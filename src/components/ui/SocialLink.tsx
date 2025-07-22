@@ -21,13 +21,10 @@ export default function SocialLink({
       href={href}
       target='_blank'
       rel='noopener noreferrer'
-      className='group flex h-8 w-8 items-center justify-center rounded-sm border border-transparent text-limed-spruce-900 transition-all duration-500 hover:border-limed-spruce-700 dark:text-limed-spruce-400 dark:hover:border-limed-spruce-500'
+      className='group flex h-4 w-4 items-center justify-center '
       aria-label={label}
     >
-      <Icon
-        size={20}
-        className='transition-all duration-500 group-hover:-translate-y-0.5 group-hover:drop-shadow-sm'
-      />
+      <Icon />
     </Link>
   );
 }

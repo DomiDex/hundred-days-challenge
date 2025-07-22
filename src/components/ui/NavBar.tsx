@@ -1,23 +1,8 @@
 import NavLink from './NavLink';
 import SocialLink from './SocialLink';
-import { Linkedin, Github } from 'lucide-react';
-
-// Custom X (Twitter) icon since Lucide doesn't have the new X logo - smaller size
-const XIcon = ({ className }: { size?: number; className?: string }) => (
-  <svg
-    width={16}
-    height={16}
-    viewBox='0 0 24 24'
-    fill='none'
-    stroke='currentColor'
-    strokeWidth='2.5'
-    strokeLinecap='round'
-    strokeLinejoin='round'
-    className={className}
-  >
-    <path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' />
-  </svg>
-);
+import GitHubIcon from '../svg/GitHubIcon';
+import LinkedInIcon from '../svg/LinkedInIcon';
+import XIcon from '../svg/XIcon';
 
 const navLinks = [
   { href: '/', text: 'Home' },
@@ -28,11 +13,11 @@ const navLinks = [
 const socialLinks = [
   {
     href: 'https://linkedin.com/in/your-profile',
-    icon: Linkedin,
+    icon: LinkedInIcon,
     label: 'LinkedIn',
   },
   { href: 'https://x.com/your-handle', icon: XIcon, label: 'X (Twitter)' },
-  { href: 'https://github.com/your-username', icon: Github, label: 'GitHub' },
+  { href: 'https://github.com/your-username', icon: GitHubIcon, label: 'GitHub' },
 ];
 
 export default function NavBar() {
