@@ -37,7 +37,7 @@ const socialLinks = [
 
 export default function NavBar() {
   return (
-    <nav className='flex items-center justify-end w-full space-x-4'>
+    <nav className='flex items-center justify-end w-full space-x-5'>
       {/* Navigation Links */}
       <div className='flex gap-6'>
         {navLinks.map((link) => (

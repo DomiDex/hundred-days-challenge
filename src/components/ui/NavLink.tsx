@@ -1,58 +1,44 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { motion, useMotionValue, animate } from 'framer-motion';
 
 interface NavLinkProps {
   href: string;
   text: string;
 }
 
-const CYCLES_PER_LETTER = 2;
-const SHUFFLE_TIME = 50;
-const CHARS = '!@#$%^&*():{};|,.<>/?';
+const ANIMATION_CONFIG = {
+  duration: 0.3,
+  ease: 'easeInOut',
+} as const;
 
 export default function NavLink({ href, text }: NavLinkProps) {
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [displayText, setDisplayText] = useState(text);
+  const x = useMotionValue(-100);
 
-  const scramble = () => {
-    let pos = 0;
-
-    intervalRef.current = setInterval(() => {
-      const scrambled = text
-        .split('')
-        .map((char, index) => {
-          if (pos / CYCLES_PER_LETTER > index) {
-            return char;
-          }
-
-          const randomCharIndex = Math.floor(Math.random() * CHARS.length);
-          const randomChar = CHARS[randomCharIndex];
-
-          return randomChar;
-        })
-        .join('');
-
-      setDisplayText(scrambled);
-      pos++;
-
-      if (pos >= text.length * CYCLES_PER_LETTER) {
-        stopScramble();
-      }
-    }, SHUFFLE_TIME);
+  const handleMouseEnter = () => {
+    animate(x, 0, ANIMATION_CONFIG);
   };
 
-  const stopScramble = () => {
-    clearInterval(intervalRef.current || undefined);
-    setDisplayText(text);
+  const handleMouseLeave = () => {
+    animate(x, 100, {
+      ...ANIMATION_CONFIG,
+      onComplete: () => x.set(-100),
+    });
   };
 
   return (
-    <div>
-      <Link href={href} onMouseEnter={scramble} onMouseLeave={stopScramble}>
-        {displayText}
-      </Link>
-    </div>
+    <Link
+      href={href}
+      className='relative block overflow-hidden'
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <span className='block'>{text}</span>
+      <motion.div
+        className='absolute bottom-0 left-0 h-[1px] w-full bg-limed-spruce-900'
+        style={{ x }}
+      />
+    </Link>
   );
 }
