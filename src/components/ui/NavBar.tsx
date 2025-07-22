@@ -12,12 +12,12 @@ const navLinks = [
 
 const socialLinks = [
   {
-    href: 'https://linkedin.com/in/your-profile',
+    href: 'https://www.linkedin.com/in/domidex/',
     icon: LinkedInIcon,
     label: 'LinkedIn',
   },
-  { href: 'https://x.com/your-handle', icon: XIcon, label: 'X (Twitter)' },
-  { href: 'https://github.com/your-username', icon: GitHubIcon, label: 'GitHub' },
+  { href: 'https://x.com/domidexdesign', icon: XIcon, label: 'X (Twitter)' },
+  { href: 'https://github.com/DomiDex', icon: GitHubIcon, label: 'GitHub' },
 ];
 
 export default function NavBar() {
