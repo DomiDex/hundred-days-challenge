@@ -1,26 +1,350 @@
-@import "tailwindcss";
+/* Tailwind v4 Theme Configuration - Limed Spruce */
+@import 'tailwindcss';
 
+/* Custom Properties - Light Mode */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Limed Spruce Color Palette */
+  --limed-spruce-50: #f3f7f8;
+  --limed-spruce-100: #e0eaed;
+  --limed-spruce-200: #c5d6dc;
+  --limed-spruce-300: #9cb9c4;
+  --limed-spruce-400: #6c93a4;
+  --limed-spruce-500: #517889;
+  --limed-spruce-600: #466474;
+  --limed-spruce-700: #3d5361;
+  --limed-spruce-800: #36454f;
+  --limed-spruce-900: #323e47;
+  --limed-spruce-950: #1e272e;
+
+  /* Theme Colors - Light Mode */
+  --background: var(--limed-spruce-50);
+  --foreground: var(--limed-spruce-900);
+  --card: #ffffff;
+  --card-foreground: var(--limed-spruce-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--limed-spruce-900);
+  --primary: var(--limed-spruce-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--limed-spruce-100);
+  --secondary-foreground: var(--limed-spruce-700);
+  --muted: var(--limed-spruce-100);
+  --muted-foreground: var(--limed-spruce-600);
+  --accent: var(--limed-spruce-200);
+  --accent-foreground: var(--limed-spruce-800);
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--limed-spruce-200);
+  --input: var(--limed-spruce-200);
+  --ring: var(--limed-spruce-400);
+
+  /* Chart Colors */
+  --chart-1: var(--limed-spruce-500);
+  --chart-2: var(--limed-spruce-400);
+  --chart-3: var(--limed-spruce-300);
+  --chart-4: var(--limed-spruce-600);
+  --chart-5: var(--limed-spruce-700);
+
+  /* Sidebar Colors */
+  --sidebar: var(--limed-spruce-50);
+  --sidebar-foreground: var(--limed-spruce-800);
+  --sidebar-primary: var(--limed-spruce-600);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--limed-spruce-100);
+  --sidebar-accent-foreground: var(--limed-spruce-700);
+  --sidebar-border: var(--limed-spruce-200);
+  --sidebar-ring: var(--limed-spruce-300);
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  /* Border Radius */
+  --radius: 0.75rem;
+
+  /* Shadows */
+  --shadow-2xs: 0 1px 2px 0 rgba(54, 69, 79, 0.05);
+  --shadow-xs: 0 1px 3px 0 rgba(54, 69, 79, 0.08);
+  --shadow-sm: 0 1px 3px 0 rgba(54, 69, 79, 0.1),
+    0 1px 2px -1px rgba(54, 69, 79, 0.1);
+  --shadow: 0 1px 3px 0 rgba(54, 69, 79, 0.12),
+    0 1px 2px -1px rgba(54, 69, 79, 0.12);
+  --shadow-md: 0 4px 6px -1px rgba(54, 69, 79, 0.1),
+    0 2px 4px -2px rgba(54, 69, 79, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(54, 69, 79, 0.1),
+    0 4px 6px -4px rgba(54, 69, 79, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(54, 69, 79, 0.1),
+    0 8px 10px -6px rgba(54, 69, 79, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(54, 69, 79, 0.25);
+
+  /* Spacing */
+  --spacing: 0.25rem;
 }
 
-@theme inline {
+/* Dark Mode */
+.dark {
+  --background: var(--limed-spruce-950);
+  --foreground: var(--limed-spruce-50);
+  --card: var(--limed-spruce-900);
+  --card-foreground: var(--limed-spruce-50);
+  --popover: var(--limed-spruce-900);
+  --popover-foreground: var(--limed-spruce-50);
+  --primary: var(--limed-spruce-400);
+  --primary-foreground: var(--limed-spruce-950);
+  --secondary: var(--limed-spruce-800);
+  --secondary-foreground: var(--limed-spruce-200);
+  --muted: var(--limed-spruce-800);
+  --muted-foreground: var(--limed-spruce-300);
+  --accent: var(--limed-spruce-700);
+  --accent-foreground: var(--limed-spruce-100);
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--limed-spruce-700);
+  --input: var(--limed-spruce-700);
+  --ring: var(--limed-spruce-400);
+
+  /* Chart Colors - Dark */
+  --chart-1: var(--limed-spruce-400);
+  --chart-2: var(--limed-spruce-300);
+  --chart-3: var(--limed-spruce-500);
+  --chart-4: var(--limed-spruce-200);
+  --chart-5: var(--limed-spruce-600);
+
+  /* Sidebar Colors - Dark */
+  --sidebar: var(--limed-spruce-900);
+  --sidebar-foreground: var(--limed-spruce-100);
+  --sidebar-primary: var(--limed-spruce-400);
+  --sidebar-primary-foreground: var(--limed-spruce-950);
+  --sidebar-accent: var(--limed-spruce-800);
+  --sidebar-accent-foreground: var(--limed-spruce-200);
+  --sidebar-border: var(--limed-spruce-700);
+  --sidebar-ring: var(--limed-spruce-500);
+
+  /* Dark Mode Shadows */
+  --shadow-2xs: 0 1px 2px 0 rgba(30, 39, 46, 0.25);
+  --shadow-xs: 0 1px 3px 0 rgba(30, 39, 46, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(30, 39, 46, 0.35),
+    0 1px 2px -1px rgba(30, 39, 46, 0.35);
+  --shadow: 0 1px 3px 0 rgba(30, 39, 46, 0.4),
+    0 1px 2px -1px rgba(30, 39, 46, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(30, 39, 46, 0.35),
+    0 2px 4px -2px rgba(30, 39, 46, 0.35);
+  --shadow-lg: 0 10px 15px -3px rgba(30, 39, 46, 0.35),
+    0 4px 6px -4px rgba(30, 39, 46, 0.35);
+  --shadow-xl: 0 20px 25px -5px rgba(30, 39, 46, 0.35),
+    0 8px 10px -6px rgba(30, 39, 46, 0.35);
+  --shadow-2xl: 0 25px 50px -12px rgba(30, 39, 46, 0.5);
+}
+
+/* Tailwind v4 Theme Extension */
+@theme {
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Chart Colors */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar Colors */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Limed Spruce Palette */
+  --color-limed-spruce-50: var(--limed-spruce-50);
+  --color-limed-spruce-100: var(--limed-spruce-100);
+  --color-limed-spruce-200: var(--limed-spruce-200);
+  --color-limed-spruce-300: var(--limed-spruce-300);
+  --color-limed-spruce-400: var(--limed-spruce-400);
+  --color-limed-spruce-500: var(--limed-spruce-500);
+  --color-limed-spruce-600: var(--limed-spruce-600);
+  --color-limed-spruce-700: var(--limed-spruce-700);
+  --color-limed-spruce-800: var(--limed-spruce-800);
+  --color-limed-spruce-900: var(--limed-spruce-900);
+  --color-limed-spruce-950: var(--limed-spruce-950);
+
+  /* Typography */
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+  --font-family-serif: var(--font-serif);
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-DEFAULT: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-full: 9999px;
+
+  /* Box Shadows */
+  --box-shadow-2xs: var(--shadow-2xs);
+  --box-shadow-xs: var(--shadow-xs);
+  --box-shadow-sm: var(--shadow-sm);
+  --box-shadow-DEFAULT: var(--shadow);
+  --box-shadow-md: var(--shadow-md);
+  --box-shadow-lg: var(--shadow-lg);
+  --box-shadow-xl: var(--shadow-xl);
+  --box-shadow-2xl: var(--shadow-2xl);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Global Styles */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: 'rlig' 1, 'calt' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Utility Classes */
+.bg-background {
+  background-color: var(--background);
+}
+.bg-foreground {
+  background-color: var(--foreground);
+}
+.bg-card {
+  background-color: var(--card);
+}
+.bg-popover {
+  background-color: var(--popover);
+}
+.bg-primary {
+  background-color: var(--primary);
+}
+.bg-secondary {
+  background-color: var(--secondary);
+}
+.bg-muted {
+  background-color: var(--muted);
+}
+.bg-accent {
+  background-color: var(--accent);
+}
+.bg-destructive {
+  background-color: var(--destructive);
+}
+.bg-sidebar {
+  background-color: var(--sidebar);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+.text-card-foreground {
+  color: var(--card-foreground);
+}
+.text-popover-foreground {
+  color: var(--popover-foreground);
+}
+.text-primary {
+  color: var(--primary);
+}
+.text-primary-foreground {
+  color: var(--primary-foreground);
+}
+.text-secondary-foreground {
+  color: var(--secondary-foreground);
+}
+.text-muted-foreground {
+  color: var(--muted-foreground);
+}
+.text-accent-foreground {
+  color: var(--accent-foreground);
+}
+.text-destructive {
+  color: var(--destructive);
+}
+.text-destructive-foreground {
+  color: var(--destructive-foreground);
+}
+.text-sidebar-foreground {
+  color: var(--sidebar-foreground);
+}
+
+.border-border {
+  border-color: var(--border);
+}
+.border-input {
+  border-color: var(--input);
+}
+.border-sidebar-border {
+  border-color: var(--sidebar-border);
+}
+
+.ring-ring {
+  --tw-ring-color: var(--ring);
+}
+.ring-sidebar-ring {
+  --tw-ring-color: var(--sidebar-ring);
+}
+
+/* Focus Styles */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Selection Styles */
+::selection {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-foreground);
 }
