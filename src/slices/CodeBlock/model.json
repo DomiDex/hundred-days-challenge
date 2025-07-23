@@ -1,0 +1,85 @@
+{
+  "id": "code_block",
+  "type": "SharedSlice",
+  "name": "CodeBlock",
+  "description": "Code block with syntax highlighting",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default code block",
+      "imageUrl": "",
+      "primary": {
+        "language": {
+          "type": "Select",
+          "config": {
+            "label": "Language",
+            "placeholder": "Select programming language",
+            "options": [
+              "javascript",
+              "typescript",
+              "jsx",
+              "tsx",
+              "python",
+              "java",
+              "c",
+              "cpp",
+              "csharp",
+              "php",
+              "ruby",
+              "go",
+              "rust",
+              "kotlin",
+              "swift",
+              "dart",
+              "bash",
+              "shell",
+              "powershell",
+              "sql",
+              "graphql",
+              "html",
+              "css",
+              "scss",
+              "sass",
+              "less",
+              "xml",
+              "json",
+              "yaml",
+              "toml",
+              "markdown",
+              "latex",
+              "plaintext"
+            ],
+            "default_value": "javascript"
+          }
+        },
+        "code": {
+          "type": "Text",
+          "config": {
+            "label": "Code",
+            "placeholder": "Paste your code here..."
+          }
+        },
+        "filename": {
+          "type": "Text",
+          "config": {
+            "label": "Filename (optional)",
+            "placeholder": "e.g., app.js"
+          }
+        },
+        "show_line_numbers": {
+          "type": "Boolean",
+          "config": {
+            "label": "Show Line Numbers",
+            "placeholder_false": "Hide line numbers",
+            "placeholder_true": "Show line numbers",
+            "default_value": true
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

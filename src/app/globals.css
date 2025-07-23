@@ -271,3 +271,30 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-foreground);
 }
+
+/* Prism.js Theme - Tomorrow Night */
+@import url('https://unpkg.com/prismjs@1.29.0/themes/prism-tomorrow.css');
+@import url('https://unpkg.com/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css');
+@import url('https://unpkg.com/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css');
+
+/* Custom Prism.js styles */
+pre[class*="language-"] {
+  @apply rounded-lg my-4;
+}
+
+pre[class*="language-"].line-numbers {
+  @apply pl-12;
+}
+
+.line-numbers .line-numbers-rows {
+  @apply border-r border-gray-600;
+}
+
+/* Code toolbar */
+div.code-toolbar > .toolbar {
+  @apply opacity-100;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+  @apply bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm hover:bg-gray-600;
+}
