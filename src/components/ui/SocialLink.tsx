@@ -14,6 +14,7 @@ interface SocialLinkProps {
   href: string;
   icon: React.ComponentType<IconProps>;
   label: string;
+  className?: string;
 }
 
 const ANIMATION_CONFIG = {
@@ -25,6 +26,7 @@ export default function SocialLink({
   href,
   icon: Icon,
   label,
+  className = '',
 }: SocialLinkProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const icon1Ref = useRef<HTMLDivElement>(null);
@@ -36,6 +38,11 @@ export default function SocialLink({
     const icon2 = icon2Ref.current;
     
     if (!link || !icon1 || !icon2) return;
+
+    // Check if device supports hover (not touch-only device)
+    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    
+    if (!mediaQuery.matches) return;
 
     gsap.set(icon2, { y: '100%', opacity: 0 });
 
@@ -74,7 +81,7 @@ export default function SocialLink({
       href={href}
       target='_blank'
       rel='noopener noreferrer'
-      className='relative flex h-4 w-4 items-center justify-center overflow-hidden'
+      className={`relative flex items-center justify-center overflow-hidden ${className || 'h-4 w-4'}`}
       aria-label={label}
     >
       <div ref={icon1Ref} className={iconContainerClass}>

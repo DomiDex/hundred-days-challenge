@@ -5,7 +5,7 @@ import NavBar from '../ui/NavBar';
 export default function Header() {
   return (
     <header className=' py-2 border-b border-border'>
-      <div className='max-w-6xl mx-auto flex justify-between items-center'>
+      <div className='max-w-6xl mx-auto px-4 flex justify-between items-center'>
         <Link href='/' className='w-[70px] h-auto text-foreground'>
           <Logo />
         </Link>

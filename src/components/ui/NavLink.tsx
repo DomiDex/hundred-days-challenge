@@ -8,12 +8,14 @@ import { useGSAP } from '@gsap/react';
 interface NavLinkProps {
   href: string;
   text: string;
+  className?: string;
+  onClick?: () => void;
 }
 
 const ANIMATION_DURATION = 0.4;
 const ANIMATION_EASE = 'power2.inOut';
 
-export default function NavLink({ href, text }: NavLinkProps) {
+export default function NavLink({ href, text, className = '', onClick }: NavLinkProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const underlineRef = useRef<HTMLDivElement>(null);
 
@@ -22,6 +24,11 @@ export default function NavLink({ href, text }: NavLinkProps) {
     const link = linkRef.current;
     
     if (!underline || !link) return;
+
+    // Check if device supports hover (not touch-only device)
+    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    
+    if (!mediaQuery.matches) return;
 
     gsap.set(underline, { x: '-100%', opacity: 1 });
 
@@ -57,7 +64,7 @@ export default function NavLink({ href, text }: NavLinkProps) {
   }, []);
 
   return (
-    <Link ref={linkRef} href={href} className='relative block overflow-hidden'>
+    <Link ref={linkRef} href={href} className={`relative block overflow-hidden ${className}`} onClick={onClick}>
       <span className='block'>{text}</span>
       <div
         ref={underlineRef}
