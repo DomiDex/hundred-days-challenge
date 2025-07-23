@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Logo from '../svg/Logo';
 import NavBar from '../ui/NavBar';
+import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Header() {
   return (
@@ -9,7 +10,10 @@ export default function Header() {
         <Link href='/' className='w-[70px] h-auto text-foreground'>
           <Logo />
         </Link>
-        <NavBar />
+        <div className='flex items-center gap-6'>
+          <NavBar />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
