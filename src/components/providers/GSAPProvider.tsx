@@ -10,8 +10,7 @@ export default function GSAPProvider({ children }: { children: React.ReactNode }
   useLayoutEffect(() => {
     // Ensure GSAP is properly initialized
     gsap.config({
-      nullTargetWarn: false,
-      trialWarn: false
+      nullTargetWarn: false
     });
   }, []);
 
