@@ -29,7 +29,7 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const tl = useRef<gsap.core.Timeline>();
+  const tl = useRef<gsap.core.Timeline | null>(null);
 
   useGSAP(() => {
     if (mobileMenuRef.current && overlayRef.current) {

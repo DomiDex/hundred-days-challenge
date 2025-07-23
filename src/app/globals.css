@@ -1,20 +1,7 @@
-/* Tailwind v4 Theme Configuration - Limed Spruce */
-@import 'tailwindcss';
-
-/* Enable dark mode with class strategy */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-:root.dark {
-  color-scheme: dark;
-}
-
-:root.light {
-  color-scheme: light;
-}
+/* Tailwind v3 Theme Configuration - Limed Spruce */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Custom Properties - Light Mode */
 :root {
@@ -155,85 +142,6 @@
   --shadow-2xl: 0 25px 50px -12px rgba(30, 39, 46, 0.5);
 }
 
-/* Tailwind v4 Theme Extension */
-@theme {
-  /* Colors */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  /* Chart Colors */
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  /* Sidebar Colors */
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Limed Spruce Palette */
-  --color-limed-spruce-50: var(--limed-spruce-50);
-  --color-limed-spruce-100: var(--limed-spruce-100);
-  --color-limed-spruce-200: var(--limed-spruce-200);
-  --color-limed-spruce-300: var(--limed-spruce-300);
-  --color-limed-spruce-400: var(--limed-spruce-400);
-  --color-limed-spruce-500: var(--limed-spruce-500);
-  --color-limed-spruce-600: var(--limed-spruce-600);
-  --color-limed-spruce-700: var(--limed-spruce-700);
-  --color-limed-spruce-800: var(--limed-spruce-800);
-  --color-limed-spruce-900: var(--limed-spruce-900);
-  --color-limed-spruce-950: var(--limed-spruce-950);
-
-  /* Typography */
-  --font-family-sans: var(--font-sans);
-  --font-family-mono: var(--font-mono);
-  --font-family-serif: var(--font-serif);
-
-  /* Border Radius */
-  --radius-none: 0;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-DEFAULT: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-full: 9999px;
-
-  /* Box Shadows */
-  --box-shadow-2xs: var(--shadow-2xs);
-  --box-shadow-xs: var(--shadow-xs);
-  --box-shadow-sm: var(--shadow-sm);
-  --box-shadow-DEFAULT: var(--shadow);
-  --box-shadow-md: var(--shadow-md);
-  --box-shadow-lg: var(--shadow-lg);
-  --box-shadow-xl: var(--shadow-xl);
-  --box-shadow-2xl: var(--shadow-2xl);
-}
 
 /* Global Styles */
 * {

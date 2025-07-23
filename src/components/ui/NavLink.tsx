@@ -68,7 +68,7 @@ export default function NavLink({ href, text, className = '', onClick }: NavLink
       <span className='block'>{text}</span>
       <div
         ref={underlineRef}
-        className='absolute bottom-0 left-0 h-[1px] w-full bg-limed-spruce-900 opacity-0'
+        className='absolute bottom-0 left-0 h-[1px] w-full bg-gray-900 dark:bg-gray-100 opacity-0'
       />
     </Link>
   );

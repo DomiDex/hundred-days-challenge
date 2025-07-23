@@ -11,12 +11,8 @@ export default function Header() {
           <Logo />
         </Link>
         <div className='flex items-center gap-3 sm:gap-6'>
-          <div className='order-2 sm:order-1'>
-            <NavBar />
-          </div>
-          <div className='order-1 sm:order-2'>
-            <ThemeToggle />
-          </div>
+          <NavBar />
+          <ThemeToggle />
         </div>
       </div>
     </header>
