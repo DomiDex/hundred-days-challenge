@@ -12,17 +12,29 @@ export default function ThemeProvider({
 
   useEffect(() => {
     const root = document.documentElement
+    
+    const applyTheme = () => {
+      root.classList.remove('light', 'dark')
+      
+      if (theme === 'system') {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        root.classList.add(systemTheme)
+      } else {
+        root.classList.add(theme)
+      }
+    }
 
+    applyTheme()
+
+    // Listen for system theme changes when in system mode
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
-        .matches
-        ? 'dark'
-        : 'light'
-      root.classList.remove('light', 'dark')
-      root.classList.add(systemTheme)
-    } else {
-      root.classList.remove('light', 'dark')
-      root.classList.add(theme)
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      const handleChange = () => applyTheme()
+      
+      mediaQuery.addEventListener('change', handleChange)
+      return () => mediaQuery.removeEventListener('change', handleChange)
     }
   }, [theme])
 

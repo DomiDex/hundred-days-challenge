@@ -1,6 +1,21 @@
 /* Tailwind v4 Theme Configuration - Limed Spruce */
 @import 'tailwindcss';
 
+/* Enable dark mode with class strategy */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+:root.light {
+  color-scheme: light;
+}
+
 /* Custom Properties - Light Mode */
 :root {
   /* Limed Spruce Color Palette */
