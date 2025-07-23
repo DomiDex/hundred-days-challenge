@@ -1,43 +1,67 @@
 'use client';
 
 import Link from 'next/link';
-import { motion, useMotionValue, animate } from 'framer-motion';
+import { useRef } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 interface NavLinkProps {
   href: string;
   text: string;
 }
 
-const ANIMATION_CONFIG = {
-  duration: 0.3,
-  ease: 'easeInOut',
-} as const;
+const ANIMATION_DURATION = 0.4;
+const ANIMATION_EASE = 'power2.inOut';
 
 export default function NavLink({ href, text }: NavLinkProps) {
-  const x = useMotionValue(-100);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const underlineRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseEnter = () => {
-    animate(x, 0, ANIMATION_CONFIG);
-  };
+  useGSAP(() => {
+    const underline = underlineRef.current;
+    const link = linkRef.current;
+    
+    if (!underline || !link) return;
 
-  const handleMouseLeave = () => {
-    animate(x, 100, {
-      ...ANIMATION_CONFIG,
-      onComplete: () => x.set(-100),
-    });
-  };
+    gsap.set(underline, { x: '-100%', opacity: 1 });
+
+    const handleMouseEnter = () => {
+      gsap.killTweensOf(underline);
+      gsap.to(underline, {
+        x: '0%',
+        duration: ANIMATION_DURATION,
+        ease: ANIMATION_EASE,
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.killTweensOf(underline);
+      gsap.to(underline, {
+        x: '101%',
+        duration: ANIMATION_DURATION,
+        ease: ANIMATION_EASE,
+        onComplete: () => {
+          gsap.set(underline, { x: '-100%' });
+        },
+      });
+    };
+
+    link.addEventListener('mouseenter', handleMouseEnter);
+    link.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      link.removeEventListener('mouseenter', handleMouseEnter);
+      link.removeEventListener('mouseleave', handleMouseLeave);
+      gsap.killTweensOf(underline);
+    };
+  }, []);
 
   return (
-    <Link
-      href={href}
-      className='relative block overflow-hidden'
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <Link ref={linkRef} href={href} className='relative block overflow-hidden'>
       <span className='block'>{text}</span>
-      <motion.div
-        className='absolute bottom-0 left-0 h-[1px] w-full bg-limed-spruce-900'
-        style={{ x }}
+      <div
+        ref={underlineRef}
+        className='absolute bottom-0 left-0 h-[1px] w-full bg-limed-spruce-900 opacity-0'
       />
     </Link>
   );

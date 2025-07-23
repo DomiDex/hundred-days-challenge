@@ -1,3 +1,5 @@
+'use client';
+
 import NavLink from './NavLink';
 import SocialLink from './SocialLink';
 import GitHubIcon from '../svg/GitHubIcon';
