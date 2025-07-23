@@ -18,7 +18,7 @@ const importantLinks = [
 
 export default function Footer() {
   return (
-    <footer className='border-t border-limed-spruce-200 dark:border-limed-spruce-800'>
+    <footer className='border-t border-border'>
       <div className='max-w-4xl  px-12 py-12'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-8 md:ml-[5rem] ml-0'>
           <div>
