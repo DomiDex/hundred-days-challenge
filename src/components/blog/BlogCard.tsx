@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PrismicNextImage } from "@prismicio/next";
-import { ImageField, KeyTextField, DateField } from "@prismicio/client";
+import { ImageField, KeyTextField, DateField, LinkField, isFilled } from "@prismicio/client";
+import { ExternalLink, Github } from "lucide-react";
 
 interface BlogCardProps {
   uid: string;
@@ -12,9 +13,11 @@ interface BlogCardProps {
     name: KeyTextField;
   };
   date: DateField | string;
+  demoLink?: LinkField;
+  githubLink?: LinkField;
 }
 
-export function BlogCard({ uid, title, excerpt, image, category, date }: BlogCardProps) {
+export function BlogCard({ uid, title, excerpt, image, category, date, demoLink, githubLink }: BlogCardProps) {
   const formattedDate = new Date(date || "").toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -56,8 +59,36 @@ export function BlogCard({ uid, title, excerpt, image, category, date }: BlogCar
             {excerpt}
           </p>
         )}
-        <div className="mt-4 text-sm text-muted-foreground">
-          {formattedDate}
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            {formattedDate}
+          </span>
+          <div className="flex gap-2">
+            {isFilled.link(demoLink) && (
+              <Link
+                href={demoLink.url!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="View Demo"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ExternalLink size={18} />
+              </Link>
+            )}
+            {isFilled.link(githubLink) && (
+              <Link
+                href={githubLink.url!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="View on GitHub"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Github size={18} />
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </article>

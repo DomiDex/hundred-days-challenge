@@ -37,20 +37,6 @@
           ]
         }
       },
-      "meta_title": {
-        "type": "Text",
-        "config": {
-          "label": "Meta Title",
-          "placeholder": "SEO meta title"
-        }
-      },
-      "meta_description": {
-        "type": "Text",
-        "config": {
-          "label": "Meta Description",
-          "placeholder": "SEO meta description"
-        }
-      },
       "category": {
         "type": "Link",
         "config": {
@@ -73,6 +59,24 @@
           "placeholder": "Brief description of the post"
         }
       },
+      "demo_link": {
+        "type": "Link",
+        "config": {
+          "label": "Demo Link",
+          "placeholder": "Link to live demo",
+          "select": "web",
+          "allowTargetBlank": true
+        }
+      },
+      "github_link": {
+        "type": "Link",
+        "config": {
+          "label": "GitHub Link",
+          "placeholder": "Link to GitHub repository",
+          "select": "web",
+          "allowTargetBlank": true
+        }
+      },
       "article_text": {
         "type": "StructuredText",
         "config": {
@@ -88,6 +92,95 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {}
+        }
+      }
+    },
+    "SEO": {
+      "meta_title": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Title",
+          "placeholder": "Page title for search engines (max 60 characters)"
+        }
+      },
+      "meta_description": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Description",
+          "placeholder": "Page description for search engines (max 160 characters)"
+        }
+      },
+      "og_title": {
+        "type": "Text",
+        "config": {
+          "label": "OpenGraph Title",
+          "placeholder": "Title for social media sharing (defaults to Meta Title if empty)"
+        }
+      },
+      "og_description": {
+        "type": "Text",
+        "config": {
+          "label": "OpenGraph Description",
+          "placeholder": "Description for social media sharing (defaults to Meta Description if empty)"
+        }
+      },
+      "og_image": {
+        "type": "Image",
+        "config": {
+          "label": "OpenGraph Image",
+          "constraint": {
+            "width": 1200,
+            "height": 630
+          },
+          "thumbnails": []
+        }
+      },
+      "og_type": {
+        "type": "Select",
+        "config": {
+          "label": "OpenGraph Type",
+          "placeholder": "Content type",
+          "options": ["article"],
+          "default_value": "article"
+        }
+      },
+      "article_author": {
+        "type": "Text",
+        "config": {
+          "label": "Article Author",
+          "placeholder": "Author name for structured data"
+        }
+      },
+      "twitter_card": {
+        "type": "Select",
+        "config": {
+          "label": "Twitter Card Type",
+          "placeholder": "Select Twitter card type",
+          "options": ["summary", "summary_large_image"],
+          "default_value": "summary_large_image"
+        }
+      },
+      "canonical_url": {
+        "type": "Text",
+        "config": {
+          "label": "Canonical URL",
+          "placeholder": "Custom canonical URL (optional)"
+        }
+      },
+      "robots": {
+        "type": "Select",
+        "config": {
+          "label": "Robots Meta",
+          "placeholder": "Search engine indexing",
+          "options": ["index,follow", "noindex,follow", "index,nofollow", "noindex,nofollow"],
+          "default_value": "index,follow"
+        }
+      },
+      "keywords": {
+        "type": "Text",
+        "config": {
+          "label": "Keywords",
+          "placeholder": "Comma-separated keywords for SEO"
         }
       }
     }

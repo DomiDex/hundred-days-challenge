@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { createClient } from "@/prismicio";
-import { PrismicNextImage } from "@prismicio/next";
 import Link from "next/link";
+import { BlogCard } from "@/components/blog/BlogCard";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -74,54 +74,20 @@ export default async function BlogPage() {
             const categoryUid = post.data.category.uid;
 
             return (
-              <article
+              <BlogCard
                 key={post.id}
-                className="bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-              >
-                {post.data.image.url && (
-                  <Link href={`/blog/${categoryUid}/${post.uid}`}>
-                    <div className="relative h-48 w-full">
-                      <PrismicNextImage
-                        field={post.data.image}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </Link>
-                )}
-                <div className="p-6">
-                  {category && (
-                    <Link
-                      href={`/blog/${categoryUid}`}
-                      className="text-sm text-primary hover:text-primary/80 font-medium"
-                    >
-                      {category.name}
-                    </Link>
-                  )}
-                  <h2 className="text-xl font-semibold text-card-foreground mt-2 mb-2">
-                    <Link
-                      href={`/blog/${categoryUid}/${post.uid}`}
-                      className="hover:text-primary transition-colors"
-                    >
-                      {post.data.name}
-                    </Link>
-                  </h2>
-                  {post.data.excerpt && (
-                    <p className="text-muted-foreground line-clamp-3">
-                      {post.data.excerpt}
-                    </p>
-                  )}
-                  <div className="mt-4 text-sm text-muted-foreground">
-                    {new Date(
-                      post.data.publication_date || post.first_publication_date
-                    ).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </div>
-                </div>
-              </article>
+                uid={post.uid}
+                title={post.data.name}
+                excerpt={post.data.excerpt}
+                image={post.data.image}
+                category={{
+                  uid: categoryUid,
+                  name: category?.name || ""
+                }}
+                date={post.data.publication_date || post.first_publication_date}
+                demoLink={post.data.demo_link}
+                githubLink={post.data.github_link}
+              />
             );
           })}
         </div>

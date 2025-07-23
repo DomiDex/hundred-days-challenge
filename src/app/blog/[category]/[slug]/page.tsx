@@ -8,27 +8,29 @@ import { components } from "@/slices";
 import { PrismicRichText } from "@prismicio/react";
 import Link from "next/link";
 import { PrismLoader } from "@/components/PrismLoader";
+import { generateSEOMetadata } from "@/components/SEO";
+import ProjectLinks from "@/components/blog/ProjectLinks";
 
 type Props = {
   params: Promise<{ category: string; slug: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { category, slug } = await params;
   const client = createClient();
   
   try {
     const post = await client.getByUID("post", slug);
+    const url = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`;
     
-    return {
-      title: post.data.meta_title || post.data.name,
-      description: post.data.meta_description || post.data.excerpt || "",
-      openGraph: {
-        title: post.data.meta_title || post.data.name,
-        description: post.data.meta_description || post.data.excerpt || "",
-        images: post.data.image.url ? [post.data.image.url] : [],
-      },
-    };
+    return generateSEOMetadata({
+      data: post.data,
+      fallbackTitle: post.data.name || "Blog Post",
+      fallbackDescription: post.data.excerpt || "",
+      url,
+      publishedTime: post.data.publication_date || post.first_publication_date,
+      modifiedTime: post.last_publication_date,
+    });
   } catch {
     return {
       title: "Post Not Found",
@@ -112,11 +114,17 @@ export default async function BlogPostPage({ params }: Props) {
             </p>
           )}
           
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
             <time dateTime={post.data.publication_date || post.first_publication_date}>
               {publicationDate}
             </time>
           </div>
+          
+          {/* Project Links */}
+          <ProjectLinks 
+            demoLink={post.data.demo_link}
+            githubLink={post.data.github_link}
+          />
         </header>
 
         {/* Featured Image */}

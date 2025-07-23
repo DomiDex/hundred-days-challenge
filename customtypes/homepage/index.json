@@ -24,13 +24,65 @@
       "meta_title": {
         "type": "Text",
         "config": {
-          "label": "Meta Title"
+          "label": "Meta Title",
+          "placeholder": "Page title for search engines (max 60 characters)"
         }
       },
       "meta_description": {
         "type": "Text",
         "config": {
-          "label": "Meta Description"
+          "label": "Meta Description",
+          "placeholder": "Page description for search engines (max 160 characters)"
+        }
+      },
+      "og_title": {
+        "type": "Text",
+        "config": {
+          "label": "OpenGraph Title",
+          "placeholder": "Title for social media sharing (defaults to Meta Title if empty)"
+        }
+      },
+      "og_description": {
+        "type": "Text",
+        "config": {
+          "label": "OpenGraph Description",
+          "placeholder": "Description for social media sharing (defaults to Meta Description if empty)"
+        }
+      },
+      "og_image": {
+        "type": "Image",
+        "config": {
+          "label": "OpenGraph Image",
+          "constraint": {
+            "width": 1200,
+            "height": 630
+          },
+          "thumbnails": []
+        }
+      },
+      "twitter_card": {
+        "type": "Select",
+        "config": {
+          "label": "Twitter Card Type",
+          "placeholder": "Select Twitter card type",
+          "options": ["summary", "summary_large_image"],
+          "default_value": "summary_large_image"
+        }
+      },
+      "canonical_url": {
+        "type": "Text",
+        "config": {
+          "label": "Canonical URL",
+          "placeholder": "Custom canonical URL (optional)"
+        }
+      },
+      "robots": {
+        "type": "Select",
+        "config": {
+          "label": "Robots Meta",
+          "placeholder": "Search engine indexing",
+          "options": ["index,follow", "noindex,follow", "index,nofollow", "noindex,nofollow"],
+          "default_value": "index,follow"
         }
       }
     }
