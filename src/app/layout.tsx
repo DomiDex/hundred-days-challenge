@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ThemeProvider from '@/components/providers/ThemeProvider';
+import GSAPProvider from '@/components/providers/GSAPProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,9 +34,11 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider>
-          <Header />
-          {children}
-          <Footer />
+          <GSAPProvider>
+            <Header />
+            {children}
+            <Footer />
+          </GSAPProvider>
         </ThemeProvider>
       </body>
     </html>
