@@ -10,18 +10,28 @@ import Link from "next/link";
 import { PrismLoader } from "@/components/PrismLoader";
 import { generateSEOMetadata } from "@/components/SEO";
 import ProjectLinks from "@/components/blog/ProjectLinks";
+import { AuthorCard } from "@/components/blog/AuthorCard";
+import { AuthorSocialLinks } from "@/components/blog/AuthorSocialLinks";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { ShareButtons } from "@/components/blog/ShareButtons";
 import type { PostDocument } from "../../../../../prismicio-types";
+import type { AuthorDocument } from "@/types/author-types";
 import { filterPostsByCategory, extractCategoryData } from "@/lib/prismic-utils";
+import { getAuthorData } from "@/lib/prismic-helpers";
 
 // Temporary type extension until Prismic types are regenerated
 interface ExtendedPostData {
   demo_link?: prismic.LinkField;
   github_link?: prismic.LinkField;
+  author?: prismic.ContentRelationshipField<"author">;
 }
 
 type ExtendedPost = PostDocument & {
   data: PostDocument['data'] & ExtendedPostData;
 };
+
+// AuthorDocument already includes all fields we need
+type ExtendedAuthor = AuthorDocument;
 
 type Props = {
   params: Promise<{ category: string; slug: string }>;
@@ -75,9 +85,10 @@ export default async function BlogPostPage({ params }: Props) {
   let post: ExtendedPost;
   try {
     post = await client.getByUID("post", slug, {
-      fetchLinks: ["category.name", "category.uid"],
+      fetchLinks: ["category.name", "category.uid", "author.name", "author.role", "author.avatar", "author.bio", "author.linkedin_link", "author.x_link", "author.github_link"],
     }) as ExtendedPost;
-  } catch {
+  } catch (error) {
+    console.error('Error fetching post:', error);
     notFound();
   }
 
@@ -94,6 +105,21 @@ export default async function BlogPostPage({ params }: Props) {
     month: "long",
     day: "numeric",
   });
+
+  // Fetch full author data if linked
+  let author: ExtendedAuthor | null = null;
+  if (prismic.isFilled.contentRelationship(post.data.author)) {
+    try {
+      const authorResponse = await client.getByID(post.data.author.id);
+      // Force cast to our known author type structure
+      author = {
+        ...authorResponse,
+        data: authorResponse.data
+      } as unknown as ExtendedAuthor;
+    } catch {
+      // Author not found, continue without it
+    }
+  }
 
   // Fetch related posts
   const categoryId = prismic.isFilled.contentRelationship(post.data.category) 
@@ -118,6 +144,16 @@ export default async function BlogPostPage({ params }: Props) {
       <PrismLoader />
       
       <article className="max-w-4xl mx-auto px-6 py-16">
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Blog', href: '/blog' },
+            { label: categoryData?.name || 'Category', href: `/blog/${category}` },
+            { label: post.data.name || '' }
+          ]}
+          className='mb-6'
+        />
+        
         {/* Post Header */}
         <header className="mb-12">
           {categoryData && (
@@ -139,10 +175,24 @@ export default async function BlogPostPage({ params }: Props) {
             </p>
           )}
           
-          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground mb-6">
             <time dateTime={post.data.publication_date || post.first_publication_date}>
               {publicationDate}
             </time>
+            {author && (
+              <>
+                <span className="hidden sm:inline">•</span>
+                <div className="flex items-center gap-2">
+                  <span>By </span>
+                  <Link 
+                    href={`/authors/${author.uid}`}
+                    className="text-primary hover:text-primary/80 transition-colors"
+                  >
+                    {getAuthorData(author)?.name || ''}
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
           
           {/* Project Links */}
@@ -154,7 +204,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Featured Image */}
         {post.data.image.url && (
-          <div className="relative h-96 w-full rounded-lg overflow-hidden mb-12">
+          <div className="relative h-96 w-full rounded-lg overflow-hidden mb-4">
             <PrismicNextImage
               field={post.data.image}
               fill
@@ -163,6 +213,14 @@ export default async function BlogPostPage({ params }: Props) {
             />
           </div>
         )}
+
+        {/* Share Buttons */}
+        <div className="flex justify-center mb-12">
+          <ShareButtons 
+            url={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`}
+            title={post.data.name || ''}
+          />
+        </div>
 
         {/* Article Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none px-6 md:px-0">
@@ -176,6 +234,22 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         )}
 
+        {/* Author Info */}
+        {author && (
+          <section className="mt-16 pt-16 border-t border-border">
+            <h2 className="text-2xl font-bold text-foreground mb-6">About the Author</h2>
+            <div className="bg-card rounded-lg p-6">
+              <AuthorCard author={author} variant="full" className="mb-4" />
+              <AuthorSocialLinks
+                linkedinLink={getAuthorData(author)?.linkedin_link}
+                xLink={getAuthorData(author)?.x_link}
+                githubLink={getAuthorData(author)?.github_link}
+                className="mt-4"
+              />
+            </div>
+          </section>
+        )}
+
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <section className="mt-16 pt-16 border-t border-border">
@@ -186,11 +260,11 @@ export default async function BlogPostPage({ params }: Props) {
               {relatedPosts.map((relatedPost) => (
                 <article
                   key={relatedPost.id}
-                  className="bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white dark:bg-gray-700 rounded-2xl p-4 shadow-lg space-y-4"
                 >
                   {relatedPost.data.image.url && (
                     <Link href={`/blog/${category}/${relatedPost.uid}`}>
-                      <div className="relative h-40 w-full">
+                      <div className="relative w-full h-40 overflow-hidden rounded-md">
                         <PrismicNextImage
                           field={relatedPost.data.image}
                           fill
@@ -199,21 +273,25 @@ export default async function BlogPostPage({ params }: Props) {
                       </div>
                     </Link>
                   )}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-card-foreground mb-2">
-                      <Link
-                        href={`/blog/${category}/${relatedPost.uid}`}
-                        className="hover:text-primary transition-colors"
-                      >
-                        {relatedPost.data.name}
-                      </Link>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-card-foreground">
+                      {relatedPost.data.name}
                     </h3>
                     {relatedPost.data.excerpt && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground line-clamp-2">
                         {relatedPost.data.excerpt}
                       </p>
                     )}
                   </div>
+                  <Link
+                    href={`/blog/${category}/${relatedPost.uid}`}
+                    className="flex items-center gap-2 group text-sm font-medium"
+                  >
+                    Learn More
+                    <svg className="w-4 h-4 pt-0.5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
                 </article>
               ))}
             </div>

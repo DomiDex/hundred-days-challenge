@@ -1,6 +1,6 @@
 {
-  "id": "post",
-  "label": "Post",
+  "id": "author",
+  "label": "Author",
   "format": "custom",
   "repeatable": true,
   "status": true,
@@ -10,68 +10,63 @@
         "type": "UID",
         "config": {
           "label": "Slug",
-          "placeholder": "Post URL slug"
+          "placeholder": "Author URL slug"
         }
       },
       "name": {
         "type": "Text",
         "config": {
           "label": "Name",
-          "placeholder": "Post title"
+          "placeholder": "Author's full name"
         }
       },
-      "image": {
+      "role": {
+        "type": "Text",
+        "config": {
+          "label": "Role",
+          "placeholder": "Author's role or title"
+        }
+      },
+      "avatar": {
         "type": "Image",
         "config": {
-          "label": "Featured Image",
+          "label": "Avatar",
           "constraint": {
-            "width": 1200,
-            "height": 630
+            "width": 400,
+            "height": 400
           },
           "thumbnails": [
             {
               "name": "thumbnail",
-              "width": 400,
-              "height": 300
+              "width": 150,
+              "height": 150
             }
           ]
         }
       },
-      "category": {
+      "bio": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Biography",
+          "placeholder": "Author's biography",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading3,heading4,heading5,heading6,strong,em,hyperlink,list-item,o-list-item"
+        }
+      },
+      "linkedin_link": {
         "type": "Link",
         "config": {
-          "label": "Category",
-          "select": "document",
-          "customtypes": ["category"]
+          "label": "LinkedIn Profile",
+          "placeholder": "Link to LinkedIn profile",
+          "select": "web",
+          "allowTargetBlank": true
         }
       },
-      "publication_date": {
-        "type": "Date",
-        "config": {
-          "label": "Publication Date",
-          "placeholder": "Select publication date"
-        }
-      },
-      "excerpt": {
-        "type": "Text",
-        "config": {
-          "label": "Excerpt",
-          "placeholder": "Brief description of the post"
-        }
-      },
-      "author": {
+      "x_link": {
         "type": "Link",
         "config": {
-          "label": "Author",
-          "select": "document",
-          "customtypes": ["author"]
-        }
-      },
-      "demo_link": {
-        "type": "Link",
-        "config": {
-          "label": "Demo Link",
-          "placeholder": "Link to live demo",
+          "label": "X (Twitter) Profile",
+          "placeholder": "Link to X/Twitter profile",
           "select": "web",
           "allowTargetBlank": true
         }
@@ -79,27 +74,10 @@
       "github_link": {
         "type": "Link",
         "config": {
-          "label": "GitHub Link",
-          "placeholder": "Link to GitHub repository",
+          "label": "GitHub Profile",
+          "placeholder": "Link to GitHub profile",
           "select": "web",
           "allowTargetBlank": true
-        }
-      },
-      "article_text": {
-        "type": "StructuredText",
-        "config": {
-          "label": "Article Text",
-          "placeholder": "Main article content",
-          "allowTargetBlank": true,
-          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
-          "labels": ["codespan", "highlight"]
-        }
-      },
-      "slices": {
-        "type": "Slices",
-        "fieldset": "Slice Zone",
-        "config": {
-          "choices": {}
         }
       }
     },
@@ -143,29 +121,13 @@
           "thumbnails": []
         }
       },
-      "og_type": {
-        "type": "Select",
-        "config": {
-          "label": "OpenGraph Type",
-          "placeholder": "Content type",
-          "options": ["article"],
-          "default_value": "article"
-        }
-      },
-      "article_author": {
-        "type": "Text",
-        "config": {
-          "label": "Article Author",
-          "placeholder": "Author name for structured data"
-        }
-      },
       "twitter_card": {
         "type": "Select",
         "config": {
           "label": "Twitter Card Type",
           "placeholder": "Select Twitter card type",
           "options": ["summary", "summary_large_image"],
-          "default_value": "summary_large_image"
+          "default_value": "summary"
         }
       },
       "canonical_url": {
@@ -180,15 +142,13 @@
         "config": {
           "label": "Robots Meta",
           "placeholder": "Search engine indexing",
-          "options": ["index,follow", "noindex,follow", "index,nofollow", "noindex,nofollow"],
+          "options": [
+            "index,follow",
+            "noindex,follow",
+            "index,nofollow",
+            "noindex,nofollow"
+          ],
           "default_value": "index,follow"
-        }
-      },
-      "keywords": {
-        "type": "Text",
-        "config": {
-          "label": "Keywords",
-          "placeholder": "Comma-separated keywords for SEO"
         }
       }
     }

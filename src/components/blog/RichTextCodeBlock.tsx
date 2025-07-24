@@ -23,13 +23,26 @@ export function RichTextCodeBlock({
     const textContent = children || '';
     const lines = textContent.split('\n');
 
-    // Use prop language if provided
+    // Use prop language if provided, otherwise try to detect from content
     let detectedLang = propLanguage || 'plaintext';
     let actualCode = textContent;
 
+    // Only try to detect language from content if not provided via prop
+    if (!propLanguage && lines[0] && lines[0].startsWith('```')) {
+      const langMatch = lines[0].match(/^```(\w+)/);
+      if (langMatch) {
+        detectedLang = langMatch[1];
+        // Remove the language line from the code
+        actualCode = lines.slice(1).join('\n');
+        // Also remove closing ``` if present
+        if (actualCode.endsWith('```')) {
+          actualCode = actualCode.slice(0, -3).trimEnd();
+        }
+      }
+    }
+
     // Prevent PHP from being processed due to Prism.js bug
-    // Also convert 'none' to 'plaintext'
-    if (detectedLang === 'php' || detectedLang === 'none') {
+    if (detectedLang === 'php') {
       detectedLang = 'plaintext';
     }
 

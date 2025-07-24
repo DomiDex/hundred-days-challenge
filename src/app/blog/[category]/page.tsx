@@ -5,6 +5,19 @@ import { PrismicNextImage } from '@prismicio/next';
 import Link from 'next/link';
 import { filterPostsByCategory } from '@/lib/prismic-utils';
 import { RichTextRenderer } from '@/components/blog/RichTextRenderer';
+import { BlogCard } from '@/components/blog/BlogCard';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import type { RichTextField } from '@prismicio/client';
+import type { CategoryDocument } from '../../../../prismicio-types';
+
+// Temporary type extension until Prismic types are regenerated
+interface ExtendedCategoryData {
+  content?: RichTextField;
+}
+
+type ExtendedCategory = CategoryDocument & {
+  data: CategoryDocument['data'] & ExtendedCategoryData;
+};
 
 type Props = {
   params: Promise<{ category: string }>;
@@ -45,9 +58,9 @@ export default async function CategoryPage({ params }: Props) {
   const client = createClient();
 
   // Fetch the category
-  let category;
+  let category: ExtendedCategory;
   try {
-    category = await client.getByUID('category', categorySlug);
+    category = await client.getByUID('category', categorySlug) as ExtendedCategory;
   } catch {
     notFound();
   }
@@ -82,6 +95,14 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <div className='min-h-screen bg-background'>
       <main className='max-w-5xl mx-auto px-6 py-16'>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Blog', href: '/blog' },
+            { label: category.data.name || '' }
+          ]}
+          className='mb-6'
+        />
         {/* Category Header */}
         <div className='mb-12'>
           <h1 className='text-4xl font-bold text-foreground mb-6'>
@@ -134,46 +155,18 @@ export default async function CategoryPage({ params }: Props) {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
             {posts.map((post) => (
-              <article
+              <BlogCard
                 key={post.id}
-                className='bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow'
-              >
-                {post.data.image.url && (
-                  <Link href={`/blog/${categorySlug}/${post.uid}`}>
-                    <div className='relative h-48 w-full'>
-                      <PrismicNextImage
-                        field={post.data.image}
-                        fill
-                        className='object-cover'
-                      />
-                    </div>
-                  </Link>
-                )}
-                <div className='p-6'>
-                  <h2 className='text-xl font-semibold text-card-foreground mb-2'>
-                    <Link
-                      href={`/blog/${categorySlug}/${post.uid}`}
-                      className='hover:text-primary transition-colors'
-                    >
-                      {post.data.name}
-                    </Link>
-                  </h2>
-                  {post.data.excerpt && (
-                    <p className='text-muted-foreground line-clamp-3'>
-                      {post.data.excerpt}
-                    </p>
-                  )}
-                  <div className='mt-4 text-sm text-muted-foreground'>
-                    {new Date(
-                      post.data.publication_date || post.first_publication_date
-                    ).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </div>
-                </div>
-              </article>
+                uid={post.uid}
+                title={post.data.name}
+                excerpt={post.data.excerpt}
+                image={post.data.image}
+                category={{
+                  uid: categorySlug,
+                  name: category.data.name,
+                }}
+                date={post.data.publication_date || post.first_publication_date}
+              />
             ))}
           </div>
         )}

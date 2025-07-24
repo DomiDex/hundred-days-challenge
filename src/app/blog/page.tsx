@@ -2,14 +2,8 @@ import { Metadata } from 'next';
 import { createClient } from '@/prismicio';
 import Link from 'next/link';
 import { BlogCard } from '@/components/blog/BlogCard';
-import type { LinkField } from '@prismicio/client';
 import { extractCategoryData } from '@/lib/prismic-utils';
-
-// Temporary type extension until Prismic types are regenerated
-interface ExtendedPostData {
-  demo_link?: LinkField;
-  github_link?: LinkField;
-}
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -48,15 +42,30 @@ export default async function BlogPage() {
 
   return (
     <div className='min-h-screen bg-background'>
-      <main className='max-w-4xl mx-auto px-6 py-16'>
+      <main className='max-w-5xl mx-auto px-6 py-16'>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Blog' }
+          ]}
+          className='mb-6'
+        />
         <h1 className='text-4xl font-bold text-foreground mb-12'>Blog</h1>
 
         {/* Categories */}
         {categories.length > 0 && (
           <div className='mb-12'>
-            <h2 className='text-xl font-semibold text-foreground mb-4'>
-              Categories
-            </h2>
+            <div className='flex items-center justify-between mb-4'>
+              <h2 className='text-xl font-semibold text-foreground'>
+                Categories
+              </h2>
+              <Link
+                href='/categories'
+                className='text-sm text-primary hover:text-primary/80 font-medium'
+              >
+                View All Categories →
+              </Link>
+            </div>
             <div className='flex flex-wrap gap-3'>
               <Link
                 href='/blog'
@@ -94,8 +103,6 @@ export default async function BlogPage() {
                   name: categoryData?.name || '',
                 }}
                 date={post.data.publication_date || post.first_publication_date}
-                demoLink={(post.data as ExtendedPostData).demo_link}
-                githubLink={(post.data as ExtendedPostData).github_link}
               />
             );
           })}

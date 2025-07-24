@@ -5,6 +5,7 @@ import { SliceZone } from '@prismicio/react';
 import { components } from '@/slices';
 import { PrismicRichText } from '@prismicio/react';
 import { generateSEOMetadata } from '@/components/SEO';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import type { PageDocument } from '../../../prismicio-types';
 import * as prismic from '@prismicio/client';
 
@@ -66,6 +67,14 @@ export default async function Page({ params }: Props) {
   return (
     <div className='min-h-screen bg-background'>
       <article className='max-w-3xl mx-auto px-6 py-16'>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: page.data.title || '' }
+          ]}
+          className='mb-6'
+        />
+        
         {/* Page Header */}
         <header className='mb-12'>
           <h1 className='text-4xl md:text-5xl font-bold text-foreground mb-8'>
