@@ -57,13 +57,15 @@
   --sidebar-ring: var(--limed-spruce-300);
 
   /* Typography */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
   --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   /* Border Radius */
   --radius: 0.75rem;
@@ -71,15 +73,16 @@
   /* Shadows */
   --shadow-2xs: 0 1px 2px 0 rgba(54, 69, 79, 0.05);
   --shadow-xs: 0 1px 3px 0 rgba(54, 69, 79, 0.08);
-  --shadow-sm: 0 1px 3px 0 rgba(54, 69, 79, 0.1),
-    0 1px 2px -1px rgba(54, 69, 79, 0.1);
-  --shadow: 0 1px 3px 0 rgba(54, 69, 79, 0.12),
-    0 1px 2px -1px rgba(54, 69, 79, 0.12);
-  --shadow-md: 0 4px 6px -1px rgba(54, 69, 79, 0.1),
-    0 2px 4px -2px rgba(54, 69, 79, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(54, 69, 79, 0.1),
-    0 4px 6px -4px rgba(54, 69, 79, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(54, 69, 79, 0.1),
+  --shadow-sm:
+    0 1px 3px 0 rgba(54, 69, 79, 0.1), 0 1px 2px -1px rgba(54, 69, 79, 0.1);
+  --shadow:
+    0 1px 3px 0 rgba(54, 69, 79, 0.12), 0 1px 2px -1px rgba(54, 69, 79, 0.12);
+  --shadow-md:
+    0 4px 6px -1px rgba(54, 69, 79, 0.1), 0 2px 4px -2px rgba(54, 69, 79, 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgba(54, 69, 79, 0.1), 0 4px 6px -4px rgba(54, 69, 79, 0.1);
+  --shadow-xl:
+    0 20px 25px -5px rgba(54, 69, 79, 0.1),
     0 8px 10px -6px rgba(54, 69, 79, 0.1);
   --shadow-2xl: 0 25px 50px -12px rgba(54, 69, 79, 0.25);
 
@@ -129,31 +132,37 @@
   /* Dark Mode Shadows */
   --shadow-2xs: 0 1px 2px 0 rgba(30, 39, 46, 0.25);
   --shadow-xs: 0 1px 3px 0 rgba(30, 39, 46, 0.3);
-  --shadow-sm: 0 1px 3px 0 rgba(30, 39, 46, 0.35),
-    0 1px 2px -1px rgba(30, 39, 46, 0.35);
-  --shadow: 0 1px 3px 0 rgba(30, 39, 46, 0.4),
-    0 1px 2px -1px rgba(30, 39, 46, 0.4);
-  --shadow-md: 0 4px 6px -1px rgba(30, 39, 46, 0.35),
-    0 2px 4px -2px rgba(30, 39, 46, 0.35);
-  --shadow-lg: 0 10px 15px -3px rgba(30, 39, 46, 0.35),
+  --shadow-sm:
+    0 1px 3px 0 rgba(30, 39, 46, 0.35), 0 1px 2px -1px rgba(30, 39, 46, 0.35);
+  --shadow:
+    0 1px 3px 0 rgba(30, 39, 46, 0.4), 0 1px 2px -1px rgba(30, 39, 46, 0.4);
+  --shadow-md:
+    0 4px 6px -1px rgba(30, 39, 46, 0.35), 0 2px 4px -2px rgba(30, 39, 46, 0.35);
+  --shadow-lg:
+    0 10px 15px -3px rgba(30, 39, 46, 0.35),
     0 4px 6px -4px rgba(30, 39, 46, 0.35);
-  --shadow-xl: 0 20px 25px -5px rgba(30, 39, 46, 0.35),
+  --shadow-xl:
+    0 20px 25px -5px rgba(30, 39, 46, 0.35),
     0 8px 10px -6px rgba(30, 39, 46, 0.35);
   --shadow-2xl: 0 25px 50px -12px rgba(30, 39, 46, 0.5);
 }
 
-
 /* Global Styles */
 * {
-  transition: background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  font-feature-settings: 'rlig' 1, 'calt' 1;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -278,11 +287,11 @@ body {
 @import url('https://unpkg.com/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css');
 
 /* Custom Prism.js styles */
-pre[class*="language-"] {
+pre[class*='language-'] {
   @apply rounded-lg my-4;
 }
 
-pre[class*="language-"].line-numbers {
+pre[class*='language-'].line-numbers {
   @apply pl-12;
 }
 
@@ -297,4 +306,50 @@ div.code-toolbar > .toolbar {
 
 div.code-toolbar > .toolbar > .toolbar-item > button {
   @apply bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm hover:bg-gray-600;
+}
+
+/* Custom Prose/Rich Text Styles */
+@layer components {
+  .prose {
+    /* Custom heading styles - using green color like footer button */
+    & h1 {
+      @apply text-7xl font-bold;
+    }
+    & h2 {
+      @apply text-4xl font-bold my-4;
+    }
+    & h3 {
+      @apply text-3xl font-bold;
+    }
+    & h4 {
+      @apply text-3xl font-bold;
+    }
+    & h5 {
+      @apply text-2xl font-bold;
+    }
+    & h6 {
+      @apply text-xl font-bold;
+    }
+
+    /* Custom link styles - using green color like footer button */
+    & a {
+      @apply text-lochinvar-600 dark:text-lochinvar-500 underline-offset-4 hover:text-lochinvar-700 dark:hover:text-lochinvar-400 transition-colors;
+    }
+    
+    /* Custom list styles - bullet points in green */
+    & ul {
+      @apply list-disc marker:text-lochinvar-600 dark:marker:text-lochinvar-500 pl-6;
+    }
+    & ol {
+      @apply list-decimal marker:text-lochinvar-600 dark:marker:text-lochinvar-500 pl-6;
+    }
+    
+    /* Nested list spacing */
+    & li {
+      @apply my-2;
+    }
+    & ul ul, & ol ol, & ul ol, & ol ul {
+      @apply ml-4 mt-2;
+    }
+  }
 }
