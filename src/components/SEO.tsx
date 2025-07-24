@@ -1,14 +1,12 @@
 import { Metadata } from 'next';
+import { ImageField, isFilled } from '@prismicio/client';
 
 interface SEOData {
   meta_title?: string | null;
   meta_description?: string | null;
   og_title?: string | null;
   og_description?: string | null;
-  og_image?: {
-    url?: string;
-    alt?: string | null;
-  } | null;
+  og_image?: ImageField | null;
   twitter_card?: string | null;
   canonical_url?: string | null;
   robots?: string | null;
@@ -54,7 +52,7 @@ export function generateSEOMetadata({
       siteName,
       locale: 'en_US',
       type: (data.og_type as 'website' | 'article') || 'website',
-      images: data.og_image?.url
+      images: data.og_image && isFilled.image(data.og_image)
         ? [
             {
               url: data.og_image.url,
@@ -69,7 +67,7 @@ export function generateSEOMetadata({
       card: twitterCard,
       title: ogTitle,
       description: ogDescription,
-      images: data.og_image?.url ? [data.og_image.url] : undefined,
+      images: data.og_image && isFilled.image(data.og_image) ? [data.og_image.url] : undefined,
     },
     alternates: {
       canonical: data.canonical_url || url || undefined,

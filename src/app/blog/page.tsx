@@ -2,6 +2,14 @@ import { Metadata } from "next";
 import { createClient } from "@/prismicio";
 import Link from "next/link";
 import { BlogCard } from "@/components/blog/BlogCard";
+import type { LinkField } from "@prismicio/client";
+import * as prismic from "@prismicio/client";
+
+// Temporary type extension until Prismic types are regenerated
+interface ExtendedPostData {
+  demo_link?: LinkField;
+  github_link?: LinkField;
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -70,8 +78,11 @@ export default async function BlogPage() {
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
-            const category = post.data.category.data;
-            const categoryUid = post.data.category.uid;
+            const categoryData = prismic.isFilled.contentRelationship(post.data.category) && 
+                               post.data.category.data
+                               ? post.data.category.data as { uid?: string; name?: string }
+                               : null;
+            const categoryUid = categoryData?.uid || "";
 
             return (
               <BlogCard
@@ -82,11 +93,11 @@ export default async function BlogPage() {
                 image={post.data.image}
                 category={{
                   uid: categoryUid,
-                  name: category?.name || ""
+                  name: categoryData?.name || ""
                 }}
                 date={post.data.publication_date || post.first_publication_date}
-                demoLink={post.data.demo_link}
-                githubLink={post.data.github_link}
+                demoLink={(post.data as ExtendedPostData).demo_link}
+                githubLink={(post.data as ExtendedPostData).github_link}
               />
             );
           })}

@@ -10,6 +10,17 @@ import Link from "next/link";
 import { PrismLoader } from "@/components/PrismLoader";
 import { generateSEOMetadata } from "@/components/SEO";
 import ProjectLinks from "@/components/blog/ProjectLinks";
+import type { PostDocument } from "../../../../../prismicio-types";
+
+// Temporary type extension until Prismic types are regenerated
+interface ExtendedPostData {
+  demo_link?: prismic.LinkField;
+  github_link?: prismic.LinkField;
+}
+
+type ExtendedPost = PostDocument & {
+  data: PostDocument['data'] & ExtendedPostData;
+};
 
 type Props = {
   params: Promise<{ category: string; slug: string }>;
@@ -45,10 +56,22 @@ export async function generateStaticParams() {
     fetchLinks: ["category.uid"],
   });
 
-  return posts.map((post) => ({
-    category: post.data.category.uid || "",
-    slug: post.uid,
-  }));
+  return posts.map((post) => {
+    // Type guard to check if the category is filled and has data
+    let categoryUid = "";
+    
+    if (prismic.isFilled.contentRelationship(post.data.category)) {
+      const categoryData = post.data.category.data;
+      if (categoryData && typeof categoryData === 'object' && 'uid' in categoryData) {
+        categoryUid = String(categoryData.uid) || "";
+      }
+    }
+    
+    return {
+      category: categoryUid,
+      slug: post.uid,
+    };
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -56,21 +79,24 @@ export default async function BlogPostPage({ params }: Props) {
   const client = createClient();
 
   // Fetch the post
-  let post;
+  let post: ExtendedPost;
   try {
     post = await client.getByUID("post", slug, {
       fetchLinks: ["category.name", "category.uid"],
-    });
+    }) as ExtendedPost;
   } catch {
     notFound();
   }
 
   // Verify the category matches
-  if (post.data.category.uid !== category) {
+  const categoryData = prismic.isFilled.contentRelationship(post.data.category) && 
+                      post.data.category.data
+                      ? post.data.category.data as { uid?: string; name?: string }
+                      : null;
+  
+  if (!categoryData?.uid || categoryData.uid !== category) {
     notFound();
   }
-
-  const categoryData = post.data.category.data;
   const publicationDate = new Date(
     post.data.publication_date || post.first_publication_date
   ).toLocaleDateString("en-US", {
@@ -80,13 +106,19 @@ export default async function BlogPostPage({ params }: Props) {
   });
 
   // Fetch related posts
-  const relatedPosts = await client.getAllByType("post", {
-    filters: [
-      prismic.filter.at("my.post.category", post.data.category.id)
-    ],
-    limit: 3,
-    orderings: [{ field: "document.first_publication_date", direction: "desc" }],
-  }).then(posts => posts.filter(p => p.id !== post.id));
+  const categoryId = prismic.isFilled.contentRelationship(post.data.category) 
+    ? post.data.category.id 
+    : null;
+    
+  const relatedPosts = categoryId 
+    ? await client.getAllByType("post", {
+        filters: [
+          prismic.filter.at("my.post.category", categoryId)
+        ],
+        limit: 3,
+        orderings: [{ field: "document.first_publication_date", direction: "desc" }],
+      }).then(posts => posts.filter(p => p.id !== post.id))
+    : [];
 
   return (
     <div className="min-h-screen bg-background">
