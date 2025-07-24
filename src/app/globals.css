@@ -281,23 +281,11 @@ body {
   background: var(--accent-foreground);
 }
 
-/* Prism.js Theme - Tomorrow Night */
-@import url('https://unpkg.com/prismjs@1.29.0/themes/prism-tomorrow.css');
+/* Prism.js Plugins Only - No Theme */
 @import url('https://unpkg.com/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css');
 @import url('https://unpkg.com/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css');
 
-/* Custom Prism.js styles */
-pre[class*='language-'] {
-  @apply rounded-lg my-4;
-}
-
-pre[class*='language-'].line-numbers {
-  @apply pl-12;
-}
-
-.line-numbers .line-numbers-rows {
-  @apply border-r border-gray-600;
-}
+/* Custom Prism.js styles - moved to theme section below */
 
 /* Code toolbar */
 div.code-toolbar > .toolbar {
@@ -305,12 +293,270 @@ div.code-toolbar > .toolbar {
 }
 
 div.code-toolbar > .toolbar > .toolbar-item > button {
-  @apply bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm hover:bg-gray-600;
+  background-color: var(--limed-spruce-700);
+  color: var(--limed-spruce-300);
+  @apply px-2 py-1 rounded text-sm;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button:hover {
+  background-color: var(--limed-spruce-600);
+}
+
+/* Code Block Component Styles */
+.code-filename {
+  background-color: var(--limed-spruce-800);
+  padding: 0.5rem;
+  color: var(--limed-spruce-600);
+  border-bottom: 1px solid var(--limed-spruce-700);
+}
+
+.dark .code-filename {
+  background-color: var(--limed-spruce-700);
+  color: var(--limed-spruce-300);
+  border-bottom-color: var(--limed-spruce-800);
+}
+
+.code-container {
+  background-color: var(--limed-spruce-950);
+}
+
+/* Code block scrollbar for dark mode */
+pre[class*='language-']::-webkit-scrollbar {
+  height: 10px;
+}
+
+pre[class*='language-']::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+pre[class*='language-']::-webkit-scrollbar-thumb {
+  background: var(--limed-spruce-700);
+  border-radius: 5px;
+}
+
+pre[class*='language-']::-webkit-scrollbar-thumb:hover {
+  background: var(--limed-spruce-600);
+}
+
+/* Custom Prism Theme - Limed Spruce */
+code[class*='language-'],
+pre[class*='language-'] {
+  background: none !important;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.6;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*='language-'] {
+  overflow: auto;
+  border-radius: 0.5rem;
+}
+
+/* Inline code */
+:not(pre) > code[class*='language-'] {
+  @apply px-1 py-0.5 rounded;
+  background-color: var(--limed-spruce-900);
+  color: var(--limed-spruce-200);
+  white-space: normal;
+}
+
+/* Token colors matching the theme - High specificity */
+.prose pre[class*='language-'] .token.comment,
+pre[class*='language-'] .token.comment,
+.prose pre[class*='language-'] .token.prolog,
+pre[class*='language-'] .token.prolog,
+.prose pre[class*='language-'] .token.doctype,
+pre[class*='language-'] .token.doctype,
+.prose pre[class*='language-'] .token.cdata,
+pre[class*='language-'] .token.cdata {
+  color: #6b7280 !important;
+  font-style: italic;
+}
+
+.dark .prose pre[class*='language-'] .token.comment,
+.dark pre[class*='language-'] .token.comment,
+.dark .prose pre[class*='language-'] .token.prolog,
+.dark pre[class*='language-'] .token.prolog,
+.dark .prose pre[class*='language-'] .token.doctype,
+.dark pre[class*='language-'] .token.doctype,
+.dark .prose pre[class*='language-'] .token.cdata,
+.dark pre[class*='language-'] .token.cdata {
+  color: #9ca3af !important;
+}
+
+.prose pre[class*='language-'] .token.punctuation,
+pre[class*='language-'] .token.punctuation {
+  color: #374151 !important;
+}
+
+.dark .prose pre[class*='language-'] .token.punctuation,
+.dark pre[class*='language-'] .token.punctuation {
+  color: #d1d5db !important;
+}
+
+.prose pre[class*='language-'] .token.namespace,
+pre[class*='language-'] .token.namespace {
+  opacity: 0.7;
+}
+
+/* Keywords, tags, booleans */
+.prose pre[class*='language-'] .token.property,
+.prose pre[class*='language-'] .token.tag,
+.prose pre[class*='language-'] .token.boolean,
+.prose pre[class*='language-'] .token.number,
+.prose pre[class*='language-'] .token.constant,
+.prose pre[class*='language-'] .token.symbol,
+.prose pre[class*='language-'] .token.deleted,
+pre[class*='language-'] .token.property,
+pre[class*='language-'] .token.tag,
+pre[class*='language-'] .token.boolean,
+pre[class*='language-'] .token.number,
+pre[class*='language-'] .token.constant,
+pre[class*='language-'] .token.symbol,
+pre[class*='language-'] .token.deleted {
+  color: #059669 !important; /* emerald-600 */
+}
+
+/* Strings */
+.prose pre[class*='language-'] .token.selector,
+.prose pre[class*='language-'] .token.attr-name,
+.prose pre[class*='language-'] .token.string,
+.prose pre[class*='language-'] .token.char,
+.prose pre[class*='language-'] .token.builtin,
+.prose pre[class*='language-'] .token.inserted,
+pre[class*='language-'] .token.selector,
+pre[class*='language-'] .token.attr-name,
+pre[class*='language-'] .token.string,
+pre[class*='language-'] .token.char,
+pre[class*='language-'] .token.builtin,
+pre[class*='language-'] .token.inserted {
+  color: #16a34a !important; /* green-600 */
+}
+
+/* Operators */
+.prose pre[class*='language-'] .token.operator,
+.prose pre[class*='language-'] .token.entity,
+.prose pre[class*='language-'] .token.url,
+.prose pre[class*='language-'] .language-css .token.string,
+.prose pre[class*='language-'] .style .token.string,
+pre[class*='language-'] .token.operator,
+pre[class*='language-'] .token.entity,
+pre[class*='language-'] .token.url,
+pre[class*='language-'] .language-css .token.string,
+pre[class*='language-'] .style .token.string {
+  color: #d97706 !important; /* amber-600 */
+}
+
+/* Keywords */
+.prose pre[class*='language-'] .token.atrule,
+.prose pre[class*='language-'] .token.attr-value,
+.prose pre[class*='language-'] .token.keyword,
+pre[class*='language-'] .token.atrule,
+pre[class*='language-'] .token.attr-value,
+pre[class*='language-'] .token.keyword {
+  color: #9333ea !important; /* purple-600 */
+  font-weight: 500;
+}
+
+/* Functions */
+.prose pre[class*='language-'] .token.function,
+.prose pre[class*='language-'] .token.class-name,
+pre[class*='language-'] .token.function,
+pre[class*='language-'] .token.class-name {
+  color: #2563eb !important; /* blue-600 */
+  font-weight: 500;
+}
+
+/* Variables */
+.prose pre[class*='language-'] .token.regex,
+.prose pre[class*='language-'] .token.important,
+.prose pre[class*='language-'] .token.variable,
+pre[class*='language-'] .token.regex,
+pre[class*='language-'] .token.important,
+pre[class*='language-'] .token.variable {
+  color: #dc2626 !important; /* red-600 */
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* Line numbers */
+pre[class*='language-'].line-numbers {
+  position: relative;
+  padding-left: 3.8em !important;
+  counter-reset: linenumber;
+}
+
+pre[class*='language-'].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 1.5rem; /* Match pre padding */
+  font-size: 100%;
+  left: 0;
+  width: 3em;
+  letter-spacing: -1px;
+  border-right: 1px solid var(--limed-spruce-800);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+  padding-right: 1em;
+  line-height: 1.6; /* Match code line-height */
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: var(--limed-spruce-500) !important;
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  padding-right: 0.8em;
 }
 
 /* Custom Prose/Rich Text Styles */
 @layer components {
   .prose {
+    /* Reset prose pre styles but allow custom component overrides */
+    & pre:not([class*='language-']) {
+      @apply p-0 m-0 bg-transparent;
+    }
+    & pre:not([class*='language-']) code {
+      @apply bg-transparent;
+    }
     /* Custom heading styles - using green color like footer button */
     & h1 {
       @apply text-7xl font-bold;
@@ -335,7 +581,7 @@ div.code-toolbar > .toolbar > .toolbar-item > button {
     & a {
       @apply text-lochinvar-600 dark:text-lochinvar-500 underline-offset-4 hover:text-lochinvar-700 dark:hover:text-lochinvar-400 transition-colors;
     }
-    
+
     /* Custom list styles - bullet points in green */
     & ul {
       @apply list-disc marker:text-lochinvar-600 dark:marker:text-lochinvar-500 pl-6;
@@ -343,13 +589,88 @@ div.code-toolbar > .toolbar > .toolbar-item > button {
     & ol {
       @apply list-decimal marker:text-lochinvar-600 dark:marker:text-lochinvar-500 pl-6;
     }
-    
+
     /* Nested list spacing */
     & li {
       @apply my-2;
     }
-    & ul ul, & ol ol, & ul ol, & ol ul {
+    & ul ul,
+    & ol ol,
+    & ul ol,
+    & ol ul {
       @apply ml-4 mt-2;
     }
   }
+}
+
+/* Code block overrides - Highest specificity */
+.prose pre[class*='language-'] {
+  padding: 2rem !important;
+  padding-top: 3rem !important;
+  margin: 0 !important;
+  background-color: #e5e7eb !important; /* gray-200 */
+}
+
+.dark .prose pre[class*='language-'] {
+  background-color: #111827 !important; /* gray-900 */
+}
+
+/* Ensure token colors work */
+.prose pre[class*='language-'] code {
+  color: #1f2937 !important; /* gray-800 */
+}
+
+.dark .prose pre[class*='language-'] code {
+  color: #f3f4f6 !important; /* gray-100 */
+}
+
+/* Force token colors to show - Ultra high specificity */
+div.prose pre code .token.keyword {
+  color: #9333ea !important;
+}
+
+div.prose pre code .token.string {
+  color: #16a34a !important;
+}
+
+div.prose pre code .token.function {
+  color: #2563eb !important;
+}
+
+div.prose pre code .token.number {
+  color: #059669 !important;
+}
+
+div.prose pre code .token.operator {
+  color: #d97706 !important;
+}
+
+div.prose pre code .token.comment {
+  color: #6b7280 !important;
+  font-style: italic;
+}
+
+/* Dark mode token colors */
+.dark div.prose pre code .token.keyword {
+  color: #c084fc !important;
+}
+
+.dark div.prose pre code .token.string {
+  color: #86efac !important;
+}
+
+.dark div.prose pre code .token.function {
+  color: #60a5fa !important;
+}
+
+.dark div.prose pre code .token.number {
+  color: #34d399 !important;
+}
+
+.dark div.prose pre code .token.operator {
+  color: #fbbf24 !important;
+}
+
+.dark div.prose pre code .token.comment {
+  color: #9ca3af !important;
 }

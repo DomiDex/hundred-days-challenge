@@ -18,6 +18,13 @@
           "label": "Title"
         }
       },
+      "description": {
+        "type": "Text",
+        "config": {
+          "label": "Description",
+          "placeholder": "Brief description of the page (max 200 characters)"
+        }
+      },
       "content": {
         "type": "StructuredText",
         "config": {

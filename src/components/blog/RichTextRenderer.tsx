@@ -3,6 +3,7 @@
 import { PrismicRichText, JSXMapSerializer } from "@prismicio/react";
 import { RichTextField } from "@prismicio/client";
 import { useEffect } from "react";
+import { RichTextCodeBlock } from "./RichTextCodeBlock";
 
 interface RichTextRendererProps {
   field: RichTextField;
@@ -15,7 +16,10 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
     const highlightCode = async () => {
       if (typeof window !== "undefined") {
         const Prism = (await import("prismjs")).default;
-        Prism.highlightAll();
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+          Prism.highlightAll();
+        }, 100);
       }
     };
     highlightCode();
@@ -43,11 +47,29 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
     paragraph: ({ children }) => (
       <p className="mb-4 leading-relaxed">{children}</p>
     ),
-    preformatted: ({ children }) => (
-      <pre className="bg-muted p-4 rounded-lg overflow-x-auto mb-4">
-        <code>{children}</code>
-      </pre>
-    ),
+    preformatted: ({ node, key }) => {
+      let language = 'plaintext';
+      let codeText = node.text || '';
+      
+      // Check if the first line contains a language hint
+      // Format: //javascript or #python or --sql etc.
+      const firstLine = codeText.split('\n')[0];
+      const languageMatch = firstLine.match(/^(?:\/\/|#|--|'|"|<!--|\/\*)\s*(\w+)/);
+      
+      if (languageMatch) {
+        language = languageMatch[1].toLowerCase();
+        // Remove the language line from the code
+        codeText = codeText.split('\n').slice(1).join('\n');
+      }
+      
+      console.log('Detected language:', language, 'from:', firstLine);
+      
+      return (
+        <RichTextCodeBlock key={key} language={language}>
+          {codeText}
+        </RichTextCodeBlock>
+      );
+    },
     strong: ({ children }) => (
       <strong className="font-semibold">{children}</strong>
     ),
@@ -103,7 +125,7 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
     label: ({ node, children }) => {
       if (node.data.label === "codespan") {
         return (
-          <code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono">
+          <code className="bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-1.5 py-0.5 rounded text-sm font-mono">
             {children}
           </code>
         );

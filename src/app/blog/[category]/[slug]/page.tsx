@@ -5,12 +5,13 @@ import { createClient } from "@/prismicio";
 import { PrismicNextImage } from "@prismicio/next";
 import { SliceZone } from "@prismicio/react";
 import { components } from "@/slices";
-import { PrismicRichText } from "@prismicio/react";
+import { RichTextRenderer } from "@/components/blog/RichTextRenderer";
 import Link from "next/link";
 import { PrismLoader } from "@/components/PrismLoader";
 import { generateSEOMetadata } from "@/components/SEO";
 import ProjectLinks from "@/components/blog/ProjectLinks";
 import type { PostDocument } from "../../../../../prismicio-types";
+import { filterPostsByCategory, extractCategoryData } from "@/lib/prismic-utils";
 
 // Temporary type extension until Prismic types are regenerated
 interface ExtendedPostData {
@@ -57,18 +58,10 @@ export async function generateStaticParams() {
   });
 
   return posts.map((post) => {
-    // Type guard to check if the category is filled and has data
-    let categoryUid = "";
-    
-    if (prismic.isFilled.contentRelationship(post.data.category)) {
-      const categoryData = post.data.category.data;
-      if (categoryData && typeof categoryData === 'object' && 'uid' in categoryData) {
-        categoryUid = String(categoryData.uid) || "";
-      }
-    }
+    const categoryData = extractCategoryData(post);
     
     return {
-      category: categoryUid,
+      category: categoryData?.uid || "",
       slug: post.uid,
     };
   });
@@ -89,10 +82,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   // Verify the category matches
-  const categoryData = prismic.isFilled.contentRelationship(post.data.category) && 
-                      post.data.category.data
-                      ? post.data.category.data as { uid?: string; name?: string }
-                      : null;
+  const categoryData = extractCategoryData(post);
   
   if (!categoryData?.uid || categoryData.uid !== category) {
     notFound();
@@ -110,14 +100,17 @@ export default async function BlogPostPage({ params }: Props) {
     ? post.data.category.id 
     : null;
     
+  // Fetch all posts and filter client-side due to Prismic API limitations
+  const allPosts = await client.getAllByType("post", {
+    orderings: [{ field: "document.first_publication_date", direction: "desc" }],
+    fetchLinks: ["category.name", "category.uid"],
+  });
+  
+  // Filter posts from the same category (excluding current post)
   const relatedPosts = categoryId 
-    ? await client.getAllByType("post", {
-        filters: [
-          prismic.filter.at("my.post.category", categoryId)
-        ],
-        limit: 3,
-        orderings: [{ field: "document.first_publication_date", direction: "desc" }],
-      }).then(posts => posts.filter(p => p.id !== post.id))
+    ? filterPostsByCategory(allPosts, categoryId)
+        .filter(p => p.id !== post.id)
+        .slice(0, 3)  // Take only the first 3 related posts
     : [];
 
   return (
@@ -172,29 +165,8 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* Article Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <PrismicRichText 
-            field={post.data.article_text}
-            components={{
-              label: ({ node, children }) => {
-                if (node.data.label === "codespan") {
-                  return (
-                    <code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono">
-                      {children}
-                    </code>
-                  );
-                }
-                if (node.data.label === "highlight") {
-                  return (
-                    <mark className="bg-yellow-200 dark:bg-yellow-900 px-1">
-                      {children}
-                    </mark>
-                  );
-                }
-                return <span>{children}</span>;
-              },
-            }}
-          />
+        <div className="prose prose-lg dark:prose-invert max-w-none px-6 md:px-0">
+          <RichTextRenderer field={post.data.article_text} />
         </div>
 
         {/* Slices */}

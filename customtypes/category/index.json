@@ -20,6 +20,13 @@
           "placeholder": "Category name"
         }
       },
+      "description": {
+        "type": "Text",
+        "config": {
+          "label": "Description",
+          "placeholder": "Brief description of the category (max 200 characters)"
+        }
+      },
       "image": {
         "type": "Image",
         "config": {
@@ -35,6 +42,15 @@
               "height": 300
             }
           ]
+        }
+      },
+      "content": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Content",
+          "placeholder": "Rich text content for the category page",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
         }
       }
     },
