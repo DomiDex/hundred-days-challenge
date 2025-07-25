@@ -15,6 +15,7 @@ import { AuthorSocialLinks } from "@/components/blog/AuthorSocialLinks";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { CategoryChip } from "@/components/blog/CategoryChip";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import type { PostDocument } from "../../../../../prismicio-types";
 import type { AuthorDocument } from "@/types/author-types";
 import { filterPostsByCategory, extractCategoryData } from "@/lib/prismic-utils";
@@ -250,52 +251,7 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* Related Posts */}
-        {relatedPosts.length > 0 && (
-          <section className="mt-16 pt-16 border-t border-border">
-            <h2 className="text-2xl font-bold text-foreground mb-8">
-              Related Posts
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedPosts.map((relatedPost) => (
-                <article
-                  key={relatedPost.id}
-                  className="bg-white dark:bg-gray-700 rounded-2xl p-4 shadow-lg space-y-4"
-                >
-                  {relatedPost.data.image.url && (
-                    <Link href={`/blog/${category}/${relatedPost.uid}`}>
-                      <div className="relative w-full h-40 overflow-hidden rounded-md">
-                        <PrismicNextImage
-                          field={relatedPost.data.image}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </Link>
-                  )}
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-card-foreground">
-                      {relatedPost.data.name}
-                    </h3>
-                    {relatedPost.data.excerpt && (
-                      <p className="text-sm text-gray-600 dark:text-muted-foreground line-clamp-2">
-                        {relatedPost.data.excerpt}
-                      </p>
-                    )}
-                  </div>
-                  <Link
-                    href={`/blog/${category}/${relatedPost.uid}`}
-                    className="flex items-center gap-2 group text-sm font-medium"
-                  >
-                    Learn More
-                    <svg className="w-4 h-4 pt-0.5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
+        <RelatedPosts posts={relatedPosts} currentCategoryUid={category} />
       </article>
     </div>
   );
