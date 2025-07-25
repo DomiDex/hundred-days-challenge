@@ -3,6 +3,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent flash of unstyled content during theme loading */
+@layer base {
+  html:not(.light):not(.dark) {
+    background-color: #ffffff;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    html:not(.light):not(.dark) {
+      background-color: #111827;
+    }
+  }
+}
+
 /* Custom Properties - Light Mode */
 :root {
   /* Limed Spruce Color Palette */
