@@ -82,8 +82,8 @@ export default async function CategoriesPage() {
             </h2>
             <p className='text-muted-foreground mb-4'>
               Our blog is organized into carefully curated categories to help you find the content that matters most to you. 
-              Whether you're interested in web development, design patterns, motion graphics, or interactive experiences, 
-              we've got you covered.
+              Whether you&apos;re interested in web development, design patterns, motion graphics, or interactive experiences, 
+              we&apos;ve got you covered.
             </p>
             <p className='text-muted-foreground mb-4'>
               Each category represents a unique aspect of modern web development and digital creativity. From cutting-edge 

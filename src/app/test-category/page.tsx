@@ -12,16 +12,15 @@ export default function TestCategoryPage() {
         </div>
         
         <div>
-          <p className="mb-2">Active style:</p>
-          <CategoryChip name="Active Category" uid="active" isActive />
+          <p className="mb-2">Another category:</p>
+          <CategoryChip name="Active Category" uid="active" />
         </div>
         
         <div>
-          <p className="mb-2">Lochinvar style (like in blog post):</p>
+          <p className="mb-2">Motion category:</p>
           <CategoryChip 
             name="Motion & Interactions" 
             uid="motion-interactions"
-            className="bg-lochinvar-600 text-white hover:bg-lochinvar-700"
           />
         </div>
       </div>

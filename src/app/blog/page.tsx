@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import { createClient } from '@/prismicio';
-import Link from 'next/link';
 import { BlogCard } from '@/components/blog/BlogCard';
 import { CategoryNavigation } from '@/components/blog/CategoryNavigation';
 import { extractCategoryData } from '@/lib/prismic-utils';
