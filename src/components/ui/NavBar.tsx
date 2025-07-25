@@ -8,6 +8,9 @@ import SocialLink from './SocialLink';
 import GitHubIcon from '../svg/GitHubIcon';
 import LinkedInIcon from '../svg/LinkedInIcon';
 import XIcon from '../svg/XIcon';
+import { MobileCategoriesSection } from './MobileCategoriesSection';
+import { CategoriesDropdown } from './CategoriesDropdown';
+import type { CategoryDocument } from '../../../prismicio-types';
 
 const navLinks = [
   { href: '/', text: 'Home' },
@@ -26,7 +29,11 @@ const socialLinks = [
   { href: 'https://github.com/DomiDex', icon: GitHubIcon, label: 'GitHub' },
 ];
 
-export default function NavBar() {
+interface NavBarProps {
+  categories?: CategoryDocument[];
+}
+
+export default function NavBar({ categories = [] }: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -56,8 +63,12 @@ export default function NavBar() {
     <>
       {/* Desktop Navigation */}
       <nav className='hidden md:flex items-center justify-end w-full space-x-5'>
-        <div className='flex gap-6'>
-          {navLinks.map((link) => (
+        <div className='flex gap-6 items-center'>
+          {navLinks.slice(0, 3).map((link) => (
+            <NavLink key={link.text} href={link.href} text={link.text} />
+          ))}
+          <CategoriesDropdown categories={categories} />
+          {navLinks.slice(3).map((link) => (
             <NavLink key={link.text} href={link.href} text={link.text} />
           ))}
         </div>
@@ -99,7 +110,22 @@ export default function NavBar() {
         className='fixed top-0 right-0 w-full h-full bg-background z-40 hidden flex-col items-center justify-center'
       >
         <nav className='flex flex-col items-center gap-8'>
-          {navLinks.map((link) => (
+          {navLinks.slice(0, 3).map((link) => (
+            <NavLink
+              key={link.text}
+              href={link.href}
+              text={link.text}
+              className='text-2xl'
+              onClick={() => setIsOpen(false)}
+            />
+          ))}
+          {categories.length > 0 && (
+            <MobileCategoriesSection
+              categories={categories}
+              onLinkClick={() => setIsOpen(false)}
+            />
+          )}
+          {navLinks.slice(3).map((link) => (
             <NavLink
               key={link.text}
               href={link.href}
