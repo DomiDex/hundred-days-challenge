@@ -2,8 +2,10 @@ import { Metadata } from 'next';
 import { createClient } from '@/prismicio';
 import Link from 'next/link';
 import { BlogCard } from '@/components/blog/BlogCard';
+import { CategoryNavigation } from '@/components/blog/CategoryNavigation';
 import { extractCategoryData } from '@/lib/prismic-utils';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { ViewAllCategoriesLink } from '@/components/ui/ViewAllCategoriesLink';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -59,30 +61,12 @@ export default async function BlogPage() {
               <h2 className='text-xl font-semibold text-foreground'>
                 Categories
               </h2>
-              <Link
-                href='/categories'
-                className='text-sm text-primary hover:text-primary/80 font-medium'
-              >
-                View All Categories →
-              </Link>
+              <ViewAllCategoriesLink />
             </div>
-            <div className='flex flex-wrap gap-3'>
-              <Link
-                href='/blog'
-                className='px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors'
-              >
-                All Posts
-              </Link>
-              {categories.map((category) => (
-                <Link
-                  key={category.id}
-                  href={`/blog/${category.uid}`}
-                  className='px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors'
-                >
-                  {category.data.name}
-                </Link>
-              ))}
-            </div>
+            <CategoryNavigation
+              categories={categories}
+              currentCategoryId={undefined}
+            />
           </div>
         )}
 

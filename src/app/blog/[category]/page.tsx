@@ -2,11 +2,11 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/prismicio';
 import { PrismicNextImage } from '@prismicio/next';
-import Link from 'next/link';
 import { filterPostsByCategory } from '@/lib/prismic-utils';
 import { RichTextRenderer } from '@/components/blog/RichTextRenderer';
 import { BlogCard } from '@/components/blog/BlogCard';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { CategoryNavigation } from '@/components/blog/CategoryNavigation';
 import type { RichTextField } from '@prismicio/client';
 import type { CategoryDocument } from '../../../../prismicio-types';
 
@@ -124,27 +124,10 @@ export default async function CategoryPage({ params }: Props) {
           <h2 className='text-xl font-semibold text-foreground mb-4'>
             Categories
           </h2>
-          <div className='flex flex-wrap gap-3'>
-            <Link
-              href='/blog'
-              className='px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors'
-            >
-              All Posts
-            </Link>
-            {allCategories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/blog/${cat.uid}`}
-                className={`px-4 py-2 rounded-lg transition-colors ${
-                  cat.id === category.id
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                }`}
-              >
-                {cat.data.name}
-              </Link>
-            ))}
-          </div>
+          <CategoryNavigation
+            categories={allCategories}
+            currentCategoryId={category.id}
+          />
         </div>
 
         {/* Blog Posts */}
