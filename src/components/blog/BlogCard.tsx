@@ -37,7 +37,7 @@ export function BlogCard({
         {image.url && (
           <div className='relative w-full h-40 overflow-hidden rounded-md'>
             <PrismicNextImage field={image} fill className='object-cover' />
-            <div className='absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center'>
+            <div className='absolute inset-0 bg-black/0 group-hover:bg-white/50 transition-all duration-300 flex items-center justify-center'>
               <button className='bg-lochinvar-600 hover:bg-lochinvar-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 opacity-0 group-hover:opacity-100 transform scale-95 group-hover:scale-100 transition-all duration-300'>
                 <Eye size={16} />
                 Read Me
