@@ -1,6 +1,11 @@
-import Link from "next/link";
-import { ExternalLink, Github } from "lucide-react";
-import { LinkField, isFilled } from "@prismicio/client";
+'use client';
+
+import { useRef } from 'react';
+import Link from 'next/link';
+import { ExternalLink, Github } from 'lucide-react';
+import { LinkField, isFilled } from '@prismicio/client';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 interface ProjectLinksProps {
   demoLink?: LinkField;
@@ -8,35 +13,84 @@ interface ProjectLinksProps {
   className?: string;
 }
 
-export default function ProjectLinks({ demoLink, githubLink, className = "" }: ProjectLinksProps) {
+export default function ProjectLinks({
+  demoLink,
+  githubLink,
+  className = '',
+}: ProjectLinksProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // Set up hover animations for all buttons
+    const buttons = gsap.utils.toArray('.project-link-button', containerRef.current);
+    
+    buttons.forEach((button) => {
+      const buttonElement = button as HTMLElement;
+      const flair = buttonElement.querySelector('.button-flair');
+      
+      // Set initial state - flair is hidden below
+      gsap.set(flair, { yPercent: 100 });
+      
+      // Mouse enter animation
+      buttonElement.addEventListener('mouseenter', () => {
+        gsap.to(flair, {
+          yPercent: 0,
+          duration: 0.5,
+          ease: 'power3.out'
+        });
+      });
+      
+      // Mouse leave animation
+      buttonElement.addEventListener('mouseleave', () => {
+        gsap.to(flair, {
+          yPercent: 100,
+          duration: 0.4,
+          ease: 'power3.inOut'
+        });
+      });
+    });
+  }, { scope: containerRef });
+
   // Check if at least one link exists
   if (!isFilled.link(demoLink) && !isFilled.link(githubLink)) {
     return null;
   }
 
   return (
-    <div className={`flex flex-wrap gap-4 ${className}`}>
+    <div ref={containerRef} className={`flex flex-wrap gap-4 ${className}`}>
       {isFilled.link(demoLink) && (
         <Link
           href={demoLink.url!}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          target='_blank'
+          rel='noopener noreferrer'
+          className='project-link-button relative inline-flex items-center gap-2 px-5 py-2.5 bg-lochinvar-600 text-white rounded-lg overflow-hidden'
         >
-          <ExternalLink size={16} />
-          <span>View Demo</span>
+          {/* Darker overlay that slides up on hover */}
+          <div className='button-flair absolute inset-0 bg-lochinvar-700' />
+          
+          {/* Button content */}
+          <span className='relative z-10 flex items-center gap-2'>
+            <ExternalLink size={16} />
+            <span>View Demo</span>
+          </span>
         </Link>
       )}
-      
+
       {isFilled.link(githubLink) && (
         <Link
           href={githubLink.url!}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors"
+          target='_blank'
+          rel='noopener noreferrer'
+          className='project-link-button relative inline-flex items-center gap-2 px-5 py-2.5 bg-lochinvar-800 text-white rounded-lg overflow-hidden'
         >
-          <Github size={16} />
-          <span>View on GitHub</span>
+          {/* Darker overlay that slides up on hover */}
+          <div className='button-flair absolute inset-0 bg-lochinvar-900' />
+          
+          {/* Button content */}
+          <span className='relative z-10 flex items-center gap-2'>
+            <Github size={16} />
+            <span>View on GitHub</span>
+          </span>
         </Link>
       )}
     </div>

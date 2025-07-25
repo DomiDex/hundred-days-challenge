@@ -14,6 +14,7 @@ import { AuthorCard } from "@/components/blog/AuthorCard";
 import { AuthorSocialLinks } from "@/components/blog/AuthorSocialLinks";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ShareButtons } from "@/components/blog/ShareButtons";
+import { CategoryChip } from "@/components/blog/CategoryChip";
 import type { PostDocument } from "../../../../../prismicio-types";
 import type { AuthorDocument } from "@/types/author-types";
 import { filterPostsByCategory, extractCategoryData } from "@/lib/prismic-utils";
@@ -157,12 +158,12 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Post Header */}
         <header className="mb-12">
           {categoryData && (
-            <Link
-              href={`/blog/${category}`}
-              className="text-primary hover:text-primary/80 font-medium mb-4 inline-block"
-            >
-              {categoryData.name}
-            </Link>
+            <div className="mb-4">
+              <CategoryChip
+                name={categoryData.name}
+                uid={category}
+              />
+            </div>
           )}
           
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -195,16 +196,22 @@ export default async function BlogPostPage({ params }: Props) {
             )}
           </div>
           
-          {/* Project Links */}
-          <ProjectLinks 
-            demoLink={post.data.demo_link}
-            githubLink={post.data.github_link}
-          />
+          {/* Project Links and Share Buttons */}
+          <div className="flex flex-wrap items-center gap-4">
+            <ProjectLinks 
+              demoLink={post.data.demo_link}
+              githubLink={post.data.github_link}
+            />
+            <ShareButtons 
+              url={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`}
+              title={post.data.name || ''}
+            />
+          </div>
         </header>
 
         {/* Featured Image */}
         {post.data.image.url && (
-          <div className="relative h-96 w-full rounded-lg overflow-hidden mb-4">
+          <div className="relative h-96 w-full rounded-lg overflow-hidden mb-12">
             <PrismicNextImage
               field={post.data.image}
               fill
@@ -213,14 +220,6 @@ export default async function BlogPostPage({ params }: Props) {
             />
           </div>
         )}
-
-        {/* Share Buttons */}
-        <div className="flex justify-center mb-12">
-          <ShareButtons 
-            url={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`}
-            title={post.data.name || ''}
-          />
-        </div>
 
         {/* Article Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none px-6 md:px-0">

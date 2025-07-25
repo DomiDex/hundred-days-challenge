@@ -1,9 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useGSAP(() => {
+    // Set up hover animation for the subscribe button
+    const button = formRef.current?.querySelector('.newsletter-button');
+    const flair = button?.querySelector('.button-flair');
+    
+    if (button && flair) {
+      // Set initial state - flair is hidden below
+      gsap.set(flair, { yPercent: 100 });
+      
+      // Mouse enter animation
+      button.addEventListener('mouseenter', () => {
+        gsap.to(flair, {
+          yPercent: 0,
+          duration: 0.5,
+          ease: 'power3.out'
+        });
+      });
+      
+      // Mouse leave animation
+      button.addEventListener('mouseleave', () => {
+        gsap.to(flair, {
+          yPercent: 100,
+          duration: 0.4,
+          ease: 'power3.inOut'
+        });
+      });
+    }
+  }, { scope: formRef });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +51,7 @@ export default function Newsletter() {
       <p className='text-sm text-limed-spruce-600 dark:text-limed-spruce-400 mb-4'>
         Subscribe to our newsletter for updates and news.
       </p>
-      <form onSubmit={handleSubmit} className='space-y-2'>
+      <form ref={formRef} onSubmit={handleSubmit} className='space-y-2'>
         <input
           type='email'
           value={email}
@@ -30,9 +62,13 @@ export default function Newsletter() {
         />
         <button
           type='submit'
-          className='w-full px-4 py-2 text-sm font-medium text-white bg-lochinvar-600 hover:bg-lochinvar-700 dark:bg-lochinvar-500 dark:hover:bg-lochinvar-600 rounded-md transition-colors'
+          className='newsletter-button relative w-full px-4 py-2 text-sm font-medium text-white bg-lochinvar-600 dark:bg-lochinvar-500 rounded-md overflow-hidden'
         >
-          Subscribe
+          {/* Darker overlay that slides up on hover */}
+          <div className='button-flair absolute inset-0 bg-lochinvar-700 dark:bg-lochinvar-600' />
+          
+          {/* Button content */}
+          <span className='relative z-10'>Subscribe</span>
         </button>
       </form>
     </div>

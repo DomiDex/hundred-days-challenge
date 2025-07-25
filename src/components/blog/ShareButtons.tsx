@@ -22,74 +22,91 @@ export function ShareButtons({
   const [copied, setCopied] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
-  const iconRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const buttonsContainerRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    if (!containerRef.current || !buttonsRef.current) return;
+  const { contextSafe } = useGSAP({ scope: containerRef });
 
-    const buttons = iconRefs.current.filter(Boolean);
+  // Animation when toggling the share buttons
+  const toggleButtons = contextSafe(() => {
+    if (!buttonsContainerRef.current) return;
 
-    if (showButtons) {
-      // Animate share button rotation
+    const buttons = gsap.utils.toArray('.social-button', buttonsContainerRef.current);
+    
+    if (!showButtons) {
+      // Opening animation
+      setShowButtons(true);
+      
+      // Rotate share button
       gsap.to(shareButtonRef.current, {
         rotation: 180,
+        duration: 0.4,
+        ease: 'power3.inOut',
+      });
+
+      // Show buttons container
+      gsap.to(buttonsContainerRef.current, {
+        opacity: 1,
+        visibility: 'visible',
         duration: 0.3,
         ease: 'power2.out',
       });
 
-      // Show buttons container
-      gsap.to(buttonsRef.current, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.3,
-        ease: 'back.out(1.7)',
-      });
-
-      // Stagger animate individual buttons
+      // Stagger animate individual buttons with elastic ease
       gsap.fromTo(
         buttons,
         {
           scale: 0,
           opacity: 0,
-          y: 20,
+          x: -20,
+          rotation: -180,
         },
         {
           scale: 1,
           opacity: 1,
-          y: 0,
-          duration: 0.4,
-          stagger: 0.1,
-          ease: 'back.out(1.7)',
+          x: 0,
+          rotation: 0,
+          duration: 0.6,
+          stagger: {
+            each: 0.1,
+            from: 'start',
+          },
+          ease: 'elastic.out(1, 0.5)',
           delay: 0.1,
         }
       );
     } else {
-      // Hide animations
+      // Closing animation
+      
+      // Rotate share button back
       gsap.to(shareButtonRef.current, {
         rotation: 0,
-        duration: 0.3,
-        ease: 'power2.out',
+        duration: 0.4,
+        ease: 'power3.inOut',
       });
 
-      gsap.to(buttons, {
+      // Animate buttons out
+      gsap.to(buttons.reverse(), {
         scale: 0,
         opacity: 0,
-        y: 20,
-        duration: 0.2,
-        stagger: 0.05,
-        ease: 'power2.in',
-      });
-
-      gsap.to(buttonsRef.current, {
-        opacity: 0,
-        scale: 0.8,
+        x: -20,
+        rotation: -180,
         duration: 0.3,
-        delay: 0.2,
+        stagger: {
+          each: 0.05,
+          from: 'start',
+        },
         ease: 'power2.in',
+        onComplete: () => {
+          // Hide container after buttons are animated out
+          gsap.set(buttonsContainerRef.current, {
+            opacity: 0,
+            visibility: 'hidden',
+          });
+          setShowButtons(false);
+        }
       });
     }
-  }, [showButtons]);
+  });
 
   // Reset copied state after 2 seconds
   useEffect(() => {
@@ -99,9 +116,41 @@ export function ShareButtons({
     }
   }, [copied]);
 
-  const handleShare = (platform: 'x' | 'linkedin' | 'copy') => {
+  // Animate copy feedback
+  useGSAP(() => {
+    if (copied) {
+      gsap.fromTo('.copy-feedback',
+        {
+          opacity: 0,
+          y: 10,
+          scale: 0.8,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.3,
+          ease: 'back.out(1.7)',
+        }
+      );
+    }
+  }, { dependencies: [copied], scope: containerRef });
+
+  const handleShare = contextSafe((platform: 'x' | 'linkedin' | 'copy') => {
     const encodedUrl = encodeURIComponent(url);
     const encodedTitle = encodeURIComponent(title);
+
+    // Add click animation
+    const button = document.querySelector(`[data-platform="${platform}"]`);
+    if (button) {
+      gsap.to(button, {
+        scale: 0.9,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1,
+        ease: 'power2.inOut',
+      });
+    }
 
     switch (platform) {
       case 'x':
@@ -123,31 +172,33 @@ export function ShareButtons({
         setCopied(true);
         break;
     }
-  };
+  });
 
   return (
     <div
       ref={containerRef}
-      className={`relative inline-flex items-center gap-2 ${className}`}
+      className={`relative inline-flex items-center gap-3 ${className}`}
     >
       <button
         ref={shareButtonRef}
-        onClick={() => setShowButtons(!showButtons)}
-        className='p-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors'
+        onClick={toggleButtons}
+        className='p-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors transform-gpu'
         aria-label='Share this post'
+        aria-expanded={showButtons}
       >
         <Share2 size={20} />
       </button>
 
       <div
-        ref={buttonsRef}
-        className='flex items-center gap-2 opacity-0 scale-0'
+        ref={buttonsContainerRef}
+        className='flex items-center gap-2 opacity-0 invisible'
         style={{ transformOrigin: 'left center' }}
       >
         <button
           onClick={() => handleShare('x')}
-          className='p-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors scale-0'
+          className='social-button p-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors transform-gpu'
           aria-label='Share on X (Twitter)'
+          data-platform="x"
         >
           <div className="w-[18px] h-[18px]">
             <XIcon />
@@ -156,8 +207,9 @@ export function ShareButtons({
 
         <button
           onClick={() => handleShare('linkedin')}
-          className='p-3 bg-[#0077B5] text-white rounded-full hover:bg-[#006399] transition-colors scale-0'
+          className='social-button p-3 bg-[#0077B5] text-white rounded-full hover:bg-[#006399] transition-colors transform-gpu'
           aria-label='Share on LinkedIn'
+          data-platform="linkedin"
         >
           <div className="w-[18px] h-[18px]">
             <LinkedInIcon />
@@ -166,8 +218,9 @@ export function ShareButtons({
 
         <button
           onClick={() => handleShare('copy')}
-          className='p-3 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors scale-0 relative'
+          className='social-button p-3 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors transform-gpu relative'
           aria-label='Copy link'
+          data-platform="copy"
         >
           {copied ? (
             <Check size={18} className='text-green-400' />
@@ -178,7 +231,7 @@ export function ShareButtons({
       </div>
 
       {copied && (
-        <span className='absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap'>
+        <span className='copy-feedback absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap pointer-events-none'>
           Link copied!
         </span>
       )}
