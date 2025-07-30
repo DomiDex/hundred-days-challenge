@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'
 
 interface RichTextCodeBlockProps {
-  children: string;
-  className?: string;
-  language?: string;
+  children: string
+  className?: string
+  language?: string
 }
 
 export function RichTextCodeBlock({
@@ -13,88 +13,83 @@ export function RichTextCodeBlock({
   className,
   language: propLanguage,
 }: RichTextCodeBlockProps) {
-  const codeRef = useRef<HTMLElement>(null);
-  const [copied, setCopied] = useState(false);
-  const [language, setLanguage] = useState<string>('plaintext');
-  const [codeContent, setCodeContent] = useState<string>('');
+  const codeRef = useRef<HTMLElement>(null)
+  const [copied, setCopied] = useState(false)
+  const [language, setLanguage] = useState<string>('plaintext')
+  const [codeContent, setCodeContent] = useState<string>('')
 
   useEffect(() => {
     // Process the text content and detect language
-    const textContent = children || '';
-    const lines = textContent.split('\n');
+    const textContent = children || ''
+    const lines = textContent.split('\n')
 
     // Use prop language if provided, otherwise try to detect from content
-    let detectedLang = propLanguage || 'plaintext';
-    let actualCode = textContent;
+    let detectedLang = propLanguage || 'plaintext'
+    let actualCode = textContent
 
     // Only try to detect language from content if not provided via prop
     if (!propLanguage && lines[0] && lines[0].startsWith('```')) {
-      const langMatch = lines[0].match(/^```(\w+)/);
+      const langMatch = lines[0].match(/^```(\w+)/)
       if (langMatch) {
-        detectedLang = langMatch[1];
+        detectedLang = langMatch[1]
         // Remove the language line from the code
-        actualCode = lines.slice(1).join('\n');
+        actualCode = lines.slice(1).join('\n')
         // Also remove closing ``` if present
         if (actualCode.endsWith('```')) {
-          actualCode = actualCode.slice(0, -3).trimEnd();
+          actualCode = actualCode.slice(0, -3).trimEnd()
         }
       }
     }
 
     // Prevent PHP from being processed due to Prism.js bug
     if (detectedLang === 'php') {
-      detectedLang = 'plaintext';
+      detectedLang = 'plaintext'
     }
 
-    setLanguage(detectedLang);
-    setCodeContent(actualCode);
-  }, [children, propLanguage]);
+    setLanguage(detectedLang)
+    setCodeContent(actualCode)
+  }, [children, propLanguage])
 
   useEffect(() => {
     const highlightCode = async () => {
       if (typeof window !== 'undefined' && codeRef.current) {
-        const Prism = (await import('prismjs')).default;
+        const Prism = (await import('prismjs')).default
 
         // Try to import the specific language if not plaintext
         if (language !== 'plaintext') {
           try {
             // Skip problematic languages
-            const skipLanguages = ['php', 'php-extras', 'erb', 'handlebars'];
+            const skipLanguages = ['php', 'php-extras', 'erb', 'handlebars']
             if (!skipLanguages.includes(language)) {
-              await import(`prismjs/components/prism-${language}`);
+              await import(`prismjs/components/prism-${language}`)
             }
           } catch (error) {
-            console.warn(
-              `Language ${language} not found, using plaintext`,
-              error
-            );
+            console.warn(`Language ${language} not found, using plaintext`, error)
           }
         }
 
         // Set the text content and apply syntax highlighting
         if (codeRef.current) {
-          codeRef.current.textContent = codeContent;
-          Prism.highlightElement(codeRef.current);
+          codeRef.current.textContent = codeContent
+          Prism.highlightElement(codeRef.current)
         }
       }
-    };
+    }
 
-    highlightCode();
-  }, [language, codeContent]);
+    highlightCode()
+  }, [language, codeContent])
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(codeContent);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    await navigator.clipboard.writeText(codeContent)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
-    <div
-      className={`relative group my-8 -mx-6 md:mx-0 max-w-full ${className || ''}`}
-    >
+    <div className={`group relative -mx-6 my-8 max-w-full md:mx-0 ${className || ''}`}>
       {/* Language badge */}
       {language !== 'plaintext' && (
-        <div className='absolute top-0 left-0 px-3 py-1 text-xs font-mono text-gray-600 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-tl-lg rounded-br-lg border-r border-b border-gray-300 dark:border-gray-600 z-10'>
+        <div className="absolute left-0 top-0 z-10 rounded-br-lg rounded-tl-lg border-b border-r border-gray-300 bg-gray-200 px-3 py-1 font-mono text-xs text-gray-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
           {language}
         </div>
       )}
@@ -102,39 +97,29 @@ export function RichTextCodeBlock({
       {/* Copy button */}
       <button
         onClick={handleCopy}
-        className='absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md transition-all opacity-0 group-hover:opacity-100 shadow-sm'
-        aria-label='Copy code'
+        className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs text-gray-600 opacity-0 shadow-sm transition-all hover:bg-gray-100 hover:text-gray-900 group-hover:opacity-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        aria-label="Copy code"
       >
         {copied ? (
           <>
-            <svg
-              className='w-4 h-4'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth={2}
-                d='M5 13l4 4L19 7'
+                d="M5 13l4 4L19 7"
               />
             </svg>
             Copied!
           </>
         ) : (
           <>
-            <svg
-              className='w-4 h-4'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth={2}
-                d='M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z'
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
               />
             </svg>
             Copy
@@ -143,16 +128,16 @@ export function RichTextCodeBlock({
       </button>
 
       {/* Code block */}
-      <div className='overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700'>
+      <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
         <pre
-          className={`${language !== 'plaintext' ? `language-${language}` : ''} !bg-gray-200 dark:!bg-gray-900 !p-8 !pt-12 !m-0 overflow-x-auto max-w-full !text-gray-800 dark:!text-gray-100`}
+          className={`${language !== 'plaintext' ? `language-${language}` : ''} !m-0 max-w-full overflow-x-auto !bg-gray-200 !p-8 !pt-12 !text-gray-800 dark:!bg-gray-900 dark:!text-gray-100`}
         >
           <code
             ref={codeRef}
-            className={`${language !== 'plaintext' ? `language-${language}` : ''} !bg-transparent text-sm font-mono block w-max min-w-full`}
+            className={`${language !== 'plaintext' ? `language-${language}` : ''} block w-max min-w-full !bg-transparent font-mono text-sm`}
           ></code>
         </pre>
       </div>
     </div>
-  );
+  )
 }

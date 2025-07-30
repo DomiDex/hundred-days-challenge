@@ -1,16 +1,11 @@
-import {
-  createClient as baseCreateClient,
-  type ClientConfig,
-  type Route,
-} from "@prismicio/client";
-import { enableAutoPreviews } from "@prismicio/next";
-import sm from "../slicemachine.config.json";
+import { createClient as baseCreateClient, type ClientConfig, type Route } from '@prismicio/client'
+import { enableAutoPreviews } from '@prismicio/next'
+import sm from '../slicemachine.config.json'
 
 /**
  * The project's Prismic repository name.
  */
-export const repositoryName =
-  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
+export const repositoryName = process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName
 
 /**
  * A list of Route Resolver objects that define how a document's `url` field is resolved.
@@ -22,7 +17,7 @@ const routes: Route[] = [
   // Examples:
   // { type: "homepage", path: "/" },
   // { type: "page", path: "/:uid" },
-];
+]
 
 /**
  * Creates a Prismic client for the project's repository. The client is used to
@@ -34,13 +29,13 @@ export const createClient = (config: ClientConfig = {}) => {
   const client = baseCreateClient(repositoryName, {
     routes,
     fetchOptions:
-      process.env.NODE_ENV === "production"
-        ? { next: { tags: ["prismic"] }, cache: "force-cache" }
+      process.env.NODE_ENV === 'production'
+        ? { next: { tags: ['prismic'] }, cache: 'force-cache' }
         : { next: { revalidate: 5 } },
     ...config,
-  });
+  })
 
-  enableAutoPreviews({ client });
+  enableAutoPreviews({ client })
 
-  return client;
-};
+  return client
+}

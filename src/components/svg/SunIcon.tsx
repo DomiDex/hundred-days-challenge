@@ -6,7 +6,7 @@ export default function SunIcon() {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      className="w-3.5 h-3.5"
+      className="h-3.5 w-3.5"
     >
       <path
         strokeLinecap="round"

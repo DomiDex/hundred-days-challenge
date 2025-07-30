@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 This is a Next.js 15 blog application integrated with Prismic CMS, featuring:
+
 - Modern App Router architecture with Server Components
 - Blog functionality with categories, posts, and authors
 - Dark mode support with Zustand state management
@@ -32,6 +33,7 @@ npm run slicemachine # Start Slice Machine UI for content modeling
 ## High-Level Architecture
 
 ### Content Management System (Prismic)
+
 - **Repository**: `hundred-days-challenge`
 - **Content Types**: Homepage, Page, Post, Category, Author
 - **Routing**: Configured in `prismicio.ts` with clean URL patterns
@@ -39,6 +41,7 @@ npm run slicemachine # Start Slice Machine UI for content modeling
 - **Caching Strategy**: Force-cache in production, 5-second revalidation in development
 
 ### Application Structure
+
 - **App Router**: All pages in `/src/app/` using file-based routing
 - **Dynamic Routes**:
   - `[uid]` - Generic pages
@@ -48,23 +51,27 @@ npm run slicemachine # Start Slice Machine UI for content modeling
 - **Components**: Organized by feature in `/src/components/`
 
 ### State Management
+
 - **Global State**: Zustand store in `/src/store/themeStore.ts` for theme management
 - **Context Providers**: Theme and GSAP providers wrap the application
 - **Server State**: Managed through Prismic client with Next.js caching
 
 ### Styling Architecture
+
 - **Tailwind CSS**: Utility-first with custom Lochinvar color palette
 - **CSS Variables**: Theme tokens defined in `globals.css`
 - **Dark Mode**: Class-based strategy with system preference support
 - **Component Styling**: Using `cn()` utility from `/src/lib/utils.ts` for conditional classes
 
 ### Key Integration Points
+
 - **Prismic Helpers**: Utility functions in `/src/lib/prismic-helpers.ts` and `prismic-utils.ts`
 - **Rich Text Rendering**: Custom renderer with code block support
 - **SEO Component**: Handles metadata generation with Prismic data
 - **Image Optimization**: Next.js Image component with Prismic imgix integration
 
 ### Development Workflow
+
 1. Use Slice Machine UI to modify content models
 2. Changes to slices are reflected in `/src/slices/`
 3. Custom types are stored in `/customtypes/`
@@ -82,6 +89,7 @@ npm run slicemachine # Start Slice Machine UI for content modeling
 ## GSAP React TypeScript Rules and Best Practices
 
 ### Key Principles
+
 - Always use `useGSAP()` for GSAP animations
 - Properly type and scope animations
 - Implement comprehensive cleanup
@@ -89,7 +97,9 @@ npm run slicemachine # Start Slice Machine UI for content modeling
 - Create reusable animation utilities
 
 ### Reference Guidelines
+
 For comprehensive GSAP integration rules, see the extensive guidelines which cover:
+
 - Hooks and Refs management
 - Performance optimization
 - TypeScript typing
@@ -102,6 +112,7 @@ These guidelines provide a robust framework for implementing GSAP animations in 
 ## Prismic Integration Rules and Best Practices
 
 ### Core Principles for Prismic and React Integration
+
 - Always use generated TypeScript types from Prismic
 - Implement type-safe content fetching
 - Create robust error handling for content rendering
@@ -110,6 +121,7 @@ These guidelines provide a robust framework for implementing GSAP animations in 
 - Implement comprehensive previews and content modeling
 
 ### Key Guidelines
+
 1. **Type Your Content**: Always use `@prismicio/client` generated types
 2. **Safe Content Rendering**: Handle empty or missing fields gracefully
 3. **Performance First**: Fetch only required fields
@@ -118,6 +130,7 @@ These guidelines provide a robust framework for implementing GSAP animations in 
 6. **Localization**: Support multi-language content
 
 ### Recommended Tools and Libraries
+
 - `@prismicio/client`: Type-safe content fetching
 - `@prismicio/react`: React components for content rendering
 - `@prismicio/next`: Next.js specific integrations

@@ -9,19 +9,23 @@ This guide explains how to use the SEO fields added to your Prismic custom types
 All custom types now include comprehensive SEO fields in a dedicated "SEO" tab:
 
 ### Basic SEO Fields
+
 - **meta_title**: Page title for search engines (max 60 characters)
 - **meta_description**: Page description for search engines (max 160 characters)
 
 ### OpenGraph Fields
+
 - **og_title**: Title for social media sharing (defaults to meta_title if empty)
 - **og_description**: Description for social media sharing (defaults to meta_description if empty)
 - **og_image**: Image for social media sharing (1200x630px recommended)
 - **og_type**: Content type (article for blog posts)
 
 ### Twitter Card Fields
+
 - **twitter_card**: Card type (summary or summary_large_image)
 
 ### Additional SEO Fields
+
 - **canonical_url**: Custom canonical URL (optional)
 - **robots**: Search engine indexing directives (index,follow by default)
 - **keywords**: Comma-separated keywords (post type only)
@@ -32,24 +36,24 @@ All custom types now include comprehensive SEO fields in a dedicated "SEO" tab:
 ### 1. Import the SEO Component
 
 ```typescript
-import { generateSEOMetadata } from "@/components/SEO";
+import { generateSEOMetadata } from '@/components/SEO'
 ```
 
 ### 2. Homepage Example
 
 ```typescript
-import { Metadata } from "next";
-import { createClient } from "@/prismicio";
-import { generateSEOMetadata } from "@/components/SEO";
+import { Metadata } from 'next'
+import { createClient } from '@/prismicio'
+import { generateSEOMetadata } from '@/components/SEO'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const client = createClient();
-  const home = await client.getSingle("homepage");
-  
+  const client = createClient()
+  const home = await client.getSingle('homepage')
+
   return generateSEOMetadata({
     data: home.data,
     url: process.env.NEXT_PUBLIC_SITE_URL || '',
-  });
+  })
 }
 ```
 
@@ -57,15 +61,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 ```typescript
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { uid } = await params;
-  const client = createClient();
-  const page = await client.getByUID("page", uid);
-  
+  const { uid } = await params
+  const client = createClient()
+  const page = await client.getByUID('page', uid)
+
   return generateSEOMetadata({
     data: page.data,
-    fallbackTitle: page.data.title || "Page",
+    fallbackTitle: page.data.title || 'Page',
     url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/${uid}`,
-  });
+  })
 }
 ```
 
@@ -73,18 +77,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 ```typescript
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category, slug } = await params;
-  const client = createClient();
-  const post = await client.getByUID("post", slug);
-  
+  const { category, slug } = await params
+  const client = createClient()
+  const post = await client.getByUID('post', slug)
+
   return generateSEOMetadata({
     data: post.data,
-    fallbackTitle: post.data.name || "Blog Post",
-    fallbackDescription: post.data.excerpt || "",
+    fallbackTitle: post.data.name || 'Blog Post',
+    fallbackDescription: post.data.excerpt || '',
     url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`,
     publishedTime: post.data.publication_date || post.first_publication_date,
     modifiedTime: post.last_publication_date,
-  });
+  })
 }
 ```
 
@@ -92,15 +96,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 ```typescript
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { uid } = await params;
-  const client = createClient();
-  const category = await client.getByUID("category", uid);
-  
+  const { uid } = await params
+  const client = createClient()
+  const category = await client.getByUID('category', uid)
+
   return generateSEOMetadata({
     data: category.data,
-    fallbackTitle: category.data.name || "Category",
+    fallbackTitle: category.data.name || 'Category',
     url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${uid}`,
-  });
+  })
 }
 ```
 
@@ -115,15 +119,19 @@ NEXT_PUBLIC_SITE_URL=https://yourdomain.com
 ## Testing Your SEO Implementation
 
 ### 1. Facebook Debugger
+
 Test OpenGraph tags: https://developers.facebook.com/tools/debug/
 
 ### 2. Twitter Card Validator
+
 Test Twitter cards: https://cards-dev.twitter.com/validator
 
 ### 3. Google Rich Results Test
+
 Test structured data: https://search.google.com/test/rich-results
 
 ### 4. LinkedIn Post Inspector
+
 Test LinkedIn sharing: https://www.linkedin.com/post-inspector/
 
 ## Best Practices

@@ -1,57 +1,57 @@
-'use client';
+'use client'
 
-import { useState, useRef } from 'react';
-import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { cn } from '@/lib/utils';
-import type { CategoryDocument } from '../../../prismicio-types';
+import { useState, useRef } from 'react'
+import Link from 'next/link'
+import { ChevronDown } from 'lucide-react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { cn } from '@/lib/utils'
+import type { CategoryDocument } from '../../../prismicio-types'
 
 interface MobileCategoriesSectionProps {
-  categories: CategoryDocument[];
-  onLinkClick: () => void;
+  categories: CategoryDocument[]
+  onLinkClick: () => void
 }
 
 export function MobileCategoriesSection({ categories, onLinkClick }: MobileCategoriesSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const iconRef = useRef<SVGSVGElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const iconRef = useRef<SVGSVGElement>(null)
 
   useGSAP(() => {
-    if (!contentRef.current || !iconRef.current) return;
+    if (!contentRef.current || !iconRef.current) return
 
-    gsap.set(contentRef.current, { 
+    gsap.set(contentRef.current, {
       height: 0,
-      opacity: 0
-    });
+      opacity: 0,
+    })
 
     if (isExpanded) {
       gsap.to(contentRef.current, {
         height: 'auto',
         opacity: 1,
         duration: 0.3,
-        ease: 'power2.out'
-      });
+        ease: 'power2.out',
+      })
       gsap.to(iconRef.current, {
         rotate: 180,
         duration: 0.3,
-        ease: 'power2.inOut'
-      });
+        ease: 'power2.inOut',
+      })
     } else {
       gsap.to(contentRef.current, {
         height: 0,
         opacity: 0,
         duration: 0.3,
-        ease: 'power2.in'
-      });
+        ease: 'power2.in',
+      })
       gsap.to(iconRef.current, {
         rotate: 0,
         duration: 0.3,
-        ease: 'power2.inOut'
-      });
+        ease: 'power2.inOut',
+      })
     }
-  }, [isExpanded]);
+  }, [isExpanded])
 
   return (
     <div className="flex flex-col items-center">
@@ -66,19 +66,15 @@ export function MobileCategoriesSection({ categories, onLinkClick }: MobileCateg
         aria-expanded={isExpanded}
       >
         Categories
-        <ChevronDown 
-          ref={iconRef}
-          className="h-5 w-5" 
-          aria-hidden="true"
-        />
+        <ChevronDown ref={iconRef} className="h-5 w-5" aria-hidden="true" />
       </button>
 
       <div ref={contentRef} className="overflow-hidden">
-        <div className="pt-6 space-y-6">
+        <div className="space-y-6 pt-6">
           <Link
             href="/categories"
             className={cn(
-              'block text-2xl text-center',
+              'block text-center text-2xl',
               'text-foreground hover:text-foreground/80',
               'transition-colors duration-150'
             )}
@@ -86,13 +82,13 @@ export function MobileCategoriesSection({ categories, onLinkClick }: MobileCateg
           >
             All Categories
           </Link>
-          
+
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/blog/${category.uid}`}
               className={cn(
-                'block text-2xl text-center',
+                'block text-center text-2xl',
                 'text-foreground hover:text-foreground/80',
                 'transition-colors duration-150'
               )}
@@ -104,5 +100,5 @@ export function MobileCategoriesSection({ categories, onLinkClick }: MobileCateg
         </div>
       </div>
     </div>
-  );
+  )
 }

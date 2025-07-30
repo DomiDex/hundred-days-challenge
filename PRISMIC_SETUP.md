@@ -60,6 +60,7 @@ In Slice Machine:
 ## Content Structure
 
 ### Category
+
 - **Name**: Category title
 - **Slug**: URL-friendly identifier
 - **Image**: Category featured image
@@ -67,6 +68,7 @@ In Slice Machine:
 - **Meta Description**: SEO description
 
 ### Post
+
 - **Name**: Post title
 - **Slug**: URL-friendly identifier
 - **Image**: Featured image
@@ -94,6 +96,7 @@ The blog supports syntax-highlighted code in two ways:
 ### Rich Text Labels
 
 In the Article Text field, you can use:
+
 - `codespan`: For inline code
 - `highlight`: For highlighted text
 

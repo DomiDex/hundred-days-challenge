@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { useLayoutEffect } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { useLayoutEffect } from 'react'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP)
 
 export default function GSAPProvider({ children }: { children: React.ReactNode }) {
   useLayoutEffect(() => {
     // Ensure GSAP is properly initialized
     gsap.config({
-      nullTargetWarn: false
-    });
-  }, []);
+      nullTargetWarn: false,
+    })
+  }, [])
 
-  return <>{children}</>;
+  return <>{children}</>
 }

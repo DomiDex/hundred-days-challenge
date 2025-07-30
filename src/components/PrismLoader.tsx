@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
 export function PrismLoader() {
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const loadPrism = async () => {
-        const Prism = (await import("prismjs")).default;
-        
+        const Prism = (await import('prismjs')).default
+
         // Import languages with proper error handling
         const languages = [
           'javascript',
-          'typescript', 
+          'typescript',
           'jsx',
           'tsx',
           'css',
@@ -29,32 +29,32 @@ export function PrismLoader() {
           'rust',
           'sql',
           'graphql',
-          'yaml'
-        ];
-        
+          'yaml',
+        ]
+
         // Load languages with error handling
         for (const lang of languages) {
           try {
-            await import(`prismjs/components/prism-${lang}`);
+            await import(`prismjs/components/prism-${lang}`)
           } catch (error) {
-            console.warn(`Failed to load Prism language: ${lang}`, error);
+            console.warn(`Failed to load Prism language: ${lang}`, error)
           }
         }
-        
+
         // Import plugins with error handling
         try {
-          await import("prismjs/plugins/line-numbers/prism-line-numbers");
+          await import('prismjs/plugins/line-numbers/prism-line-numbers')
         } catch (error) {
-          console.warn("Failed to load line-numbers plugin", error);
+          console.warn('Failed to load line-numbers plugin', error)
         }
-        
+
         // Highlight all code blocks
-        Prism.highlightAll();
-      };
-      
-      loadPrism();
+        Prism.highlightAll()
+      }
+
+      loadPrism()
     }
-  }, []);
-  
-  return null;
+  }, [])
+
+  return null
 }

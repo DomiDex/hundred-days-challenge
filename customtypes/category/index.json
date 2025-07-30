@@ -115,12 +115,7 @@
         "config": {
           "label": "Robots Meta",
           "placeholder": "Search engine indexing",
-          "options": [
-            "index,follow",
-            "noindex,follow",
-            "index,nofollow",
-            "noindex,nofollow"
-          ],
+          "options": ["index,follow", "noindex,follow", "index,nofollow", "noindex,nofollow"],
           "default_value": "index,follow"
         }
       }
