@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       orderings: [
         { field: "document.first_publication_date", direction: "desc" },
       ],
-      fetchLinks: ["category.title", "author.name", "author.avatar"],
+      fetchLinks: ["category.name", "category.uid", "author.name", "author.avatar"],
     });
 
     const posts = response.results;

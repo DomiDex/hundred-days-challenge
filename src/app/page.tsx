@@ -43,7 +43,7 @@ export default async function Home() {
     orderings: [
       { field: 'document.first_publication_date', direction: 'desc' },
     ],
-    fetchLinks: ['category.title', 'author.name', 'author.avatar'],
+    fetchLinks: ['category.name', 'category.uid', 'author.name', 'author.avatar'],
   });
 
   // Fetch all categories

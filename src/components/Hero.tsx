@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Logo from '@/components/svg/Logo';
 
 export function Hero() {
   const [email, setEmail] = useState('');
@@ -20,16 +19,15 @@ export function Hero() {
     }, 1000);
   };
 
-
   return (
-    <section className='relative min-h-[500px] flex items-center justify-center'>
+    <section className='relative min-h-[500px] flex items-start justify-center overflow-hidden'>
+      {/* Vertical logo on the right side */}
+      <div className='absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 h-[500px] w-auto text-gray-400 dark:text-gray-800 opacity-50'></div>
+
       <div className='relative z-10 max-w-6xl mx-auto px-6 py-16'>
         <div className='flex flex-col lg:flex-row items-center justify-between gap-12'>
           {/* Left side - Logo and content */}
           <div className='flex-1 text-center lg:text-left'>
-            <div className='w-28 h-20 md:w-40 md:h-20 mx-auto lg:mx-0 mb-8 text-gray-900 dark:text-white'>
-              <Logo />
-            </div>
             <h1 className='text-3xl md:text-5xl font-bold mb-6'>
               A daily journey of code, creativity, and growth
             </h1>
@@ -69,7 +67,7 @@ export function Hero() {
                 >
                   {/* Darker overlay that slides up on hover */}
                   <div className='button-flair absolute inset-0 bg-lochinvar-700 dark:bg-lochinvar-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out' />
-                  
+
                   {/* Button content */}
                   <span className='relative z-10'>
                     {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
