@@ -1,20 +1,62 @@
 'use client'
 
 import { useState } from 'react'
+import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+
+interface NewsletterState {
+  status: 'idle' | 'loading' | 'success' | 'error'
+  message?: string
+}
 
 export function Hero() {
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [firstName, setFirstName] = useState('')
+  const [state, setState] = useState<NewsletterState>({ status: 'idle' })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setStatus('loading')
 
-    // TODO: Implement newsletter subscription
-    setTimeout(() => {
-      setStatus('success')
-      setEmail('')
-    }, 1000)
+    setState({ status: 'loading' })
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          firstName,
+          tags: ['hero-signup', 'homepage'],
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setState({
+          status: 'success',
+          message: data.message || 'Successfully subscribed! Check your email for updates.',
+        })
+        setEmail('')
+        setFirstName('')
+
+        // Reset after 5 seconds
+        setTimeout(() => {
+          setState({ status: 'idle' })
+        }, 5000)
+      } else {
+        setState({
+          status: 'error',
+          message: data.error || 'Something went wrong. Please try again.',
+        })
+      }
+    } catch {
+      setState({
+        status: 'error',
+        message: 'Network error. Please try again.',
+      })
+    }
   }
 
   return (
@@ -46,38 +88,57 @@ export function Hero() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First Name (optional)"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary"
+                  disabled={state.status === 'loading'}
+                />
+
+                <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
                   className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary"
+                  disabled={state.status === 'loading'}
                 />
 
                 <button
                   type="submit"
-                  disabled={status === 'loading'}
+                  disabled={state.status === 'loading'}
                   className="hero-newsletter-button group relative w-full overflow-hidden rounded-lg bg-lochinvar-600 px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 dark:bg-lochinvar-500"
                 >
                   {/* Darker overlay that slides up on hover */}
                   <div className="button-flair absolute inset-0 translate-y-full bg-lochinvar-700 transition-transform duration-500 ease-out group-hover:translate-y-0 dark:bg-lochinvar-600" />
 
                   {/* Button content */}
-                  <span className="relative z-10">
-                    {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {state.status === 'loading' ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Subscribing...
+                      </>
+                    ) : (
+                      'Subscribe'
+                    )}
                   </span>
                 </button>
 
-                {status === 'success' && (
-                  <p className="text-sm text-green-600 dark:text-green-400">
-                    Successfully subscribed! Check your email for confirmation.
-                  </p>
+                {state.status === 'success' && (
+                  <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+                    <CheckCircle2 className="h-4 w-4" />
+                    {state.message}
+                  </div>
                 )}
 
-                {status === 'error' && (
-                  <p className="text-sm text-red-600 dark:text-red-400">
-                    Something went wrong. Please try again.
-                  </p>
+                {state.status === 'error' && (
+                  <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+                    <AlertCircle className="h-4 w-4" />
+                    {state.message}
+                  </div>
                 )}
               </form>
             </div>
