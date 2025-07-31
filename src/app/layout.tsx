@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
-  
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -83,15 +83,37 @@ export default function RootLayout({
           href="/feed.json"
         />
         {/* WebSub hub discovery */}
-        <link
-          rel="hub"
-          href="https://pubsubhubbub.appspot.com/"
-        />
+        <link rel="hub" href="https://pubsubhubbub.appspot.com/" />
         {/* Self reference for WebSub */}
+        <link rel="self" type="application/rss+xml" href={`${siteUrl}/rss.xml`} />
+
+        {/* Enhanced feed discovery for better SEO */}
+        {/* Category-specific feeds for targeted subscription */}
         <link
-          rel="self"
+          rel="alternate"
           type="application/rss+xml"
-          href={`${siteUrl}/rss.xml`}
+          title="100 Days of Craft - Tutorials"
+          href="/feeds/category/tutorials.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="100 Days of Craft - News & Updates"
+          href="/feeds/category/news.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="100 Days of Craft - Projects"
+          href="/feeds/category/projects.xml"
+        />
+
+        {/* OpenSearch for feed discovery */}
+        <link
+          rel="search"
+          type="application/opensearchdescription+xml"
+          title="100 Days of Craft"
+          href="/opensearch.xml"
         />
       </head>
       <body

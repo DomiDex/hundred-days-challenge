@@ -256,6 +256,30 @@ export default async function BlogPostPage({ params }: Props) {
             {/* Related Posts */}
             <RelatedPosts posts={relatedPosts} currentCategoryUid={category} />
           </article>
+
+          {/* RSS Feed Widget in Sidebar */}
+          <aside className="mt-8 hidden lg:block">
+            <div className="sticky top-8">
+              <div className="mb-8">
+                <h3 className="mb-4 text-lg font-semibold">Never Miss a Post</h3>
+                <div className="prose prose-sm dark:prose-invert mb-4">
+                  <p>
+                    Subscribe to our RSS feed and get updates delivered directly to your feed
+                    reader.
+                  </p>
+                </div>
+                <Link
+                  href="/subscribe"
+                  className="inline-flex items-center gap-2 text-primary transition-colors hover:text-primary/80"
+                >
+                  <span>Subscribe via RSS</span>
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3.429 5.1v2.4c7.248 0 13.114 5.886 13.114 13.142h2.4C18.943 12.316 11.755 5.1 3.429 5.1zm0 4.8v2.4a4.351 4.351 0 014.343 4.342h2.4c0-3.726-3.017-6.742-6.743-6.742zM6.171 16.486a1.714 1.714 0 11-3.428 0 1.714 1.714 0 013.428 0z" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
