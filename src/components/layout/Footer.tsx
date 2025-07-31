@@ -2,6 +2,7 @@ import FooterLink from '@/components/ui/FooterLink'
 import Newsletter from '@/components/ui/Newsletter'
 import FooterLogo from '@/components/svg/FooterLogo'
 import { RSSIcon } from '@/components/svg/RSSIcon'
+import Link from 'next/link'
 
 const categories = [
   { href: '/projects', label: 'Projects' },
@@ -13,6 +14,7 @@ const categories = [
 const importantLinks = [
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
+  { href: '/subscribe', label: 'RSS Subscribe' },
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/terms', label: 'Terms of Service' },
 ]
@@ -59,14 +61,14 @@ export default function Footer() {
           <div className="flex items-center justify-between py-4">
             <FooterLogo />
             <div className="flex items-center gap-4">
-              <a
-                href="/rss.xml"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="RSS Feed"
-                title="Subscribe via RSS"
+              <Link
+                href="/subscribe"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Subscribe to RSS Feed"
+                title="Subscribe via RSS, Atom, or JSON Feed"
               >
                 <RSSIcon />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
