@@ -6,12 +6,12 @@ import { PrismicNextImage } from '@prismicio/next'
 import { SliceZone } from '@prismicio/react'
 import { components } from '@/slices'
 import { RichTextRenderer } from '@/components/blog/RichTextRenderer'
+import { TableOfContents } from '@/components/blog/TableOfContents'
 import Link from 'next/link'
 import { PrismLoader } from '@/components/PrismLoader'
 import { generateSEOMetadata } from '@/components/SEO'
 import ProjectLinks from '@/components/blog/ProjectLinks'
 import { AuthorCard } from '@/components/blog/AuthorCard'
-import { AuthorSocialLinks } from '@/components/blog/AuthorSocialLinks'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { ShareButtons } from '@/components/blog/ShareButtons'
 import { CategoryChip } from '@/components/blog/CategoryChip'
@@ -20,6 +20,7 @@ import type { PostDocument } from '../../../../../prismicio-types'
 import type { AuthorDocument } from '@/types/author-types'
 import { filterPostsByCategory, extractCategoryData } from '@/lib/prismic-utils'
 import { getAuthorData } from '@/lib/prismic-helpers'
+import { extractHeadingsFromRichText } from '@/lib/toc-utils'
 
 // Temporary type extension until Prismic types are regenerated
 interface ExtendedPostData {
@@ -97,6 +98,7 @@ export default async function BlogPostPage({ params }: Props) {
         'author.linkedin_link',
         'author.x_link',
         'author.github_link',
+        'author.website_link',
       ],
     })) as ExtendedPost
   } catch (error) {
@@ -151,11 +153,14 @@ export default async function BlogPostPage({ params }: Props) {
         .slice(0, 3) // Take only the first 3 related posts
     : []
 
+  // Extract headings for table of contents
+  const headings = extractHeadingsFromRichText(post.data.article_text)
+
   return (
     <div className="min-h-screen bg-background">
       <PrismLoader />
 
-      <article className="mx-auto max-w-4xl px-6 py-16">
+      <div className="mx-auto max-w-7xl px-8 py-16 md:px-12 lg:px-16">
         <Breadcrumb
           items={[
             { label: 'Home', href: '/' },
@@ -163,91 +168,96 @@ export default async function BlogPostPage({ params }: Props) {
             { label: categoryData?.name || 'Category', href: `/blog/${category}` },
             { label: post.data.name || '' },
           ]}
-          className="mb-6"
+          className="mb-16"
         />
+        <div className="grid grid-cols-1 gap-12 xl:grid-cols-[300px_1fr]">
+          {/* Table of Contents */}
+          <aside className="hidden xl:block">
+            <TableOfContents headings={headings} />
+          </aside>
 
-        {/* Post Header */}
-        <header className="mb-12">
-          {categoryData && (
-            <div className="mb-4">
-              <CategoryChip name={categoryData.name} uid={category} />
-            </div>
-          )}
-
-          <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">{post.data.name}</h1>
-
-          {post.data.excerpt && (
-            <p className="mb-6 text-xl text-muted-foreground">{post.data.excerpt}</p>
-          )}
-
-          <div className="mb-6 flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center">
-            <time dateTime={post.data.publication_date || post.first_publication_date}>
-              {publicationDate}
-            </time>
-            {author && (
-              <>
-                <span className="hidden sm:inline">•</span>
-                <div className="flex items-center gap-2">
-                  <span>By </span>
-                  <Link
-                    href={`/authors/${author.uid}`}
-                    className="text-primary transition-colors hover:text-primary/80"
-                  >
-                    {getAuthorData(author)?.name || ''}
-                  </Link>
+          {/* Main Content */}
+          <article className="min-w-0">
+            {/* Post Header */}
+            <header className="mb-12">
+              {categoryData && (
+                <div className="mb-4">
+                  <CategoryChip name={categoryData.name} uid={category} />
                 </div>
-              </>
+              )}
+
+              <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
+                {post.data.name}
+              </h1>
+
+              {post.data.excerpt && (
+                <p className="mb-6 text-xl text-muted-foreground">{post.data.excerpt}</p>
+              )}
+
+              <div className="mb-6 flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center">
+                <time dateTime={post.data.publication_date || post.first_publication_date}>
+                  {publicationDate}
+                </time>
+                {author && (
+                  <>
+                    <span className="hidden sm:inline">•</span>
+                    <div className="flex items-center gap-2">
+                      <span>By </span>
+                      <Link
+                        href={`/authors/${author.uid}`}
+                        className="text-primary transition-colors hover:text-primary/80"
+                      >
+                        {getAuthorData(author)?.name || ''}
+                      </Link>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Project Links and Share Buttons */}
+              <div className="flex flex-wrap items-center gap-4">
+                <ProjectLinks demoLink={post.data.demo_link} githubLink={post.data.github_link} />
+                <ShareButtons
+                  url={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`}
+                  title={post.data.name || ''}
+                />
+              </div>
+            </header>
+
+            {/* Featured Image */}
+            {post.data.image.url && (
+              <div className="relative mb-12 h-96 w-full overflow-hidden rounded-lg">
+                <PrismicNextImage field={post.data.image} fill className="object-cover" priority />
+              </div>
             )}
-          </div>
 
-          {/* Project Links and Share Buttons */}
-          <div className="flex flex-wrap items-center gap-4">
-            <ProjectLinks demoLink={post.data.demo_link} githubLink={post.data.github_link} />
-            <ShareButtons
-              url={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/blog/${category}/${slug}`}
-              title={post.data.name || ''}
-            />
-          </div>
-        </header>
-
-        {/* Featured Image */}
-        {post.data.image.url && (
-          <div className="relative mb-12 h-96 w-full overflow-hidden rounded-lg">
-            <PrismicNextImage field={post.data.image} fill className="object-cover" priority />
-          </div>
-        )}
-
-        {/* Article Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none px-6 md:px-0">
-          <RichTextRenderer field={post.data.article_text} />
-        </div>
-
-        {/* Slices */}
-        {post.data.slices && post.data.slices.length > 0 && (
-          <div className="mt-12">
-            <SliceZone slices={post.data.slices} components={components} />
-          </div>
-        )}
-
-        {/* Author Info */}
-        {author && (
-          <section className="mt-16 border-t border-border pt-16">
-            <h2 className="mb-6 text-2xl font-bold text-foreground">About the Author</h2>
-            <div className="rounded-lg bg-card p-6">
-              <AuthorCard author={author} variant="full" className="mb-4" />
-              <AuthorSocialLinks
-                linkedinLink={getAuthorData(author)?.linkedin_link}
-                xLink={getAuthorData(author)?.x_link}
-                githubLink={getAuthorData(author)?.github_link}
-                className="mt-4"
-              />
+            {/* Article Content */}
+            <div className="prose prose-lg dark:prose-invert max-w-none">
+              <RichTextRenderer field={post.data.article_text} />
             </div>
-          </section>
-        )}
 
-        {/* Related Posts */}
-        <RelatedPosts posts={relatedPosts} currentCategoryUid={category} />
-      </article>
+            {/* Slices */}
+            {post.data.slices && post.data.slices.length > 0 && (
+              <div className="mt-12">
+                <SliceZone slices={post.data.slices} components={components} />
+              </div>
+            )}
+
+            {/* Author Info */}
+            {author && (
+              <section className="mt-16 border-t border-border pt-16">
+                <h2 className="mb-6 text-2xl font-bold text-foreground">About the Author</h2>
+                <div className="rounded-lg bg-card p-6">
+                  <AuthorCard author={author} variant="full" />
+                </div>
+              </section>
+            )}
+
+            {/* Related Posts */}
+            <RelatedPosts posts={relatedPosts} currentCategoryUid={category} />
+          </article>
+        </div>
+      </div>
     </div>
   )
 }

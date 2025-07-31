@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prismic Direct Access Links</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        a { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; text-decoration: none; }
+        a:hover { background: #e0e0e0; }
+        .warning { color: red; margin: 20px 0; }
+        .solution { background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Prismic CloudFront 403 Error - Workarounds</h1>
+    
+    <div class="warning">
+        <strong>Getting CloudFront 403 Error?</strong> Try these alternative URLs:
+    </div>
+
+    <h2>1. Direct Repository Access (Try these in order):</h2>
+    <a href="https://hundred-days-challenge.prismic.io/documents" target="_blank">
+        Direct Documents Access
+    </a>
+    <a href="https://hundred-days-challenge.prismic.io/settings" target="_blank">
+        Direct Settings Access
+    </a>
+    <a href="https://hundred-days-challenge.prismic.io/custom-types" target="_blank">
+        Direct Custom Types Access
+    </a>
+    <a href="https://prismic.io/dashboard/hundred-days-challenge" target="_blank">
+        Dashboard with Repository Name
+    </a>
+
+    <h2>2. Alternative Login URLs:</h2>
+    <a href="https://auth.prismic.io/login" target="_blank">
+        Auth Subdomain Login
+    </a>
+    <a href="https://prismic.io/login" target="_blank">
+        Main Domain Login
+    </a>
+    <a href="https://prismic.io/dashboard" target="_blank">
+        Dashboard Direct
+    </a>
+
+    <div class="solution">
+        <h3>Quick Fix Steps:</h3>
+        <ol>
+            <li>Open Chrome in Incognito Mode (Ctrl+Shift+N)</li>
+            <li>Go to: <code>chrome://settings/content/all</code></li>
+            <li>Search for "prismic.io"</li>
+            <li>Delete all data for prismic.io</li>
+            <li>Try logging in again</li>
+        </ol>
+    </div>
+
+    <div class="solution">
+        <h3>If still blocked, try:</h3>
+        <ul>
+            <li>Use your phone's browser</li>
+            <li>Use a different network (mobile hotspot)</li>
+            <li>Wait 1-2 hours (rate limiting may expire)</li>
+            <li>Contact Prismic support with the CloudFront Request ID</li>
+        </ul>
+    </div>
+
+    <div class="solution">
+        <h3>Manual Custom Type Update (Last Resort):</h3>
+        <p>If you can access ANY part of Prismic dashboard:</p>
+        <ol>
+            <li>Go to Custom Types → Author</li>
+            <li>Click JSON editor</li>
+            <li>Add website_link field manually after github_link</li>
+            <li>Save changes</li>
+        </ol>
+    </div>
+</body>
+</html>

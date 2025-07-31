@@ -26,6 +26,7 @@ This directory contains all tasks required to enhance the 100 Days of Craft blog
 - **Task 09**: [Performance Optimization](./task-09-performance-optimization.md) - Optimize Core Web Vitals and bundle size
 - **Task 10**: [SEO & Accessibility](./task-10-seo-optimization.md) - Implement structured data and WCAG compliance
 - **Task 15**: [RSS/Atom Feed](./task-15-rss-atom-feed.md) - Implement RSS, Atom, and JSON feeds for content syndication
+- **Task 16**: [RSS Promotion Strategy](./task-16-rss-promotion-strategy.md) - Comprehensive strategy to promote blog through RSS feeds
 
 ### 🚢 Deployment & CI/CD
 
@@ -61,8 +62,9 @@ This directory contains all tasks required to enhance the 100 Days of Craft blog
 12. **Task 08** - E2E Tests (2 days)
 13. **Task 10** - SEO Optimization (1 day)
 14. **Task 15** - RSS/Atom Feed (1 day)
-15. **Task 05** - Dependency Security (1 day)
-16. Final testing and deployment (1 day)
+15. **Task 16** - RSS Promotion Strategy (1 day)
+16. **Task 05** - Dependency Security (1 day)
+17. Final testing and deployment
 
 ## Key Milestones
 

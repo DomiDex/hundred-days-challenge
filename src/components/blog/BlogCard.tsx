@@ -30,11 +30,11 @@ export function BlogCard({ uid, title, excerpt, image, category, date }: BlogCar
         {image.url && (
           <div className="relative h-40 w-full overflow-hidden rounded-md">
             <PrismicNextImage field={image} fill className="object-cover" />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-white/50">
-              <button className="flex scale-95 transform items-center gap-2 rounded-lg bg-lochinvar-600 px-4 py-2 font-medium text-white opacity-0 transition-all duration-300 hover:bg-lochinvar-700 group-hover:scale-100 group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/20 dark:group-hover:bg-black/40">
+              <div className="flex scale-95 transform items-center gap-2 rounded-lg bg-lochinvar-600 px-4 py-2 font-medium text-white opacity-0 shadow-lg transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
                 <Eye size={16} />
                 Read Me
-              </button>
+              </div>
             </div>
           </div>
         )}

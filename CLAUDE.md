@@ -137,3 +137,7 @@ These guidelines provide a robust framework for implementing GSAP animations in 
 - Slice Machine: Content modeling and development
 
 These Prismic integration guidelines ensure type-safe, performant, and flexible content management in your React application.
+
+## Development Reminders
+
+- Always refere to the file @tasks/README.md  to understand were we are and what we need to do.

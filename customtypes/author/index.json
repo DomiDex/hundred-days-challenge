@@ -79,6 +79,19 @@
           "select": "web",
           "allowTargetBlank": true
         }
+      },
+      "website_link": {
+        "type": "Link",
+        "config": {
+          "label": "Personal Website",
+          "placeholder": "Link to personal website",
+          "select": "web",
+          "allowTargetBlank": true
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone"
       }
     },
     "SEO": {

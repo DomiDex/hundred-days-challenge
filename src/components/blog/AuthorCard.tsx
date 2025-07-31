@@ -1,5 +1,6 @@
 import { PrismicNextImage } from '@prismicio/next'
 import { RichTextRenderer } from './RichTextRenderer'
+import { AuthorSocialLinks } from './AuthorSocialLinks'
 import type { AuthorDocument } from '@/types/author-types'
 import { getAuthorData } from '@/lib/prismic-helpers'
 
@@ -22,16 +23,28 @@ export function AuthorCard({ author, variant = 'compact', className = '' }: Auth
             width={variant === 'full' ? 100 : 60}
             height={variant === 'full' ? 100 : 60}
             className="rounded-full object-cover"
+            fallbackAlt=""
           />
         </div>
       )}
       <div className="flex-1">
         <h3 className="text-lg font-semibold text-foreground">{authorData.name}</h3>
         {authorData.role && <p className="mb-2 text-sm text-muted-foreground">{authorData.role}</p>}
-        {variant === 'full' && authorData.bio && (
-          <div className="prose prose-sm dark:prose-invert">
-            <RichTextRenderer field={authorData.bio} />
-          </div>
+        {variant === 'full' && (
+          <>
+            <AuthorSocialLinks
+              linkedinLink={authorData.linkedin_link}
+              xLink={authorData.x_link}
+              githubLink={authorData.github_link}
+              websiteLink={authorData.website_link}
+              className="mb-3"
+            />
+            {authorData.bio && (
+              <div className="prose prose-sm dark:prose-invert">
+                <RichTextRenderer field={authorData.bio} />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

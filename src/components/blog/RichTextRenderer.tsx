@@ -4,6 +4,7 @@ import { PrismicRichText, JSXMapSerializer } from '@prismicio/react'
 import { RichTextField } from '@prismicio/client'
 import { useEffect } from 'react'
 import { RichTextCodeBlock } from './RichTextCodeBlock'
+import { generateId } from '@/lib/toc-utils'
 
 interface RichTextRendererProps {
   field: RichTextField
@@ -26,12 +27,36 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
   }, [field])
 
   const components: JSXMapSerializer = {
-    heading1: ({ children }) => <h1 className="mb-4 mt-8 text-4xl font-bold">{children}</h1>,
-    heading2: ({ children }) => <h2 className="mb-4 mt-8 text-3xl font-bold">{children}</h2>,
-    heading3: ({ children }) => <h3 className="mb-3 mt-6 text-2xl font-bold">{children}</h3>,
-    heading4: ({ children }) => <h4 className="mb-3 mt-6 text-xl font-bold">{children}</h4>,
-    heading5: ({ children }) => <h5 className="mb-2 mt-4 text-lg font-bold">{children}</h5>,
-    heading6: ({ children }) => <h6 className="mb-2 mt-4 text-base font-bold">{children}</h6>,
+    heading1: ({ children, node }) => {
+      const text = node.text || ''
+      const id = generateId(text)
+      return <h1 id={id} className="mb-4 mt-8 text-4xl font-bold">{children}</h1>
+    },
+    heading2: ({ children, node }) => {
+      const text = node.text || ''
+      const id = generateId(text)
+      return <h2 id={id} className="mb-4 mt-8 text-3xl font-bold">{children}</h2>
+    },
+    heading3: ({ children, node }) => {
+      const text = node.text || ''
+      const id = generateId(text)
+      return <h3 id={id} className="mb-3 mt-6 text-2xl font-bold">{children}</h3>
+    },
+    heading4: ({ children, node }) => {
+      const text = node.text || ''
+      const id = generateId(text)
+      return <h4 id={id} className="mb-3 mt-6 text-xl font-bold">{children}</h4>
+    },
+    heading5: ({ children, node }) => {
+      const text = node.text || ''
+      const id = generateId(text)
+      return <h5 id={id} className="mb-2 mt-4 text-lg font-bold">{children}</h5>
+    },
+    heading6: ({ children, node }) => {
+      const text = node.text || ''
+      const id = generateId(text)
+      return <h6 id={id} className="mb-2 mt-4 text-base font-bold">{children}</h6>
+    },
     paragraph: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
     preformatted: ({ node, key }) => {
       let language = 'plaintext'

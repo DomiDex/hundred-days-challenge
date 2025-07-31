@@ -10,6 +10,7 @@ export type AuthorDocumentData = {
   linkedin_link: prismic.LinkField
   x_link: prismic.LinkField
   github_link: prismic.LinkField
+  website_link: prismic.LinkField
   meta_title: prismic.KeyTextField
   meta_description: prismic.KeyTextField
   og_title: prismic.KeyTextField

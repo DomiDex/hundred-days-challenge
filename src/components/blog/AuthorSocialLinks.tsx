@@ -5,11 +5,13 @@ import SocialLink from '@/components/ui/SocialLink'
 import LinkedInIcon from '@/components/svg/LinkedInIcon'
 import XIcon from '@/components/svg/XIcon'
 import GitHubIcon from '@/components/svg/GitHubIcon'
+import WebsiteIcon from '@/components/svg/WebsiteIcon'
 
 interface AuthorSocialLinksProps {
   linkedinLink?: prismic.LinkField
   xLink?: prismic.LinkField
   githubLink?: prismic.LinkField
+  websiteLink?: prismic.LinkField
   className?: string
 }
 
@@ -17,9 +19,15 @@ export function AuthorSocialLinks({
   linkedinLink,
   xLink,
   githubLink,
+  websiteLink,
   className = '',
 }: AuthorSocialLinksProps) {
   const socialLinks = [
+    {
+      link: websiteLink,
+      icon: WebsiteIcon,
+      label: 'Personal Website',
+    },
     {
       link: linkedinLink,
       icon: LinkedInIcon,

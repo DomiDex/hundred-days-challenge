@@ -129,6 +129,7 @@ export default async function AuthorPage({ params }: Props) {
                   width={200}
                   height={200}
                   className="rounded-full object-cover"
+                  fallbackAlt=""
                 />
               </div>
             )}
@@ -141,6 +142,7 @@ export default async function AuthorPage({ params }: Props) {
                 linkedinLink={authorData.linkedin_link}
                 xLink={authorData.x_link}
                 githubLink={authorData.github_link}
+                websiteLink={authorData.website_link}
                 className="mb-6"
               />
               {authorData.bio && (
