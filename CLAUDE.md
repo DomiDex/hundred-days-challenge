@@ -140,4 +140,8 @@ These Prismic integration guidelines ensure type-safe, performant, and flexible 
 
 ## Development Reminders
 
-- Always refere to the file @tasks/README.md  to understand were we are and what we need to do.
+- Always refere to the file @tasks/README.md to understand were we are and what we need to do.
+
+## Git Commit Best Practices
+
+- When commiting don't use claude markup
