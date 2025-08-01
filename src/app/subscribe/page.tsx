@@ -3,6 +3,7 @@ import { SmartFeedWidget } from '@/components/feed/SmartFeedWidget'
 import { Rss, CheckCircle2, Shield, Zap, Bell } from 'lucide-react'
 import Script from 'next/script'
 import { generateFeedStructuredData } from '@/lib/feed-seo-optimizer'
+import { headers } from 'next/headers'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
 
@@ -16,7 +17,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function SubscribePage() {
+export default async function SubscribePage() {
+  const headersList = await headers()
+  const nonce = headersList.get('x-nonce') || ''
   const benefits = [
     {
       icon: <Shield className="h-5 w-5" />,
@@ -226,6 +229,7 @@ export default function SubscribePage() {
       <Script
         id="feed-structured-data"
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(generateFeedStructuredData(siteUrl)),
         }}

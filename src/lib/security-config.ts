@@ -53,6 +53,7 @@ const developmentConfig: SecurityConfig = {
       "'unsafe-eval'", // Required for React Fast Refresh
       'http://localhost:*',
       'ws://localhost:*', // WebSocket for HMR
+      "'sha256-CjG1SF7x5vU6t2FPiTodr3rfhCM7n03YT9lcVSo0pnA='", // Allow specific inline script
     ],
     styleSrc: [
       ...baseConfig.csp.styleSrc,
