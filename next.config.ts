@@ -3,19 +3,12 @@ import type { NextConfig } from 'next'
 const isProduction = process.env.NODE_ENV === 'production'
 
 const nextConfig: NextConfig = {
-  devIndicators: {
-    appIsrStatus: false,
-    buildActivity: false,
-    buildActivityPosition: 'bottom-right',
-  },
   // Security: Disable source maps in production
   productionBrowserSourceMaps: false,
   // Security: Disable powered by header
   poweredByHeader: false,
   // Security: Enable React strict mode
   reactStrictMode: true,
-  // Optimize build
-  swcMinify: true,
   compiler: {
     // Remove console.log in production
     removeConsole: isProduction

@@ -3,7 +3,7 @@
 import DOMPurify from 'isomorphic-dompurify'
 
 // Configure DOMPurify for client-side use
-const purifyConfig: DOMPurify.Config = {
+const purifyConfig = {
   ALLOWED_TAGS: [
     'p',
     'br',
@@ -83,7 +83,7 @@ export function sanitizeUserInput(input: string): string {
     return input
   }
 
-  const strictConfig: DOMPurify.Config = {
+  const strictConfig = {
     ALLOWED_TAGS: ['p', 'br', 'em', 'strong', 'a'],
     ALLOWED_ATTR: ['href', 'target', 'rel'],
     ALLOW_DATA_ATTR: false,

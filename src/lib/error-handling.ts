@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { ZodError } from 'zod'
 import { ValidationError } from './validation'
 
 // Custom error classes
@@ -74,15 +73,27 @@ export function createErrorResponse(
     message = error.message
     code = error.code
     finalStatusCode = error.statusCode
-  } else if (error instanceof ZodError) {
+  } else if (error && typeof error === 'object' && 'errors' in error) {
+    // Handle ZodError
     message = 'Validation error'
     code = 'VALIDATION_ERROR'
     finalStatusCode = 400
     if (includeDetails || isDevelopment) {
-      details = error.errors.map((e) => ({
-        path: e.path.join('.'),
-        message: e.message,
-      }))
+      // Access errors property without type assertion
+      const errorWithErrors = error as { errors: unknown }
+      if (Array.isArray(errorWithErrors.errors)) {
+        details = errorWithErrors.errors.map((e: unknown) => {
+          const errorItem = e as { path?: unknown; message?: unknown }
+          return {
+            path: Array.isArray(errorItem.path)
+              ? errorItem.path.join('.')
+              : String(errorItem.path || ''),
+            message: String(errorItem.message || 'Validation error'),
+          }
+        })
+      } else {
+        details = error
+      }
     }
   } else if (error instanceof ValidationError) {
     message = error.message
@@ -106,11 +117,11 @@ export function createErrorResponse(
   const errorResponse: ErrorResponse = {
     error: {
       message,
-      ...(code && { code }),
-      ...(details && { details }),
+      ...(code ? { code } : {}),
+      ...(details !== undefined ? { details } : {}),
     },
     timestamp: new Date().toISOString(),
-    ...(requestId && { requestId }),
+    ...(requestId ? { requestId } : {}),
   }
 
   // Add rate limit headers if applicable

@@ -42,7 +42,7 @@ const recentEvents: SecurityEvent[] = []
 const MAX_EVENTS = 1000
 
 // Thresholds for alerting
-const ALERT_THRESHOLDS = {
+const ALERT_THRESHOLDS: Partial<Record<SecurityEventType, { count: number; window: number }>> = {
   [SecurityEventType.AUTH_FAILURE]: { count: 5, window: 300000 }, // 5 failures in 5 minutes
   [SecurityEventType.RATE_LIMIT_EXCEEDED]: { count: 10, window: 600000 }, // 10 in 10 minutes
   [SecurityEventType.INVALID_INPUT]: { count: 20, window: 300000 }, // 20 in 5 minutes
@@ -161,6 +161,7 @@ function sendAlert(alert: {
 }
 
 // Send event to monitoring service
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function sendToMonitoringService(event: SecurityEvent): void {
   // TODO: Implement integration with monitoring service
   // Examples: Sentry, DataDog, New Relic, CloudWatch
@@ -221,7 +222,6 @@ export function getSecurityMetrics(window: number = 3600000): {
 // Middleware to detect suspicious patterns
 export function detectSuspiciousPatterns(request: NextRequest): void {
   const url = request.url
-  const body = request.body
 
   // Check for common attack patterns
   const suspiciousPatterns = [
