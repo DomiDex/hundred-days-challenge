@@ -5,6 +5,7 @@ import { RichTextField } from '@prismicio/client'
 import { useEffect } from 'react'
 import { RichTextCodeBlock } from './RichTextCodeBlock'
 import { generateId } from '@/lib/toc-utils'
+import DOMPurify from 'isomorphic-dompurify'
 
 interface RichTextRendererProps {
   field: RichTextField
@@ -30,32 +31,56 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
     heading1: ({ children, node }) => {
       const text = node.text || ''
       const id = generateId(text)
-      return <h1 id={id} className="mb-4 mt-8 text-4xl font-bold">{children}</h1>
+      return (
+        <h1 id={id} className="mb-4 mt-8 text-4xl font-bold">
+          {children}
+        </h1>
+      )
     },
     heading2: ({ children, node }) => {
       const text = node.text || ''
       const id = generateId(text)
-      return <h2 id={id} className="mb-4 mt-8 text-3xl font-bold">{children}</h2>
+      return (
+        <h2 id={id} className="mb-4 mt-8 text-3xl font-bold">
+          {children}
+        </h2>
+      )
     },
     heading3: ({ children, node }) => {
       const text = node.text || ''
       const id = generateId(text)
-      return <h3 id={id} className="mb-3 mt-6 text-2xl font-bold">{children}</h3>
+      return (
+        <h3 id={id} className="mb-3 mt-6 text-2xl font-bold">
+          {children}
+        </h3>
+      )
     },
     heading4: ({ children, node }) => {
       const text = node.text || ''
       const id = generateId(text)
-      return <h4 id={id} className="mb-3 mt-6 text-xl font-bold">{children}</h4>
+      return (
+        <h4 id={id} className="mb-3 mt-6 text-xl font-bold">
+          {children}
+        </h4>
+      )
     },
     heading5: ({ children, node }) => {
       const text = node.text || ''
       const id = generateId(text)
-      return <h5 id={id} className="mb-2 mt-4 text-lg font-bold">{children}</h5>
+      return (
+        <h5 id={id} className="mb-2 mt-4 text-lg font-bold">
+          {children}
+        </h5>
+      )
     },
     heading6: ({ children, node }) => {
       const text = node.text || ''
       const id = generateId(text)
-      return <h6 id={id} className="mb-2 mt-4 text-base font-bold">{children}</h6>
+      return (
+        <h6 id={id} className="mb-2 mt-4 text-base font-bold">
+          {children}
+        </h6>
+      )
     },
     paragraph: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
     preformatted: ({ node, key }) => {
@@ -98,12 +123,24 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
         )}
       </figure>
     ),
-    embed: ({ node }) => (
-      <div
-        className="relative my-8 h-0 overflow-hidden rounded-lg pb-[56.25%]"
-        dangerouslySetInnerHTML={{ __html: node.oembed.html || '' }}
-      />
-    ),
+    embed: ({ node }) => {
+      if (!node.oembed.html) return null
+
+      // Sanitize the HTML to prevent XSS attacks
+      const sanitizedHtml = DOMPurify.sanitize(node.oembed.html, {
+        ADD_TAGS: ['iframe'],
+        ADD_ATTR: ['allowfullscreen', 'frameborder', 'src', 'allow', 'width', 'height'],
+        ALLOWED_URI_REGEXP:
+          /^https?:\/\/(www\.)?(youtube\.com|youtube-nocookie\.com|vimeo\.com|twitter\.com|x\.com)/,
+      })
+
+      return (
+        <div
+          className="relative my-8 h-0 overflow-hidden rounded-lg pb-[56.25%]"
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+        />
+      )
+    },
     hyperlink: ({ children, node }) => {
       const target = node.data.link_type === 'Web' ? node.data.target : undefined
       return (

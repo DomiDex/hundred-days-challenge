@@ -1,7 +1,6 @@
 import FooterLink from '@/components/ui/FooterLink'
 import Newsletter from '@/components/ui/Newsletter'
 import FooterLogo from '@/components/svg/FooterLogo'
-import { RSSIcon } from '@/components/svg/RSSIcon'
 import Link from 'next/link'
 
 const categories = [
@@ -66,9 +65,7 @@ export default function Footer() {
                 className="text-muted-foreground transition-colors hover:text-foreground"
                 aria-label="Subscribe to RSS Feed"
                 title="Subscribe via RSS, Atom, or JSON Feed"
-              >
-                <RSSIcon />
-              </Link>
+              ></Link>
             </div>
           </div>
         </div>

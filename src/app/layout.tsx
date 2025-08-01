@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { headers } from 'next/headers'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import GSAPProvider from '@/components/providers/GSAPProvider'
+import { NonceProvider } from '@/components/providers/NonceProvider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,18 +24,21 @@ export const metadata: Metadata = {
     'Practicing Next.js by building a daily coding challenge project every day for 100 days.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
+  const headersList = await headers()
+  const nonce = headersList.get('x-nonce') || ''
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -121,13 +126,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider>
-          <GSAPProvider>
-            <Header />
-            {children}
-            <Footer />
-          </GSAPProvider>
-        </ThemeProvider>
+        <NonceProvider nonce={nonce}>
+          <ThemeProvider>
+            <GSAPProvider>
+              <Header />
+              {children}
+              <Footer />
+            </GSAPProvider>
+          </ThemeProvider>
+        </NonceProvider>
       </body>
     </html>
   )

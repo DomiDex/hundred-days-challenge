@@ -1,32 +1,45 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import mailchimp from '@/lib/mailchimp'
 import crypto from 'crypto'
-import { validateEmail, sanitizeInput, createRateLimiter } from '@/lib/newsletter-validation'
+import { validateEmail, sanitizeInput } from '@/lib/newsletter-validation'
+import { withErrorHandler } from '@/lib/error-handler'
+import { validateRequestBody } from '@/lib/validation'
+import { createSecureApiRoute } from '@/lib/api-auth'
+import { getMailchimpConfig } from '@/lib/env'
 
-// Rate limiter: 5 requests per minute per IP
-const rateLimiter = createRateLimiter(5, 60000)
+async function handleSubscribe(request: NextRequest) {
+  // Parse and validate request body
+  const rawBody = await request.json()
+  const body = validateRequestBody<{
+    email: string
+    firstName?: string
+    lastName?: string
+    tags?: string[]
+  }>(rawBody, {
+    email: { required: true, type: 'string' },
+    firstName: { required: false, type: 'string', sanitizer: (v) => sanitizeInput(String(v)) },
+    lastName: { required: false, type: 'string', sanitizer: (v) => sanitizeInput(String(v)) },
+    tags: { required: false, type: 'array' },
+  })
 
-export async function POST(request: Request) {
-  // Get client IP for rate limiting
-  const ip = request.headers.get('x-forwarded-for') || 'unknown'
-
-  if (!rateLimiter(ip)) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 }
-    )
-  }
-
-  const { email, firstName, lastName, tags } = await request.json()
-
-  // Validate and sanitize inputs
-  if (!email || !validateEmail(email)) {
+  // Validate and sanitize email
+  if (!validateEmail(body.email)) {
     return NextResponse.json({ error: 'Please provide a valid email address' }, { status: 400 })
   }
 
-  const sanitizedEmail = sanitizeInput(email).toLowerCase()
-  const sanitizedFirstName = firstName ? sanitizeInput(firstName) : ''
-  const sanitizedLastName = lastName ? sanitizeInput(lastName) : ''
+  const sanitizedEmail = sanitizeInput(body.email).toLowerCase()
+  const sanitizedFirstName = body.firstName || ''
+  const sanitizedLastName = body.lastName || ''
+
+  // Get Mailchimp config
+  const mailchimpConfig = getMailchimpConfig()
+  if (!mailchimpConfig) {
+    console.error('Mailchimp not configured')
+    return NextResponse.json(
+      { error: 'Newsletter service temporarily unavailable' },
+      { status: 503 }
+    )
+  }
 
   try {
     // Generate subscriber hash for updates
@@ -34,10 +47,7 @@ export async function POST(request: Request) {
 
     // Check if user already exists
     try {
-      const member = await mailchimp.lists.getListMember(
-        process.env.MAILCHIMP_AUDIENCE_ID!,
-        subscriberHash
-      )
+      const member = await mailchimp.lists.getListMember(mailchimpConfig.audienceId, subscriberHash)
 
       // Update existing member
       if (member.status === 'subscribed') {
@@ -48,7 +58,7 @@ export async function POST(request: Request) {
       }
 
       // Resubscribe unsubscribed member
-      await mailchimp.lists.updateListMember(process.env.MAILCHIMP_AUDIENCE_ID!, subscriberHash, {
+      await mailchimp.lists.updateListMember(mailchimpConfig.audienceId, subscriberHash, {
         status: 'subscribed',
         merge_fields: {
           FNAME: sanitizedFirstName,
@@ -62,14 +72,14 @@ export async function POST(request: Request) {
       })
     } catch {
       // Member doesn't exist, create new
-      const response = await mailchimp.lists.addListMember(process.env.MAILCHIMP_AUDIENCE_ID!, {
+      const response = await mailchimp.lists.addListMember(mailchimpConfig.audienceId, {
         email_address: sanitizedEmail,
         status: 'subscribed',
         merge_fields: {
           FNAME: sanitizedFirstName,
           LNAME: sanitizedLastName,
         },
-        tags: tags || ['website-signup'],
+        tags: body.tags || ['website-signup'],
       })
 
       return NextResponse.json({
@@ -101,3 +111,15 @@ export async function POST(request: Request) {
     )
   }
 }
+
+// Export secure route with error handling
+export const POST = withErrorHandler(
+  createSecureApiRoute(handleSubscribe, {
+    requireAuth: false, // Public endpoint
+    rateLimit: {
+      windowMs: 60 * 1000, // 1 minute
+      maxRequests: 5, // 5 requests per minute
+    },
+    allowedMethods: ['POST'],
+  })
+)
