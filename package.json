@@ -13,7 +13,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint:fix": "next lint --fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "security:audit": "npm audit --production",
+    "security:fix": "npm audit fix",
+    "security:fix-force": "npm audit fix --force",
+    "security:check": "npm audit --audit-level=moderate",
+    "security:scan": "npm run security:check && npm run lint",
+    "prebuild": "npm run security:check"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -23,6 +29,8 @@
     "@prismicio/react": "^3.2.1",
     "@types/dompurify": "^3.0.5",
     "@types/prismjs": "^1.26.5",
+    "@upstash/ratelimit": "^2.0.6",
+    "@upstash/redis": "^1.35.3",
     "clsx": "^2.1.1",
     "dompurify": "^3.2.6",
     "feed": "^5.1.0",
@@ -36,6 +44,7 @@
     "sax": "^1.4.1",
     "statuses": "^2.0.2",
     "tailwind-merge": "^3.3.1",
+    "zod": "^4.0.14",
     "zustand": "^5.0.6"
   },
   "devDependencies": {

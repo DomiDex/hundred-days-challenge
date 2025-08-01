@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,38 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Security
+.env.local
+.env.production
+.env.*.local
+secrets/
+*.key
+*.pem
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# IDE and editor files
+.idea/
+.vscode/settings.json
+.vscode/launch.json
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Build analysis
+.next/analyze/
+.next/trace
+stats.json
+
+# Testing
+test-results/
+playwright-report/
+playwright/.cache/

@@ -44,6 +44,22 @@ function validateEnvironmentVariables(): EnvironmentVariables {
 
   // Validate server-only variables (only in server environment)
   if (typeof window === 'undefined') {
+    // Production security requirements
+    if (process.env.NODE_ENV === 'production') {
+      // These are required in production
+      if (!env.PREVIEW_SECRET) {
+        errors.push('PREVIEW_SECRET is required in production')
+      }
+      if (!env.API_SECRET_KEY) {
+        errors.push('API_SECRET_KEY is required in production')
+      }
+
+      // Ensure HTTPS in production
+      if (env.NEXT_PUBLIC_SITE_URL && !env.NEXT_PUBLIC_SITE_URL.startsWith('https://')) {
+        errors.push('NEXT_PUBLIC_SITE_URL must use HTTPS in production')
+      }
+    }
+
     // Validate Mailchimp configuration if any part is provided
     const mailchimpVars = [
       env.MAILCHIMP_API_KEY,
@@ -65,12 +81,20 @@ function validateEnvironmentVariables(): EnvironmentVariables {
     }
 
     // Validate security keys format if provided
-    if (env.PREVIEW_SECRET && env.PREVIEW_SECRET.length < 16) {
-      errors.push('PREVIEW_SECRET must be at least 16 characters long')
+    if (env.PREVIEW_SECRET && env.PREVIEW_SECRET.length < 32) {
+      errors.push('PREVIEW_SECRET must be at least 32 characters long')
     }
 
     if (env.API_SECRET_KEY && env.API_SECRET_KEY.length < 32) {
       errors.push('API_SECRET_KEY must be at least 32 characters long')
+    }
+
+    if (env.PRISMIC_WEBHOOK_SECRET && env.PRISMIC_WEBHOOK_SECRET.length < 32) {
+      errors.push('PRISMIC_WEBHOOK_SECRET must be at least 32 characters long')
+    }
+
+    if (env.MAILCHIMP_WEBHOOK_KEY && env.MAILCHIMP_WEBHOOK_KEY.length < 32) {
+      errors.push('MAILCHIMP_WEBHOOK_KEY must be at least 32 characters long')
     }
   }
 
@@ -154,4 +178,19 @@ function generateDefaultSecret(type: string): string {
 
   // In development, generate a consistent secret based on the type
   return Buffer.from(`dev-${type}-secret-${process.env.NODE_ENV}`).toString('base64')
+}
+
+// Helper function to check if we're in a secure context
+export function isSecureContext(): boolean {
+  return process.env.NODE_ENV === 'production' || process.env.FORCE_SECURE === 'true'
+}
+
+// Helper to get the site URL with proper protocol
+export function getSiteUrl(): string {
+  const { siteUrl } = getSecurityConfig()
+  if (process.env.NODE_ENV === 'development' && !siteUrl.startsWith('https://')) {
+    return siteUrl
+  }
+  // Force HTTPS in production
+  return siteUrl.replace(/^http:\/\//, 'https://')
 }

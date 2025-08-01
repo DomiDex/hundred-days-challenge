@@ -1,5 +1,7 @@
 // Input validation and sanitization utilities
 
+import { z } from 'zod'
+
 export class ValidationError extends Error {
   constructor(
     message: string,
@@ -8,6 +10,46 @@ export class ValidationError extends Error {
   ) {
     super(message)
     this.name = 'ValidationError'
+  }
+}
+
+// Zod schemas for common validations
+export const emailSchema = z.string().email().toLowerCase().trim()
+export const urlSchema = z.string().url().trim()
+export const slugSchema = z
+  .string()
+  .min(1)
+  .max(200)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format')
+
+// Newsletter subscription schema
+export const newsletterSubscriptionSchema = z.object({
+  email: emailSchema,
+  source: z.string().optional(),
+})
+
+// Contact form schema
+export const contactFormSchema = z.object({
+  name: z.string().min(1).max(100).trim(),
+  email: emailSchema,
+  message: z.string().min(1).max(5000).trim(),
+  subject: z.string().min(1).max(200).trim().optional(),
+})
+
+// Helper to validate with Zod schema
+export async function validateWithSchema<T>(
+  data: unknown,
+  schema: z.ZodSchema<T>
+): Promise<{ success: true; data: T } | { success: false; error: string }> {
+  try {
+    const validated = await schema.parseAsync(data)
+    return { success: true, data: validated }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const messages = error.errors.map((e) => `${e.path.join('.')}: ${e.message}`)
+      return { success: false, error: messages.join(', ') }
+    }
+    return { success: false, error: 'Validation failed' }
   }
 }
 
@@ -233,4 +275,25 @@ export const sanitizers = {
 
   toBoolean: (value: unknown): boolean =>
     value === true || value === 'true' || value === '1' || value === 1,
+}
+
+// XSS prevention helpers
+export function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+// Sanitize user input for display
+export function sanitizeForDisplay(input: string): string {
+  return escapeHtml(sanitizeString(input))
+}
+
+// Rate limit identifier sanitization
+export function sanitizeRateLimitIdentifier(identifier: string): string {
+  // Remove any characters that could be used for Redis key injection
+  return identifier.replace(/[^a-zA-Z0-9:.-]/g, '_').slice(0, 200)
 }
