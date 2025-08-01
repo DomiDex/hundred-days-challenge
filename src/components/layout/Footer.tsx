@@ -2,23 +2,38 @@ import FooterLink from '@/components/ui/FooterLink'
 import Newsletter from '@/components/ui/Newsletter'
 import FooterLogo from '@/components/svg/FooterLogo'
 import Link from 'next/link'
-
-const categories = [
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/tutorials', label: 'Tutorials' },
-  { href: '/resources', label: 'Resources' },
-]
+import { createClient } from '@/prismicio'
+import { getCategoryData } from '@/lib/prismic-helpers'
 
 const importantLinks = [
   { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/categories', label: 'All Categories' },
   { href: '/subscribe', label: 'RSS Subscribe' },
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/terms', label: 'Terms of Service' },
 ]
 
-export default function Footer() {
+export default async function Footer() {
+  const client = createClient()
+
+  // Fetch all categories
+  const categories = await client.getAllByType('category', {
+    orderings: [{ field: 'my.category.name', direction: 'asc' }],
+    limit: 4, // Show only first 4 categories in footer
+  })
+
+  const categoryLinks = categories
+    .map((category) => {
+      const categoryData = getCategoryData(category)
+      return categoryData
+        ? {
+            href: `/blog/${category.uid}`,
+            label: categoryData.name,
+          }
+        : null
+    })
+    .filter((link): link is { href: string; label: string } => link !== null)
   return (
     <footer className="border-t border-border">
       <div className="max-w-4xl px-12 py-12">
@@ -28,7 +43,7 @@ export default function Footer() {
               Categories
             </h3>
             <ul className="space-y-2">
-              {categories.map((link) => (
+              {categoryLinks.map((link) => (
                 <li key={link.href}>
                   <FooterLink href={link.href}>{link.label}</FooterLink>
                 </li>
