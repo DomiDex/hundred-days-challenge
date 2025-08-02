@@ -20,6 +20,12 @@ This directory contains all tasks required to enhance the 100 Days of Craft blog
 - **Task 06**: [Testing Framework Setup](./task-06-testing-setup.md) - Configure Jest, React Testing Library, and Playwright
 - **Task 07**: [Unit Tests Implementation](./task-07-unit-tests.md) - Write comprehensive unit tests for 80% coverage
 - **Task 08**: [E2E Tests Implementation](./task-08-e2e-tests.md) - Create end-to-end tests for critical user journeys
+- **Task 18**: [Fix Security Test Failures](./task-18-fix-security-tests.md) - Fix failing security tests with proper environment mocking
+- **Task 19**: [Fix ESLint Any Types](./task-19-fix-eslint-any-types.md) - Replace all `any` types with proper TypeScript types
+- **Task 20**: [Fix TypeScript Type Errors](./task-20-fix-typescript-type-errors.md) - Fix type errors that emerged after removing `any` types
+- **Task 21**: [API Route Testing](./task-21-api-route-testing.md) - Comprehensive testing strategy for all API routes
+- **Task 22**: [API Test Utilities](./task-22-api-test-utilities.md) - Create testing utilities and helpers for API route testing
+- **Task 23**: [API Test Implementation](./task-23-api-route-test-implementation.md) - Implement tests for all API endpoints
 
 ### ⚡ Performance & SEO
 
@@ -64,7 +70,13 @@ This directory contains all tasks required to enhance the 100 Days of Craft blog
 14. **Task 15** - RSS/Atom Feed (1 day)
 15. **Task 16** - RSS Promotion Strategy (1 day)
 16. **Task 05** - Dependency Security (1 day)
-17. Final testing and deployment
+17. **Task 18** - Fix Security Test Failures (0.5 day)
+18. **Task 19** - Fix ESLint Any Types (0.5 day)
+19. **Task 20** - Fix TypeScript Type Errors (0.5 day)
+20. **Task 21** - API Route Testing Strategy (1 day)
+21. **Task 22** - API Test Utilities (1 day)
+22. **Task 23** - API Test Implementation (3 days)
+23. Final testing and deployment
 
 ## Key Milestones
 
@@ -90,9 +102,11 @@ This directory contains all tasks required to enhance the 100 Days of Craft blog
 
 ### Testing
 
-- ✅ 80%+ code coverage
+- ✅ 80%+ code coverage for components
+- ✅ 90%+ code coverage for API routes
 - ✅ All E2E tests passing
 - ✅ No flaky tests
+- ✅ Comprehensive API test suite
 
 ### Performance
 

@@ -20,9 +20,11 @@
     "security:check": "npm audit --audit-level=moderate",
     "security:scan": "npm run security:check && npm run lint",
     "prebuild": "npm run security:check",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "node ./node_modules/jest/bin/jest.js",
+    "test:watch": "node ./node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node ./node_modules/jest/bin/jest.js --coverage",
+    "test:api": "node ./node_modules/jest/bin/jest.js --config jest.config.api.js",
+    "test:api:coverage": "node ./node_modules/jest/bin/jest.js --config jest.config.api.js --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
@@ -82,7 +84,8 @@
     "tailwindcss": "^3.4.0",
     "ts-jest": "^29.4.0",
     "tsx": "^4.20.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "undici": "^7.13.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -8,7 +8,7 @@ import { generateSEOMetadata } from '@/components/SEO'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import Link from 'next/link'
 import * as prismic from '@prismicio/client'
-import type { AuthorDocument } from '@/types/author-types'
+import type { AuthorDocument } from '../../../../prismicio-types'
 import { extractCategoryData } from '@/lib/prismic-utils'
 import { getAuthorData } from '@/lib/prismic-helpers'
 

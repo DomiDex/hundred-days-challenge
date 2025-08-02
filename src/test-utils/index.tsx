@@ -12,7 +12,7 @@ export function renderWithProviders(
   ui: ReactElement,
   options: CustomRenderOptions = {}
 ) {
-  const { withTheme = true, withGsap = true, ...renderOptions } = options
+  const { withTheme = true, withGsap = false, ...renderOptions } = options
 
   const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
     let element = <>{children}</>

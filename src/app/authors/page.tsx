@@ -4,7 +4,7 @@ import { PrismicNextImage } from '@prismicio/next'
 import Link from 'next/link'
 import { AuthorSocialLinks } from '@/components/blog/AuthorSocialLinks'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
-import type { AuthorDocument } from '@/types/author-types'
+import type { AuthorDocument } from '../../../prismicio-types'
 import { getAuthorData } from '@/lib/prismic-helpers'
 
 // No need for extended types since AuthorDocument already has all fields
