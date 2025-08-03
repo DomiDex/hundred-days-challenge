@@ -19,6 +19,9 @@ type ExtendedCategory = CategoryDocument & {
   data: CategoryDocument['data'] & ExtendedCategoryData
 }
 
+// Allow dynamic params that aren't pre-generated
+export const dynamicParams = true
+
 type Props = {
   params: Promise<{ category: string }>
 }
@@ -43,12 +46,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const client = createClient()
-  const categories = await client.getAllByType('category')
+  try {
+    const client = createClient()
+    const categories = await client.getAllByType('category')
 
-  return categories.map((category) => ({
-    category: category.uid,
-  }))
+    return categories.map((category) => ({
+      category: category.uid,
+    }))
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error)
+    // Return empty array on error to prevent build failure
+    return []
+  }
 }
 
 export default async function CategoryPage({ params }: Props) {

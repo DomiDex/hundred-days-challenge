@@ -26,6 +26,9 @@ import { BreadcrumbSchema } from '@/components/SEO/BreadcrumbSchema'
 // Revalidate every 2 hours for blog posts
 export const revalidate = 7200
 
+// Allow dynamic params that aren't pre-generated
+export const dynamicParams = true
+
 // Temporary type extension until Prismic types are regenerated
 interface ExtendedPostData {
   demo_link?: prismic.LinkField
@@ -69,19 +72,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const client = createClient()
-  const posts = await client.getAllByType('post', {
-    fetchLinks: ['category.uid'],
-  })
+  try {
+    const client = createClient()
+    const posts = await client.getAllByType('post', {
+      fetchLinks: ['category.uid'],
+    })
 
-  return posts.map((post) => {
-    const categoryData = extractCategoryData(post)
+    // Filter out posts without valid category data
+    const validPosts = posts.filter((post) => {
+      const categoryData = extractCategoryData(post)
+      return categoryData?.uid && post.uid
+    })
 
-    return {
-      category: categoryData?.uid || '',
-      slug: post.uid,
-    }
-  })
+    return validPosts.map((post) => {
+      const categoryData = extractCategoryData(post)
+      return {
+        category: categoryData!.uid,
+        slug: post.uid,
+      }
+    })
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error)
+    // Return empty array on error to prevent build failure
+    return []
+  }
 }
 
 export default async function BlogPostPage({ params }: Props) {
