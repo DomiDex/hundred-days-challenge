@@ -9,7 +9,6 @@ import GSAPProvider from '@/components/providers/GSAPProvider'
 import { NonceProvider } from '@/components/providers/NonceProvider'
 import { SkipNavigation } from '@/components/SkipNavigation'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { CookieConsent } from '@/components/CookieConsent'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -165,7 +164,6 @@ export default async function RootLayout({
                 {children}
               </main>
               <Footer />
-              <CookieConsent />
             </GSAPProvider>
           </ThemeProvider>
         </NonceProvider>
