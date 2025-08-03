@@ -6,7 +6,7 @@ import * as prismic from '@prismicio/client'
 import type { PostDocument } from '../../prismicio-types'
 import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data'
 
-// Revalidate homepage every hour  
+// Revalidate homepage every hour
 export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,9 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!page) {
     return {
-      title: 'Blog - Hundred Days Challenge',
+      title: '100 Days of Craft - Daily Journey of Code, Creativity & Growth',
       description:
-        'Welcome to our blog featuring articles on web development, technology, and more.',
+        'Explore the intersection of code and creativity with 100 Days of Craft. Daily experiments, projects, and learnings in design and development.',
     }
   }
 
@@ -70,19 +70,19 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
-      
+
       <main className="min-h-screen">
         {/* Hero Section */}
         <Hero />
 
-      {/* Main Blog Content */}
-      <div className="container mx-auto px-4 py-8">
-        <HomepageBlogSection
-          initialPosts={posts}
-          initialHasMore={hasMore}
-          categories={categories}
-        />
-      </div>
+        {/* Main Blog Content */}
+        <div className="container mx-auto px-4 py-8">
+          <HomepageBlogSection
+            initialPosts={posts}
+            initialHasMore={hasMore}
+            categories={categories}
+          />
+        </div>
       </main>
     </>
   )
