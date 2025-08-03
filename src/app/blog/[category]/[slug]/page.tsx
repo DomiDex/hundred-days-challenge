@@ -23,10 +23,10 @@ import { extractHeadingsFromRichText } from '@/lib/toc-utils'
 import { generateArticleSchema } from '@/lib/structured-data'
 import { BreadcrumbSchema } from '@/components/SEO/BreadcrumbSchema'
 
-// Revalidate every 2 hours for blog posts
-export const revalidate = 7200
+// Configure for ISR (Incremental Static Regeneration)
+export const revalidate = 3600 // Revalidate every hour
 
-// Allow dynamic params that aren't pre-generated
+// Allow dynamic params that aren't pre-generated at build time
 export const dynamicParams = true
 
 // Temporary type extension until Prismic types are regenerated
