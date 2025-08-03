@@ -54,7 +54,10 @@ export function AuthorSocialLinks({
       {validLinks.map(({ link, icon, label }) => {
         if (!prismic.isFilled.link(link)) return null
 
-        const url = link.link_type === 'Web' ? link.url : '#'
+        // Cast link to record to access properties safely
+        const linkObj = link as Record<string, unknown>
+        const url =
+          linkObj.link_type === 'Web' && typeof linkObj.url === 'string' ? linkObj.url : '#'
 
         return (
           <SocialLink

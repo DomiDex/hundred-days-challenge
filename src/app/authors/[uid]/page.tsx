@@ -11,6 +11,7 @@ import * as prismic from '@prismicio/client'
 import type { AuthorDocument } from '../../../../prismicio-types'
 import { extractCategoryData } from '@/lib/prismic-utils'
 import { getAuthorData } from '@/lib/prismic-helpers'
+import { BlogCard } from '@/components/blog/BlogCard'
 
 // Temporary type extension for posts with author field
 type ExtendedPost = {
@@ -169,69 +170,18 @@ export default async function AuthorPage({ params }: Props) {
                 const categorySlug = categoryData?.uid || 'uncategorized'
 
                 return (
-                  <article
+                  <BlogCard
                     key={post.id}
-                    className="space-y-4 rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-700"
-                  >
-                    {post.data.image.url && (
-                      <Link href={`/blog/${categorySlug}/${post.uid}`}>
-                        <div className="relative h-40 w-full overflow-hidden rounded-md">
-                          <PrismicNextImage field={post.data.image} fill className="object-cover" />
-                        </div>
-                      </Link>
-                    )}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        {categoryData && (
-                          <>
-                            <Link
-                              href={`/blog/${categorySlug}`}
-                              className="font-medium text-primary hover:text-primary/80"
-                            >
-                              {categoryData.name}
-                            </Link>
-                            <span className="text-gray-400">•</span>
-                          </>
-                        )}
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {new Date(
-                            post.data.publication_date || post.first_publication_date
-                          ).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </span>
-                      </div>
-                      <h3 className="text-lg font-bold text-slate-800 dark:text-card-foreground">
-                        {post.data.name}
-                      </h3>
-                      {post.data.excerpt && (
-                        <p className="line-clamp-2 text-sm text-gray-600 dark:text-muted-foreground">
-                          {post.data.excerpt}
-                        </p>
-                      )}
-                    </div>
-                    <Link
-                      href={`/blog/${categorySlug}/${post.uid}`}
-                      className="group flex items-center gap-2 text-sm font-medium"
-                    >
-                      Learn More
-                      <svg
-                        className="h-4 w-4 pt-0.5 transition-transform duration-300 group-hover:translate-x-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </Link>
-                  </article>
+                    uid={post.uid}
+                    title={post.data.name}
+                    excerpt={post.data.excerpt}
+                    image={post.data.image}
+                    category={{
+                      uid: categorySlug,
+                      name: categoryData?.name || '',
+                    }}
+                    date={post.data.publication_date || post.first_publication_date}
+                  />
                 )
               })}
             </div>
