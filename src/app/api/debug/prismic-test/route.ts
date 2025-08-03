@@ -12,7 +12,7 @@ export async function GET() {
     let testPost = null
     try {
       testPost = await client.getByUID('post', 'test')
-    } catch (e) {
+    } catch {
       // Post not found
     }
 

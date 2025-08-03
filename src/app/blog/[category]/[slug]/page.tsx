@@ -7,7 +7,6 @@ import { SliceZone } from '@prismicio/react'
 import { components } from '@/slices'
 import { RichTextRenderer } from '@/components/blog/RichTextRenderer'
 import { TableOfContents } from '@/components/blog/TableOfContents'
-import Link from 'next/link'
 import { PrismLoader } from '@/components/PrismLoader'
 import { generateSEOMetadata } from '@/components/SEO'
 import ProjectLinks from '@/components/blog/ProjectLinks'
@@ -22,6 +21,8 @@ import { getAuthorData } from '@/lib/prismic-helpers'
 import { extractHeadingsFromRichText } from '@/lib/toc-utils'
 import { generateArticleSchema } from '@/lib/structured-data'
 import { BreadcrumbSchema } from '@/components/SEO/BreadcrumbSchema'
+import { BlogPostAnalytics } from '@/components/BlogPostAnalytics'
+import { AuthorLink } from '@/components/blog/AuthorLink'
 
 // Configure for ISR (Incremental Static Regeneration)
 export const revalidate = 3600 // Revalidate every hour
@@ -194,6 +195,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background">
       <PrismLoader />
+      <BlogPostAnalytics postSlug={post.uid} postTitle={post.data.name || ''} />
 
       {/* Structured Data */}
       <script
@@ -237,12 +239,11 @@ export default async function BlogPostPage({ params }: Props) {
                     <span className="hidden sm:inline">•</span>
                     <div className="flex items-center gap-2">
                       <span>By </span>
-                      <Link
-                        href={`/authors/${author.uid}`}
+                      <AuthorLink
+                        uid={author.uid}
+                        name={getAuthorData(author)?.name || ''}
                         className="text-primary transition-colors hover:text-primary/80"
-                      >
-                        {getAuthorData(author)?.name || ''}
-                      </Link>
+                      />
                     </div>
                   </>
                 )}
