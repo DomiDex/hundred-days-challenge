@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import type { CategoryDocument } from '../../../prismicio-types'
@@ -10,7 +11,7 @@ interface CategoryNavigationProps {
   className?: string
 }
 
-export function CategoryNavigation({
+export const CategoryNavigation = memo(function CategoryNavigation({
   categories,
   currentCategoryId,
   className,
@@ -48,4 +49,4 @@ export function CategoryNavigation({
       })}
     </div>
   )
-}
+})

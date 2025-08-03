@@ -4,6 +4,10 @@ import { HomepageBlogSection } from '@/components/blog/HomepageBlogSection'
 import { Hero } from '@/components/Hero'
 import * as prismic from '@prismicio/client'
 import type { PostDocument } from '../../prismicio-types'
+import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data'
+
+// Revalidate homepage every hour  
+export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient()
@@ -50,10 +54,26 @@ export default async function Home() {
   const posts = postsResponse.results as PostDocument[]
   const hasMore = postsResponse.page < postsResponse.total_pages
 
+  // Generate structured data
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
+  const organizationSchema = generateOrganizationSchema(siteUrl)
+  const websiteSchema = generateWebSiteSchema(siteUrl)
+
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <Hero />
+    <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      
+      <main className="min-h-screen">
+        {/* Hero Section */}
+        <Hero />
 
       {/* Main Blog Content */}
       <div className="container mx-auto px-4 py-8">
@@ -63,6 +83,7 @@ export default async function Home() {
           categories={categories}
         />
       </div>
-    </main>
+      </main>
+    </>
   )
 }

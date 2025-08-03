@@ -20,6 +20,11 @@ import type { PostDocument, AuthorDocument } from '../../../../../prismicio-type
 import { filterPostsByCategory, extractCategoryData } from '@/lib/prismic-utils'
 import { getAuthorData } from '@/lib/prismic-helpers'
 import { extractHeadingsFromRichText } from '@/lib/toc-utils'
+import { generateArticleSchema } from '@/lib/structured-data'
+import { BreadcrumbSchema } from '@/components/SEO/BreadcrumbSchema'
+
+// Revalidate every 2 hours for blog posts
+export const revalidate = 7200
 
 // Temporary type extension until Prismic types are regenerated
 interface ExtendedPostData {
@@ -155,18 +160,31 @@ export default async function BlogPostPage({ params }: Props) {
   // Extract headings for table of contents
   const headings = extractHeadingsFromRichText(post.data.article_text)
 
+  // Generate structured data
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
+  const articleSchema = generateArticleSchema(post, author, siteUrl)
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog', href: '/blog' },
+    { label: categoryData?.name || 'Category', href: `/blog/${category}` },
+    { label: post.data.name || '' },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       <PrismLoader />
+      
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <BreadcrumbSchema items={breadcrumbItems} />
 
       <div className="mx-auto max-w-7xl px-8 py-16 md:px-12 lg:px-16">
         <Breadcrumb
-          items={[
-            { label: 'Home', href: '/' },
-            { label: 'Blog', href: '/blog' },
-            { label: categoryData?.name || 'Category', href: `/blog/${category}` },
-            { label: post.data.name || '' },
-          ]}
+          items={breadcrumbItems}
           className="mb-16"
         />
         <div className="grid grid-cols-1 gap-12 xl:grid-cols-[300px_1fr]">

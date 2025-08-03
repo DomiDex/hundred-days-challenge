@@ -7,15 +7,22 @@ import Footer from '@/components/layout/Footer'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import GSAPProvider from '@/components/providers/GSAPProvider'
 import { NonceProvider } from '@/components/providers/NonceProvider'
+import { SkipNavigation } from '@/components/SkipNavigation'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
 })
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  fallback: ['Consolas', 'Monaco', 'Courier New', 'monospace'],
 })
 
 export const metadata: Metadata = {
@@ -42,6 +49,14 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/favicon.ico" />
         <meta name="msapplication-TileColor" content="#8B5CF6" />
         <meta name="theme-color" content="#8B5CF6" />
+        
+        {/* Preconnect to external domains for performance */}
+        <link rel="preconnect" href="https://images.prismic.io" />
+        <link rel="dns-prefetch" href="https://images.prismic.io" />
+        <link rel="preconnect" href="https://hundred-days-challenge.cdn.prismic.io" />
+        <link rel="dns-prefetch" href="https://hundred-days-challenge.cdn.prismic.io" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
@@ -134,8 +149,11 @@ export default async function RootLayout({
         <NonceProvider nonce={nonce}>
           <ThemeProvider>
             <GSAPProvider>
+              <SkipNavigation />
               <Header />
-              {children}
+              <main id="main-content" tabIndex={-1} className="focus:outline-none">
+                {children}
+              </main>
               <Footer />
             </GSAPProvider>
           </ThemeProvider>

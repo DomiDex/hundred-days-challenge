@@ -6,6 +6,9 @@ import { extractCategoryData } from '@/lib/prismic-utils'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { ViewAllCategoriesLink } from '@/components/ui/ViewAllCategoriesLink'
 
+// Revalidate every hour
+export const revalidate = 3600
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Blog | Your Site Name',

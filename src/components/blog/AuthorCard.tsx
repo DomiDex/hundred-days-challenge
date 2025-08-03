@@ -24,6 +24,8 @@ export function AuthorCard({ author, variant = 'compact', className = '' }: Auth
             height={variant === 'full' ? 100 : 60}
             className="rounded-full object-cover"
             fallbackAlt=""
+            loading="lazy"
+            sizes="(max-width: 768px) 60px, 100px"
           />
         </div>
       )}

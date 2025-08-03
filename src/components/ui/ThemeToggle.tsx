@@ -22,6 +22,8 @@ export default function ThemeToggle() {
     <div
       className="flex items-center rounded-full bg-gray-200 p-0.5 shadow-inner dark:bg-gray-700"
       style={{ minWidth: '78px', height: '28px' }}
+      role="group"
+      aria-label="Theme switcher"
     >
       <button
         onClick={() => setTheme('light')}
@@ -30,7 +32,8 @@ export default function ThemeToggle() {
             ? 'bg-white text-yellow-500 shadow-md dark:bg-gray-600'
             : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
         }`}
-        aria-label="Light mode"
+        aria-label="Switch to light mode"
+        aria-pressed={theme === 'light'}
       >
         <SunIcon />
       </button>
@@ -41,7 +44,8 @@ export default function ThemeToggle() {
             ? 'bg-white text-purple-500 shadow-md dark:bg-gray-600'
             : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
         }`}
-        aria-label="Dark mode"
+        aria-label="Switch to dark mode"
+        aria-pressed={theme === 'dark'}
       >
         <MoonIcon />
       </button>
@@ -52,7 +56,8 @@ export default function ThemeToggle() {
             ? 'bg-white text-blue-500 shadow-md dark:bg-gray-600'
             : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
         }`}
-        aria-label="System mode"
+        aria-label="Switch to system theme"
+        aria-pressed={theme === 'system'}
       >
         <ComputerIcon />
       </button>

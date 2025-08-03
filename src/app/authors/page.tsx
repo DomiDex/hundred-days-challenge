@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default async function AuthorsPage() {
   const client = createClient()
-  const authors = (await client.getAllByType('author' as 'page', {
+  const authors = (await client.getAllByType('author', {
     orderings: [{ field: 'my.author.name', direction: 'asc' }],
   })) as unknown as AuthorDocument[]
 

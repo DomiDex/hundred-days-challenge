@@ -1,0 +1,73 @@
+{
+  "timings": [
+    {
+      "metric": "first-contentful-paint",
+      "max": 1800,
+      "warn": 1500
+    },
+    {
+      "metric": "largest-contentful-paint", 
+      "max": 2500,
+      "warn": 2000
+    },
+    {
+      "metric": "cumulative-layout-shift",
+      "max": 0.1,
+      "warn": 0.05
+    },
+    {
+      "metric": "total-blocking-time",
+      "max": 300,
+      "warn": 200
+    },
+    {
+      "metric": "speed-index",
+      "max": 3000,
+      "warn": 2500
+    }
+  ],
+  "resourceSizes": [
+    {
+      "resourceType": "script",
+      "max": 150,
+      "warn": 120
+    },
+    {
+      "resourceType": "stylesheet", 
+      "max": 50,
+      "warn": 40
+    },
+    {
+      "resourceType": "image",
+      "max": 200,
+      "warn": 150
+    },
+    {
+      "resourceType": "font",
+      "max": 100,
+      "warn": 80
+    },
+    {
+      "resourceType": "total",
+      "max": 500,
+      "warn": 400
+    }
+  ],
+  "resourceCounts": [
+    {
+      "resourceType": "script",
+      "max": 10,
+      "warn": 8
+    },
+    {
+      "resourceType": "stylesheet",
+      "max": 5,
+      "warn": 3
+    },
+    {
+      "resourceType": "font",
+      "max": 5,
+      "warn": 3
+    }
+  ]
+}
