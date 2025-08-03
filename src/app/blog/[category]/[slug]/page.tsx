@@ -107,10 +107,12 @@ export default async function BlogPostPage({ params }: Props) {
     })) as ExtendedPost
   } catch (error) {
     console.error(`Error fetching post with slug "${slug}":`, error)
-    // In development, show more detailed error
-    if (process.env.NODE_ENV === 'development') {
-      throw new Error(`Failed to fetch post: ${slug}`)
-    }
+    console.error('Error details:', {
+      slug,
+      category,
+      repositoryName: process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || 'hundred-days-challenge',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
     notFound()
   }
 
@@ -178,7 +180,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background">
       <PrismLoader />
-      
+
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -187,10 +189,7 @@ export default async function BlogPostPage({ params }: Props) {
       <BreadcrumbSchema items={breadcrumbItems} />
 
       <div className="mx-auto max-w-7xl px-8 py-16 md:px-12 lg:px-16">
-        <Breadcrumb
-          items={breadcrumbItems}
-          className="mb-16"
-        />
+        <Breadcrumb items={breadcrumbItems} className="mb-16" />
         <div className="grid grid-cols-1 gap-12 xl:grid-cols-[300px_1fr]">
           {/* Table of Contents */}
           <aside className="hidden xl:block">
