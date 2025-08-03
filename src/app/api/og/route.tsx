@@ -3,13 +3,8 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-const font = fetch(new URL('../../../../public/fonts/Inter-Bold.ttf', import.meta.url)).then(
-  (res) => res.arrayBuffer()
-)
-
 export async function GET(req: NextRequest) {
   try {
-    const fontData = await font
     const { searchParams } = new URL(req.url)
 
     // Get params
@@ -129,15 +124,9 @@ export async function GET(req: NextRequest) {
             >
               {/* Author and date */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                {author && (
-                  <span style={{ fontSize: '24px', color: '#8b5cf6' }}>{author}</span>
-                )}
-                {author && date && (
-                  <span style={{ fontSize: '24px', color: '#6b7280' }}>•</span>
-                )}
-                {date && (
-                  <span style={{ fontSize: '24px', color: '#6b7280' }}>{date}</span>
-                )}
+                {author && <span style={{ fontSize: '24px', color: '#8b5cf6' }}>{author}</span>}
+                {author && date && <span style={{ fontSize: '24px', color: '#6b7280' }}>•</span>}
+                {date && <span style={{ fontSize: '24px', color: '#6b7280' }}>{date}</span>}
               </div>
 
               {/* Logo/Brand */}
@@ -157,14 +146,6 @@ export async function GET(req: NextRequest) {
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: 'Inter',
-            data: fontData,
-            style: 'normal',
-            weight: 800,
-          },
-        ],
       }
     )
   } catch (e) {
