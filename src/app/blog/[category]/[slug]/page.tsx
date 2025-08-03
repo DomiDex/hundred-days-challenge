@@ -106,7 +106,11 @@ export default async function BlogPostPage({ params }: Props) {
       ],
     })) as ExtendedPost
   } catch (error) {
-    console.error('Error fetching post:', error)
+    console.error(`Error fetching post with slug "${slug}":`, error)
+    // In development, show more detailed error
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error(`Failed to fetch post: ${slug}`)
+    }
     notFound()
   }
 
