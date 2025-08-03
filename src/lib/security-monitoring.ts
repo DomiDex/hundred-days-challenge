@@ -260,3 +260,31 @@ if (typeof window === 'undefined') {
     60 * 60 * 1000
   ) // Every hour
 }
+
+// Additional functions for testing
+export function getFailedLoginAttempts(window: number = 3600000): SecurityEvent[] {
+  const cutoff = Date.now() - window
+  return recentEvents.filter(
+    (event) => event.type === SecurityEventType.AUTH_FAILURE && event.timestamp.getTime() > cutoff
+  )
+}
+
+export function getCSPViolations(window: number = 3600000): SecurityEvent[] {
+  const cutoff = Date.now() - window
+  return recentEvents.filter(
+    (event) => event.type === SecurityEventType.CSP_VIOLATION && event.timestamp.getTime() > cutoff
+  )
+}
+
+export function getRateLimitHits(window: number = 3600000): SecurityEvent[] {
+  const cutoff = Date.now() - window
+  return recentEvents.filter(
+    (event) =>
+      event.type === SecurityEventType.RATE_LIMIT_EXCEEDED && event.timestamp.getTime() > cutoff
+  )
+}
+
+export function getSecurityEvents(window: number = 3600000): SecurityEvent[] {
+  const cutoff = Date.now() - window
+  return recentEvents.filter((event) => event.timestamp.getTime() > cutoff)
+}

@@ -1,5 +1,5 @@
 import { generateSEOMetadata } from '@/components/SEO'
-import { isFilled, ImageField } from '@prismicio/client'
+import { isFilled } from '@prismicio/client'
 import { createMockImageField } from '@/test-utils/mock-factories'
 
 // Mock Prismic client
@@ -29,7 +29,9 @@ describe('generateSEOMetadata', () => {
     const metadata = generateSEOMetadata({ data: {} })
 
     expect(metadata.title).toBe('A daily Next.js coding challenge | A dayly Next.js')
-    expect(metadata.description).toBe('Practicing Next.js by building a daily coding challenge project every day for 100 days.')
+    expect(metadata.description).toBe(
+      'Practicing Next.js by building a daily coding challenge project every day for 100 days.'
+    )
     expect(metadata.robots).toBe('index,follow')
     expect((metadata.openGraph as OpenGraphWithType)?.type).toBe('website')
     expect((metadata.twitter as TwitterWithCard)?.card).toBe('summary_large_image')
@@ -125,7 +127,11 @@ describe('generateSEOMetadata', () => {
     })
 
     expect((metadata.openGraph as OpenGraphWithType)?.type).toBe('article')
-    const openGraph = metadata.openGraph as { authors?: string[]; publishedTime?: string; modifiedTime?: string }
+    const openGraph = metadata.openGraph as {
+      authors?: string[]
+      publishedTime?: string
+      modifiedTime?: string
+    }
     expect(openGraph?.authors).toEqual(['John Doe'])
     expect(openGraph?.publishedTime).toBe('2024-01-01T00:00:00Z')
     expect(openGraph?.modifiedTime).toBe('2024-01-02T00:00:00Z')
@@ -163,7 +169,7 @@ describe('generateSEOMetadata', () => {
 
   it('handles invalid image data', () => {
     ;(isFilled.image as jest.MockedFunction<typeof isFilled.image>).mockReturnValue(false)
-    
+
     const data = {
       og_image: createMockImageField({ url: '', alt: '' }),
     }
@@ -222,7 +228,9 @@ describe('generateSEOMetadata', () => {
     const metadata = generateSEOMetadata({ data })
 
     expect(metadata.title).toBe('A daily Next.js coding challenge | A dayly Next.js')
-    expect(metadata.description).toBe('Practicing Next.js by building a daily coding challenge project every day for 100 days.')
+    expect(metadata.description).toBe(
+      'Practicing Next.js by building a daily coding challenge project every day for 100 days.'
+    )
     expect(metadata.robots).toBe('index,follow')
     expect((metadata.openGraph as OpenGraphWithType)?.type).toBe('website')
     expect((metadata.twitter as TwitterWithCard)?.card).toBe('summary_large_image')
