@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { headers } from 'next/headers'
+// import { headers } from 'next/headers' // Removed to fix DYNAMIC_SERVER_USAGE
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -14,7 +14,14 @@ const geistSans = Geist({
   subsets: ['latin'],
   display: 'swap',
   preload: true,
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+  fallback: [
+    'system-ui',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Segoe UI',
+    'Roboto',
+    'sans-serif',
+  ],
 })
 
 const geistMono = Geist_Mono({
@@ -37,8 +44,9 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') || ''
+  // Remove headers() call to fix DYNAMIC_SERVER_USAGE error
+  // Nonce is not currently used since middleware is disabled
+  const nonce = ''
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -49,7 +57,7 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/favicon.ico" />
         <meta name="msapplication-TileColor" content="#8B5CF6" />
         <meta name="theme-color" content="#8B5CF6" />
-        
+
         {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://images.prismic.io" />
         <link rel="dns-prefetch" href="https://images.prismic.io" />

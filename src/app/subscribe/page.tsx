@@ -3,7 +3,7 @@ import { SmartFeedWidget } from '@/components/feed/SmartFeedWidget'
 import { Rss, CheckCircle2, Shield, Zap, Bell } from 'lucide-react'
 import Script from 'next/script'
 import { generateFeedStructuredData } from '@/lib/feed-seo-optimizer'
-import { headers } from 'next/headers'
+// import { headers } from 'next/headers' // Removed to avoid dynamic rendering
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
 
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 }
 
 export default async function SubscribePage() {
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') || ''
+  // Remove headers() call to avoid forcing dynamic rendering
+  const nonce = ''
   const benefits = [
     {
       icon: <Shield className="h-5 w-5" />,
