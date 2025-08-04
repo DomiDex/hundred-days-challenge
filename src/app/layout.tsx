@@ -150,6 +150,15 @@ export default async function RootLayout({
           title="100 Days of Craft"
           href="/opensearch.xml"
         />
+
+        {/* Additional metadata for feed readers and discovery */}
+        <meta name="feed:rss" content={`${siteUrl}/rss.xml`} />
+        <meta name="feed:atom" content={`${siteUrl}/atom.xml`} />
+        <meta name="feed:json" content={`${siteUrl}/feed.json`} />
+
+        {/* Syndication metadata */}
+        <meta name="syndication-source" content={siteUrl} />
+        <meta name="original-source" content={siteUrl} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

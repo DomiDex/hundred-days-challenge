@@ -39,7 +39,10 @@ export default async function Footer() {
       <div className="max-w-4xl px-12 py-12">
         <div className="ml-0 grid grid-cols-1 gap-8 md:ml-[5rem] md:grid-cols-3">
           <nav aria-labelledby="categories-heading">
-            <h3 id="categories-heading" className="text-limed-spruce-900 dark:text-limed-spruce-100 mb-4 text-lg font-semibold">
+            <h3
+              id="categories-heading"
+              className="text-limed-spruce-900 dark:text-limed-spruce-100 mb-4 text-lg font-semibold"
+            >
               Categories
             </h3>
             <ul className="space-y-2">
@@ -52,7 +55,10 @@ export default async function Footer() {
           </nav>
 
           <nav aria-labelledby="important-links-heading">
-            <h3 id="important-links-heading" className="text-limed-spruce-900 dark:text-limed-spruce-100 mb-4 text-lg font-semibold">
+            <h3
+              id="important-links-heading"
+              className="text-limed-spruce-900 dark:text-limed-spruce-100 mb-4 text-lg font-semibold"
+            >
               Important Links
             </h3>
             <ul className="space-y-2">

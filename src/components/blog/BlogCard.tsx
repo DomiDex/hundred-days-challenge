@@ -18,7 +18,14 @@ interface BlogCardProps {
   date: DateField | string
 }
 
-export const BlogCard = memo(function BlogCard({ uid, title, excerpt, image, category, date }: BlogCardProps) {
+export const BlogCard = memo(function BlogCard({
+  uid,
+  title,
+  excerpt,
+  image,
+  category,
+  date,
+}: BlogCardProps) {
   const formattedDate = new Date(date || '').toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -30,10 +37,10 @@ export const BlogCard = memo(function BlogCard({ uid, title, excerpt, image, cat
       <article className="space-y-4 rounded-2xl bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-700">
         {image.url && (
           <div className="relative h-40 w-full overflow-hidden rounded-md">
-            <PrismicNextImage 
-              field={image} 
-              fill 
-              className="object-cover" 
+            <PrismicNextImage
+              field={image}
+              fill
+              className="object-cover"
               loading="lazy"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />

@@ -27,6 +27,7 @@ That's it! You'll now receive all new posts automatically.
 ### 📧 Get RSS via Email
 
 Convert RSS to email using:
+
 - [Blogtrottr](https://blogtrottr.com)
 - [FeedRabbit](https://feedrabbit.com)
 
@@ -40,7 +41,7 @@ const response = await fetch('https://yourdomain.com/feed.json')
 const feed = await response.json()
 
 // Display posts
-feed.items.forEach(post => {
+feed.items.forEach((post) => {
   console.log(post.title, post.url)
 })
 ```
@@ -55,7 +56,7 @@ const parser = new DOMParser()
 const doc = parser.parseFromString(rssText, 'text/xml')
 
 const items = doc.querySelectorAll('item')
-items.forEach(item => {
+items.forEach((item) => {
   const title = item.querySelector('title')?.textContent
   const link = item.querySelector('link')?.textContent
   console.log(title, link)
@@ -69,14 +70,14 @@ let lastETag = null
 
 async function checkForUpdates() {
   const response = await fetch('https://yourdomain.com/rss.xml', {
-    headers: lastETag ? { 'If-None-Match': lastETag } : {}
+    headers: lastETag ? { 'If-None-Match': lastETag } : {},
   })
-  
+
   if (response.status === 304) {
     console.log('No new content')
     return
   }
-  
+
   lastETag = response.headers.get('ETag')
   const content = await response.text()
   // Process new content
@@ -101,8 +102,8 @@ await fetch(hubUrl, {
   body: new URLSearchParams({
     'hub.mode': 'subscribe',
     'hub.topic': topicUrl,
-    'hub.callback': callbackUrl
-  })
+    'hub.callback': callbackUrl,
+  }),
 })
 ```
 
@@ -126,14 +127,17 @@ Subscribe to specific topics:
 ## Troubleshooting
 
 **Feed not showing in reader?**
+
 - Try the Atom feed if RSS doesn't work
 - Check if your reader supports HTTPS
 
 **Missing images?**
+
 - Images are included as enclosures
 - Some readers hide images by default
 
 **Want only summaries?**
+
 - Currently feeds include full content
 - Use your reader's truncation settings
 
@@ -149,6 +153,7 @@ Subscribe to specific topics:
 
 ```markdown
 <!-- Add to README -->
+
 [![RSS Feed](https://img.shields.io/badge/RSS-Feed-orange)](https://yourdomain.com/rss.xml)
 ```
 

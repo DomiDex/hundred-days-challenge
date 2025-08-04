@@ -19,9 +19,7 @@ export default function Error({
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
       <div className="mx-auto max-w-md text-center">
         <h1 className="mb-4 text-6xl font-bold text-primary">500</h1>
-        <h2 className="mb-4 text-2xl font-semibold text-foreground">
-          Something went wrong!
-        </h2>
+        <h2 className="mb-4 text-2xl font-semibold text-foreground">Something went wrong!</h2>
         <p className="mb-8 text-muted-foreground">
           We apologize for the inconvenience. An unexpected error has occurred.
         </p>
