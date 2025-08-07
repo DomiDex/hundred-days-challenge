@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   title: 'A daily Next.js coding challenge | A dayly Next.js',
   description:
     'Practicing Next.js by building a daily coding challenge project every day for 100 days.',
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 }
 
 export default async function RootLayout({
