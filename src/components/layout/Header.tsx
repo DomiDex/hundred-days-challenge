@@ -14,14 +14,18 @@ export default async function Header() {
   return (
     <header className="border-b border-border py-2" role="banner">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-3 sm:px-4">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="h-auto w-[60px] text-foreground sm:w-[70px]"
           aria-label="100 Days of Craft - Home"
         >
           <Logo />
         </Link>
-        <nav className="flex items-center gap-3 sm:gap-6" role="navigation" aria-label="Main navigation">
+        <nav
+          className="flex items-center gap-3 sm:gap-6"
+          role="navigation"
+          aria-label="Main navigation"
+        >
           <NavBar categories={categories} />
           <ThemeToggle />
         </nav>

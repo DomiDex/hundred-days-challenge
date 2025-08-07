@@ -11,8 +11,9 @@ export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Blog | Your Site Name',
-    description: 'Read our latest blog posts',
+    title: 'Code & Creativity Articles | 100 Days of Craft',
+    description:
+      'Daily articles and insights from 100 Days of Craft. Follow the journey of building, learning, and exploring code and design every day.',
   }
 }
 

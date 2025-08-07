@@ -32,7 +32,7 @@ test.describe('Accessibility Tests', () => {
     // Click on the first blog post
     const firstPost = page.locator('article').first().locator('a').first()
     const postUrl = await firstPost.getAttribute('href')
-    
+
     if (postUrl) {
       await page.goto(postUrl)
       await page.waitForLoadState('networkidle')
@@ -75,7 +75,7 @@ test.describe('Keyboard Navigation', () => {
 
     // Tab through interactive elements
     await page.keyboard.press('Tab')
-    
+
     // Skip navigation should be the first focusable element
     const skipNav = page.locator('a[href="#main-content"]')
     await expect(skipNav).toBeFocused()
@@ -83,7 +83,7 @@ test.describe('Keyboard Navigation', () => {
     // Continue tabbing through navigation
     await page.keyboard.press('Tab')
     await page.keyboard.press('Tab')
-    
+
     // Theme toggle should be reachable
     const themeToggle = page.locator('[aria-label*="Switch to"]').first()
     await expect(themeToggle).toBeVisible()
@@ -95,10 +95,10 @@ test.describe('Keyboard Navigation', () => {
 
     // Tab to skip navigation
     await page.keyboard.press('Tab')
-    
+
     // Activate skip navigation
     await page.keyboard.press('Enter')
-    
+
     // Main content should be focused
     const mainContent = page.locator('#main-content')
     await expect(mainContent).toBeFocused()
@@ -150,13 +150,10 @@ test.describe('Color Contrast', () => {
       document.documentElement.classList.add('light')
     })
 
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2aa'])
-      .include('body')
-      .analyze()
+    const results = await new AxeBuilder({ page }).withTags(['wcag2aa']).include('body').analyze()
 
-    const contrastViolations = results.violations.filter(v => 
-      v.id === 'color-contrast' || v.id === 'color-contrast-enhanced'
+    const contrastViolations = results.violations.filter(
+      (v) => v.id === 'color-contrast' || v.id === 'color-contrast-enhanced'
     )
 
     expect(contrastViolations).toEqual([])
@@ -172,13 +169,10 @@ test.describe('Color Contrast', () => {
       document.documentElement.classList.add('dark')
     })
 
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2aa'])
-      .include('body')
-      .analyze()
+    const results = await new AxeBuilder({ page }).withTags(['wcag2aa']).include('body').analyze()
 
-    const contrastViolations = results.violations.filter(v => 
-      v.id === 'color-contrast' || v.id === 'color-contrast-enhanced'
+    const contrastViolations = results.violations.filter(
+      (v) => v.id === 'color-contrast' || v.id === 'color-contrast-enhanced'
     )
 
     expect(contrastViolations).toEqual([])
@@ -196,7 +190,7 @@ test.describe('Focus Management', () => {
 
     // Check if focus indicator is visible
     const focusedElement = page.locator(':focus')
-    const focusVisible = await focusedElement.evaluate(el => {
+    const focusVisible = await focusedElement.evaluate((el) => {
       const styles = window.getComputedStyle(el)
       return styles.outline !== 'none' || styles.boxShadow !== 'none'
     })

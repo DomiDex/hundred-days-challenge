@@ -1,9 +1,41 @@
 import '@testing-library/jest-dom'
+import { TextEncoder, TextDecoder } from 'util'
+
+// Setup TextEncoder/TextDecoder for Node.js environment
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
+
+// Polyfill Response for Node.js test environment
+if (!global.Response) {
+  global.Response = class Response {
+    constructor(body, init = {}) {
+      this.body = body
+      this.status = init.status || 200
+      this.statusText = init.statusText || 'OK'
+      this.headers = new Map()
+      this.ok = this.status >= 200 && this.status < 300
+
+      if (init.headers) {
+        Object.entries(init.headers).forEach(([key, value]) => {
+          this.headers.set(key, value)
+        })
+      }
+    }
+
+    async text() {
+      return this.body
+    }
+
+    async json() {
+      return JSON.parse(this.body)
+    }
+  }
+}
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,

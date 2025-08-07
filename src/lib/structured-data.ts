@@ -1,6 +1,7 @@
 import type { PostDocument, AuthorDocument } from '../../prismicio-types'
 import { getAuthorData } from './prismic-helpers'
 import { extractCategoryData } from './prismic-utils'
+import { isFilled } from '@prismicio/client'
 
 export function generateArticleSchema(
   post: PostDocument,
@@ -46,18 +47,27 @@ export function generatePersonSchema(author: AuthorDocument, siteUrl: string) {
   const authorData = getAuthorData(author)
   if (!authorData) return null
 
+  // Extract bio text from RichTextField
+  const bioText =
+    authorData.bio?.reduce((text, node) => {
+      if ('text' in node) {
+        return text + node.text
+      }
+      return text
+    }, '') || ''
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: authorData.name,
-    description: authorData.bio?.[0]?.text || '',
+    description: bioText,
     image: authorData.avatar?.url || '',
     url: `${siteUrl}/authors/${author.uid}`,
     sameAs: [
-      authorData.linkedin_link?.url,
-      authorData.x_link?.url,
-      authorData.github_link?.url,
-      authorData.website_link?.url,
+      isFilled.link(authorData.linkedin_link) ? authorData.linkedin_link.url : null,
+      isFilled.link(authorData.x_link) ? authorData.x_link.url : null,
+      isFilled.link(authorData.github_link) ? authorData.github_link.url : null,
+      isFilled.link(authorData.website_link) ? authorData.website_link.url : null,
     ].filter(Boolean),
   }
 }
@@ -86,10 +96,7 @@ export function generateOrganizationSchema(siteUrl: string) {
     description: 'A daily Next.js coding challenge project',
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
-    sameAs: [
-      'https://twitter.com/100daysofcraft',
-      'https://github.com/100daysofcraft',
-    ],
+    sameAs: ['https://twitter.com/100daysofcraft', 'https://github.com/100daysofcraft'],
   }
 }
 

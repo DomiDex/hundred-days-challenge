@@ -1,9 +1,9 @@
-import type { 
-  PostDocument, 
+import type {
+  PostDocument,
   CategoryDocument,
   HomepageDocument,
   PageDocument,
-  AuthorDocument
+  AuthorDocument,
 } from '../../prismicio-types'
 import type * as prismic from '@prismicio/client'
 
@@ -298,7 +298,9 @@ export const createMockAuthor = (overrides: Partial<AuthorDocument> = {}): Autho
   return base as AuthorDocument
 }
 
-export const createMockCategory = (overrides: Partial<CategoryDocument> = {}): CategoryDocument => ({
+export const createMockCategory = (
+  overrides: Partial<CategoryDocument> = {}
+): CategoryDocument => ({
   ...mockCategory,
   ...overrides,
   data: {

@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { CategoryLink } from './CategoryLink'
 
 interface CategoryChipProps {
   name: string
@@ -8,8 +8,8 @@ interface CategoryChipProps {
 
 export function CategoryChip({ name, uid }: CategoryChipProps) {
   return (
-    <Link href={`/blog/${uid}`} className={cn('font-medium')}>
+    <CategoryLink uid={uid} name={name} className={cn('font-medium')}>
       {name}
-    </Link>
+    </CategoryLink>
   )
 }

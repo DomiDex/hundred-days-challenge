@@ -89,14 +89,14 @@ describe('Security Tests', () => {
   describe('Cookie Security', () => {
     it('should set secure cookie options in production', () => {
       const originalEnv = process.env.NODE_ENV
-      
+
       jest.isolateModules(() => {
         // Set NODE_ENV directly without the helper
         // @ts-expect-error - Need to override readonly NODE_ENV for testing
         process.env.NODE_ENV = 'production'
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { getSecureCookieOptions } = require('../cookies')
-        
+
         const options = getSecureCookieOptions()
         expect(options.httpOnly).toBe(true)
         expect(options.secure).toBe(true)
@@ -109,13 +109,13 @@ describe('Security Tests', () => {
 
     it('should not require secure cookies in development', () => {
       const originalEnv = process.env.NODE_ENV
-      
+
       jest.isolateModules(() => {
         // @ts-expect-error - Need to override readonly NODE_ENV for testing
         process.env.NODE_ENV = 'development'
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { getSecureCookieOptions } = require('../cookies')
-        
+
         const options = getSecureCookieOptions()
         expect(options.httpOnly).toBe(true)
         expect(options.secure).toBe(false)

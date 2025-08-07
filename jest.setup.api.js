@@ -33,7 +33,7 @@ jest.mock('@/lib/env', () => require('./src/test-utils/api/env-mock'))
 // Mock Next.js cache functions
 jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
-  revalidateTag: jest.fn()
+  revalidateTag: jest.fn(),
 }))
 
 // Mock Mailchimp
@@ -43,9 +43,9 @@ jest.mock('@/lib/mailchimp', () => ({
     lists: {
       getListMember: jest.fn(),
       updateListMember: jest.fn(),
-      addListMember: jest.fn()
-    }
-  }
+      addListMember: jest.fn(),
+    },
+  },
 }))
 
 // Mock security monitoring
@@ -54,7 +54,7 @@ jest.mock('@/lib/security-monitoring', () => ({
   getFailedLoginAttempts: jest.fn(),
   getCSPViolations: jest.fn(),
   getRateLimitHits: jest.fn(),
-  getSecurityEvents: jest.fn()
+  getSecurityEvents: jest.fn(),
 }))
 
 // Mock Prismic Next
@@ -62,30 +62,42 @@ jest.mock('@prismicio/next', () => ({
   redirectToPreviewURL: jest.fn().mockResolvedValue(
     new Response(null, {
       status: 307,
-      headers: { location: '/preview' }
+      headers: { location: '/preview' },
     })
   ),
-  enableAutoPreviews: jest.fn()
+  enableAutoPreviews: jest.fn(),
 }))
 
 // Mock API auth and handlers
 jest.mock('@/lib/api-auth', () => ({
-  createSecureApiRoute: jest.fn(handler => handler)
+  createSecureApiRoute: jest.fn((handler) => handler),
 }))
 
 jest.mock('@/lib/error-handler', () => ({
-  withErrorHandler: jest.fn(handler => handler)
+  withErrorHandler: jest.fn((handler) => handler),
 }))
 
 jest.mock('@/lib/validation', () => ({
-  validateRequestBody: jest.fn((body, schema) => body)
+  validateRequestBody: jest.fn((body, schema) => body),
 }))
 
 // Mock feed generator
 jest.mock('@/lib/feed-generator', () => ({
-  generateRSSFeed: jest.fn().mockResolvedValue('<?xml version="1.0"?><rss version="2.0"><channel><title>Test</title></channel></rss>'),
-  generateAtomFeed: jest.fn().mockResolvedValue('<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"><title>Test</title></feed>'),
-  generateJSONFeed: jest.fn().mockResolvedValue(JSON.stringify({ version: 'https://jsonfeed.org/version/1', title: 'Test' }))
+  generateRSSFeed: jest
+    .fn()
+    .mockResolvedValue(
+      '<?xml version="1.0"?><rss version="2.0"><channel><title>Test</title></channel></rss>'
+    ),
+  generateAtomFeed: jest
+    .fn()
+    .mockResolvedValue(
+      '<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"><title>Test</title></feed>'
+    ),
+  generateJSONFeed: jest
+    .fn()
+    .mockResolvedValue(
+      JSON.stringify({ version: 'https://jsonfeed.org/version/1', title: 'Test' })
+    ),
 }))
 
 // Clear all timers/intervals after tests

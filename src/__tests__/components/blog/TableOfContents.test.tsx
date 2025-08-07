@@ -43,7 +43,9 @@ describe('TableOfContents', () => {
 
   beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { useTableOfContents } = require('@/hooks/useTableOfContents') as { useTableOfContents: jest.Mock }
+    const { useTableOfContents } = require('@/hooks/useTableOfContents') as {
+      useTableOfContents: jest.Mock
+    }
     useTableOfContents.mockReturnValue(mockUseTableOfContents)
     mockScrollToSection.mockClear()
   })
@@ -113,7 +115,9 @@ describe('TableOfContents', () => {
     expect(activeItem).toHaveClass('active')
 
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { useTableOfContents } = require('@/hooks/useTableOfContents') as { useTableOfContents: jest.Mock }
+    const { useTableOfContents } = require('@/hooks/useTableOfContents') as {
+      useTableOfContents: jest.Mock
+    }
     useTableOfContents.mockReturnValue({
       ...mockUseTableOfContents,
       activeId: 'heading-3',

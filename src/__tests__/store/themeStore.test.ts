@@ -1,7 +1,10 @@
 import { renderHook, act } from '@testing-library/react'
 import { useThemeStore } from '@/store/themeStore'
 
-type ZustandSet<T> = (partial: T | Partial<T> | ((state: T) => T | Partial<T>), replace?: boolean | undefined) => void
+type ZustandSet<T> = (
+  partial: T | Partial<T> | ((state: T) => T | Partial<T>),
+  replace?: boolean | undefined
+) => void
 type ZustandGet<T> = () => T
 type ZustandApi<T> = {
   setState: ZustandSet<T>
@@ -12,8 +15,10 @@ type ZustandApi<T> = {
 
 // Mock zustand persist
 jest.mock('zustand/middleware', () => ({
-  persist: <T>(config: (set: ZustandSet<T>, get: ZustandGet<T>, api: ZustandApi<T>) => T) => 
-    (set: ZustandSet<T>, get: ZustandGet<T>, api: ZustandApi<T>) => config(set, get, api),
+  persist:
+    <T>(config: (set: ZustandSet<T>, get: ZustandGet<T>, api: ZustandApi<T>) => T) =>
+    (set: ZustandSet<T>, get: ZustandGet<T>, api: ZustandApi<T>) =>
+      config(set, get, api),
 }))
 
 describe('useThemeStore', () => {
@@ -80,7 +85,7 @@ describe('useThemeStore', () => {
     const { result } = renderHook(() => useThemeStore())
     const themes: Array<'light' | 'dark' | 'system'> = ['light', 'dark', 'system']
 
-    themes.forEach(theme => {
+    themes.forEach((theme) => {
       act(() => {
         result.current.setTheme(theme)
       })

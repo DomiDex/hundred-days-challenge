@@ -46,7 +46,13 @@ interface MockSocialLinksProps {
 }
 
 jest.mock('@/components/blog/AuthorSocialLinks', () => ({
-  AuthorSocialLinks: ({ linkedinLink, xLink, githubLink, websiteLink, className }: MockSocialLinksProps) => (
+  AuthorSocialLinks: ({
+    linkedinLink,
+    xLink,
+    githubLink,
+    websiteLink,
+    className,
+  }: MockSocialLinksProps) => (
     <div data-testid="social-links" className={className}>
       {linkedinLink && <a href={linkedinLink.url}>LinkedIn</a>}
       {xLink && <a href={xLink.url}>X</a>}
@@ -109,11 +115,11 @@ describe('AuthorCard', () => {
 
   it('returns null when author data is invalid', () => {
     // Create a mock author with invalid structure
-    const invalidAuthor = { 
+    const invalidAuthor = {
       ...createMockAuthor(),
-      data: null // This will make getAuthorData return null
+      data: null, // This will make getAuthorData return null
     } as unknown as AuthorDocument
-    
+
     const { container } = render(<AuthorCard author={invalidAuthor} />)
 
     expect(container.firstChild).toBeNull()
@@ -129,7 +135,7 @@ describe('AuthorCard', () => {
 
   it('renders bio only in full variant', () => {
     const mockAuthor = createMockAuthor()
-    
+
     const { rerender } = render(<AuthorCard author={mockAuthor} variant="compact" />)
     expect(screen.queryByTestId('rich-text')).not.toBeInTheDocument()
 
@@ -139,7 +145,7 @@ describe('AuthorCard', () => {
 
   it('renders social links only in full variant', () => {
     const mockAuthor = createMockAuthor()
-    
+
     const { rerender } = render(<AuthorCard author={mockAuthor} variant="compact" />)
     expect(screen.queryByTestId('social-links')).not.toBeInTheDocument()
 

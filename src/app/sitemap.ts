@@ -102,7 +102,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     ]
 
-    return [...routes, ...postRoutes, ...pageRoutes, ...authorRoutes, ...categoryRoutes, ...feedRoutes]
+    return [
+      ...routes,
+      ...postRoutes,
+      ...pageRoutes,
+      ...authorRoutes,
+      ...categoryRoutes,
+      ...feedRoutes,
+    ]
   } catch (error) {
     console.error('Error generating sitemap:', error)
     // Return minimal sitemap on error

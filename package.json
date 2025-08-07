@@ -34,6 +34,7 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@next/third-parties": "^15.4.5",
     "@prismicio/client": "^7.18.1",
     "@prismicio/next": "^2.0.1",
     "@prismicio/react": "^3.2.1",
@@ -46,7 +47,7 @@
     "feed": "^5.1.0",
     "gsap": "^3.13.0",
     "isomorphic-dompurify": "^2.26.0",
-    "lucide-react": "^0.536.0",
+    "lucide-react": "^0.535.0",
     "next": "15.4.5",
     "prismjs": "^1.30.0",
     "react": "19.1.1",
