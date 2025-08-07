@@ -1,5 +1,5 @@
 // Helper functions for Prismic type handling
-import type { AuthorDocument, AuthorDocumentData } from '@/types/author-types'
+import type { AuthorDocument, AuthorDocumentData } from '../../prismicio-types'
 import type { ExtendedCategoryDocumentData } from '@/types/category-types'
 
 // Helper function to safely extract author data

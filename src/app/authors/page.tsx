@@ -4,7 +4,7 @@ import { PrismicNextImage } from '@prismicio/next'
 import Link from 'next/link'
 import { AuthorSocialLinks } from '@/components/blog/AuthorSocialLinks'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
-import type { AuthorDocument } from '@/types/author-types'
+import type { AuthorDocument } from '../../../prismicio-types'
 import { getAuthorData } from '@/lib/prismic-helpers'
 
 // No need for extended types since AuthorDocument already has all fields
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default async function AuthorsPage() {
   const client = createClient()
-  const authors = (await client.getAllByType('author' as 'page', {
+  const authors = (await client.getAllByType('author', {
     orderings: [{ field: 'my.author.name', direction: 'asc' }],
   })) as unknown as AuthorDocument[]
 

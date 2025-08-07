@@ -7,21 +7,25 @@ The 100 Days of Craft blog provides multiple feed formats for content syndicatio
 ## Available Feed Formats
 
 ### 1. RSS 2.0 Feed
+
 - **URL**: `https://yourdomain.com/rss.xml`
 - **Content-Type**: `application/rss+xml`
 - **Description**: Most widely supported format, compatible with all major feed readers
 
 ### 2. Atom 1.0 Feed
+
 - **URL**: `https://yourdomain.com/atom.xml`
 - **Content-Type**: `application/atom+xml`
 - **Description**: Modern feed standard with better namespace support
 
 ### 3. JSON Feed 1.1
+
 - **URL**: `https://yourdomain.com/feed.json`
 - **Content-Type**: `application/feed+json`
 - **Description**: Developer-friendly format, easy to parse programmatically
 
 ### 4. Category-Specific Feeds
+
 - **URL Pattern**: `https://yourdomain.com/feeds/category/{category-slug}.xml`
 - **Example**: `https://yourdomain.com/feeds/category/tutorials.xml`
 - **Description**: Subscribe to specific content categories
@@ -29,6 +33,7 @@ The 100 Days of Craft blog provides multiple feed formats for content syndicatio
 ## Features
 
 ### SEO Optimizations
+
 - ✅ Unique, permanent GUIDs for each post
 - ✅ Full article content (not just excerpts)
 - ✅ Absolute URLs throughout
@@ -37,6 +42,7 @@ The 100 Days of Craft blog provides multiple feed formats for content syndicatio
 - ✅ Author information with privacy-safe emails
 
 ### Performance Features
+
 - ✅ ETags for efficient caching
 - ✅ Conditional GET support (If-None-Match, If-Modified-Since)
 - ✅ 1-hour cache revalidation
@@ -44,6 +50,7 @@ The 100 Days of Craft blog provides multiple feed formats for content syndicatio
 - ✅ Stale-while-revalidate caching strategy
 
 ### Real-time Updates
+
 - ✅ WebSub (PubSubHubbub) support
 - ✅ Hub URL: `https://pubsubhubbub.appspot.com/`
 - ✅ Instant notifications on new content
@@ -74,6 +81,7 @@ Feeds are generated dynamically using the `feed` npm package with data from Pris
 ### URL Rewrites
 
 Clean URLs are provided through Next.js rewrites:
+
 ```javascript
 // next.config.ts
 {
@@ -87,45 +95,61 @@ Clean URLs are provided through Next.js rewrites:
 ### Using Feed Readers
 
 #### Feedly
+
 1. Click the Feedly button or visit: `https://feedly.com/i/subscription/feed/https://yourdomain.com/rss.xml`
 2. Choose your subscription folder
 3. Start reading!
 
 #### Inoreader
+
 1. Add subscription: `https://yourdomain.com/rss.xml`
 2. Optionally set up rules and filters
 3. Enjoy full-text content
 
 #### Other Popular Readers
+
 - **NewsBlur**: `https://newsblur.com/?url=https://yourdomain.com/rss.xml`
 - **The Old Reader**: Add via their interface
 - **NetNewsWire**: Native macOS/iOS app
 - **Miniflux**: Self-hosted option
 
 ### Browser Extensions
+
 Many browsers support RSS feed discovery automatically through our meta tags.
 
 ### Email Delivery
+
 Use services like Blogtrottr or FeedRabbit to receive RSS updates via email.
 
 ## Feed Discovery
 
 ### Auto-Discovery Tags
+
 The following tags are included in the HTML `<head>`:
 
 ```html
-<link rel="alternate" type="application/rss+xml" 
-      title="100 Days of Craft - RSS Feed" 
-      href="/rss.xml" />
-<link rel="alternate" type="application/atom+xml" 
-      title="100 Days of Craft - Atom Feed" 
-      href="/atom.xml" />
-<link rel="alternate" type="application/feed+json" 
-      title="100 Days of Craft - JSON Feed" 
-      href="/feed.json" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="100 Days of Craft - RSS Feed"
+  href="/rss.xml"
+/>
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  title="100 Days of Craft - Atom Feed"
+  href="/atom.xml"
+/>
+<link
+  rel="alternate"
+  type="application/feed+json"
+  title="100 Days of Craft - JSON Feed"
+  href="/feed.json"
+/>
 ```
 
 ### WebSub Discovery
+
 ```html
 <link rel="hub" href="https://pubsubhubbub.appspot.com/" />
 <link rel="self" type="application/rss+xml" href="https://yourdomain.com/rss.xml" />
@@ -134,6 +158,7 @@ The following tags are included in the HTML `<head>`:
 ## Feed Content Structure
 
 ### RSS Item Example
+
 ```xml
 <item>
   <title>Post Title</title>
@@ -149,6 +174,7 @@ The following tags are included in the HTML `<head>`:
 ```
 
 ### Atom Entry Example
+
 ```xml
 <entry>
   <title>Post Title</title>
@@ -167,6 +193,7 @@ The following tags are included in the HTML `<head>`:
 ```
 
 ### JSON Feed Item Example
+
 ```json
 {
   "id": "https://yourdomain.com/blog/category/post-slug",
@@ -185,6 +212,7 @@ The following tags are included in the HTML `<head>`:
 ## Technical Specifications
 
 ### Cache Headers
+
 ```
 Cache-Control: public, max-age=600, s-maxage=3600, stale-while-revalidate=7200
 X-Robots-Tag: noindex
@@ -193,6 +221,7 @@ ETag: "{content-hash}"
 ```
 
 ### Content Guidelines
+
 - Full article content included
 - Images use absolute URLs
 - HTML is properly escaped
@@ -200,6 +229,7 @@ ETag: "{content-hash}"
 - UTF-8 encoding throughout
 
 ### Limits
+
 - Maximum 30 posts per feed
 - 1-hour cache revalidation
 - No pagination (latest posts only)
@@ -207,6 +237,7 @@ ETag: "{content-hash}"
 ## Validation
 
 Feeds can be validated using:
+
 - **W3C Feed Validator**: https://validator.w3.org/feed/
 - **FeedValidator.org**: http://feedvalidator.org/
 - **JSON Feed Validator**: https://validator.jsonfeed.org/
@@ -225,6 +256,7 @@ Crawl-delay: 10
 ## API Usage
 
 ### Programmatic Access
+
 ```javascript
 // Fetch RSS feed
 const response = await fetch('https://yourdomain.com/rss.xml')
@@ -236,12 +268,13 @@ const jsonFeed = await jsonResponse.json()
 ```
 
 ### Conditional Requests
+
 ```javascript
 // Use ETags for efficient polling
 const response = await fetch('https://yourdomain.com/rss.xml', {
   headers: {
-    'If-None-Match': previousETag
-  }
+    'If-None-Match': previousETag,
+  },
 })
 
 if (response.status === 304) {
@@ -252,16 +285,19 @@ if (response.status === 304) {
 ## Troubleshooting
 
 ### Feed Not Updating?
+
 1. Check cache headers (1-hour TTL)
 2. Verify WebSub notifications are working
 3. Clear feed reader cache
 
 ### Validation Errors?
+
 1. Use feed validators listed above
 2. Check for special characters
 3. Verify all URLs are absolute
 
 ### Missing Content?
+
 1. Ensure posts are published in Prismic
 2. Check post publication dates
 3. Verify category relationships
@@ -277,6 +313,7 @@ if (response.status === 304) {
 ## Support
 
 For issues or questions about RSS feeds:
+
 1. Check feed validators
 2. Test with multiple readers
 3. Review server logs

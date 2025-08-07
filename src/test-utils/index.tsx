@@ -8,11 +8,8 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   withGsap?: boolean
 }
 
-export function renderWithProviders(
-  ui: ReactElement,
-  options: CustomRenderOptions = {}
-) {
-  const { withTheme = true, withGsap = true, ...renderOptions } = options
+export function renderWithProviders(ui: ReactElement, options: CustomRenderOptions = {}) {
+  const { withTheme = true, withGsap = false, ...renderOptions } = options
 
   const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
     let element = <>{children}</>

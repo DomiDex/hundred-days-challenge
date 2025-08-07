@@ -83,7 +83,7 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
       )
     },
     paragraph: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
-    preformatted: ({ node, key }) => {
+    preformatted: ({ node }) => {
       let language = 'plaintext'
       let codeText = node.text || ''
 
@@ -98,13 +98,9 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
         codeText = codeText.split('\n').slice(1).join('\n')
       }
 
-      console.log('Detected language:', language, 'from:', firstLine)
+      // Language detected: ${language} from ${firstLine}
 
-      return (
-        <RichTextCodeBlock key={key} language={language}>
-          {codeText}
-        </RichTextCodeBlock>
-      )
+      return <RichTextCodeBlock language={language}>{codeText}</RichTextCodeBlock>
     },
     strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,

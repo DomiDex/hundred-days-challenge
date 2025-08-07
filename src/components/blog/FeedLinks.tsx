@@ -10,22 +10,22 @@ export function FeedLinks() {
   ]
 
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="rounded-lg border bg-card p-6">
+      <div className="mb-4 flex items-center gap-2">
         <RSSIcon className="h-5 w-5 text-primary" />
         <h3 className="text-lg font-semibold">Subscribe to Feeds</h3>
       </div>
-      
-      <p className="text-sm text-muted-foreground mb-4">
+
+      <p className="mb-4 text-sm text-muted-foreground">
         Stay updated with our latest posts through your favorite feed reader.
       </p>
-      
+
       <div className="grid gap-2">
         {feeds.map((feed) => (
           <a
             key={feed.name}
             href={feed.url}
-            className="flex items-center justify-between p-3 border rounded hover:bg-muted/50 transition-colors"
+            className="flex items-center justify-between rounded border p-3 transition-colors hover:bg-muted/50"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -34,8 +34,8 @@ export function FeedLinks() {
           </a>
         ))}
       </div>
-      
-      <div className="mt-4 pt-4 border-t">
+
+      <div className="mt-4 border-t pt-4">
         <p className="text-xs text-muted-foreground">
           All feeds include full content and support WebSub for real-time updates.
         </p>

@@ -1,9 +1,9 @@
-import type { 
-  PostDocument, 
-  AuthorDocument, 
+import type {
+  PostDocument,
   CategoryDocument,
   HomepageDocument,
-  PageDocument
+  PageDocument,
+  AuthorDocument,
 } from '../../prismicio-types'
 import type * as prismic from '@prismicio/client'
 
@@ -109,7 +109,7 @@ export const mockAuthor: AuthorDocument = {
   alternate_languages: [],
   data: {
     name: 'Test Author',
-    role: 'Developer',
+    role: 'Senior Developer',
     bio: mockRichTextField,
     linkedin_link: { link_type: 'Any' },
     x_link: { link_type: 'Any' },
@@ -165,7 +165,7 @@ export const mockCategory: CategoryDocument = {
   lang: 'en-us',
   alternate_languages: [],
   data: {
-    name: 'Test Category',
+    name: 'Technology',
     description: 'Test category description',
     image: {
       id: 'test-cat-image',
@@ -284,16 +284,23 @@ export const createMockPost = (overrides: Partial<PostDocument> = {}): PostDocum
   },
 })
 
-export const createMockAuthor = (overrides: Partial<AuthorDocument> = {}): AuthorDocument => ({
-  ...mockAuthor,
-  ...overrides,
-  data: {
-    ...mockAuthor.data,
-    ...(overrides.data || {}),
-  },
-})
+export const createMockAuthor = (overrides: Partial<AuthorDocument> = {}): AuthorDocument => {
+  const base = {
+    ...mockAuthor,
+    ...overrides,
+  }
+  if (overrides.data) {
+    base.data = {
+      ...mockAuthor.data,
+      ...overrides.data,
+    }
+  }
+  return base as AuthorDocument
+}
 
-export const createMockCategory = (overrides: Partial<CategoryDocument> = {}): CategoryDocument => ({
+export const createMockCategory = (
+  overrides: Partial<CategoryDocument> = {}
+): CategoryDocument => ({
   ...mockCategory,
   ...overrides,
   data: {

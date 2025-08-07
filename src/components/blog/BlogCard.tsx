@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import Link from 'next/link'
 import { PrismicNextImage } from '@prismicio/next'
 import { ImageField, KeyTextField, DateField } from '@prismicio/client'
@@ -17,7 +18,14 @@ interface BlogCardProps {
   date: DateField | string
 }
 
-export function BlogCard({ uid, title, excerpt, image, category, date }: BlogCardProps) {
+export const BlogCard = memo(function BlogCard({
+  uid,
+  title,
+  excerpt,
+  image,
+  category,
+  date,
+}: BlogCardProps) {
   const formattedDate = new Date(date || '').toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -29,7 +37,13 @@ export function BlogCard({ uid, title, excerpt, image, category, date }: BlogCar
       <article className="space-y-4 rounded-2xl bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-700">
         {image.url && (
           <div className="relative h-40 w-full overflow-hidden rounded-md">
-            <PrismicNextImage field={image} fill className="object-cover" />
+            <PrismicNextImage
+              field={image}
+              fill
+              className="object-cover"
+              loading="lazy"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
             <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/20 dark:group-hover:bg-black/40">
               <div className="flex scale-95 transform items-center gap-2 rounded-lg bg-lochinvar-600 px-4 py-2 font-medium text-white opacity-0 shadow-lg transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
                 <Eye size={16} />
@@ -67,4 +81,4 @@ export function BlogCard({ uid, title, excerpt, image, category, date }: BlogCar
       </article>
     </Link>
   )
-}
+})

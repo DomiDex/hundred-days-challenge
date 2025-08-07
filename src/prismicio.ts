@@ -28,9 +28,10 @@ const routes: Route[] = [
 export const createClient = (config: ClientConfig = {}) => {
   const client = baseCreateClient(repositoryName, {
     routes,
+    accessToken: process.env.PRISMIC_ACCESS_TOKEN,
     fetchOptions:
       process.env.NODE_ENV === 'production'
-        ? { next: { tags: ['prismic'] }, cache: 'force-cache' }
+        ? { next: { tags: ['prismic'], revalidate: 60 } } // Revalidate every 60 seconds in production
         : { next: { revalidate: 5 } },
     ...config,
   })

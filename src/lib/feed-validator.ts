@@ -4,7 +4,10 @@ interface ValidationResult {
   warnings: string[]
 }
 
-export async function validateFeed(feedContent: string, type: 'rss' | 'atom' | 'json'): Promise<ValidationResult> {
+export async function validateFeed(
+  feedContent: string,
+  type: 'rss' | 'atom' | 'json'
+): Promise<ValidationResult> {
   switch (type) {
     case 'rss':
     case 'atom':
@@ -17,19 +20,19 @@ export async function validateFeed(feedContent: string, type: 'rss' | 'atom' | '
 async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<ValidationResult> {
   const errors: string[] = []
   const warnings: string[] = []
-  
+
   try {
     // Basic XML validation
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, 'text/xml')
-    
+
     // Check for XML parsing errors
     const parserError = doc.querySelector('parsererror')
     if (parserError) {
       errors.push(`XML parsing failed: ${parserError.textContent}`)
       return { valid: false, errors, warnings }
     }
-    
+
     // RSS specific validation
     if (type === 'rss') {
       const channel = doc.querySelector('channel')
@@ -43,7 +46,7 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
             errors.push(`Missing required channel element: <${element}>`)
           }
         }
-        
+
         // Check items
         const items = channel.querySelectorAll('item')
         if (items.length === 0) {
@@ -54,13 +57,13 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
             if (!item.querySelector('title') && !item.querySelector('description')) {
               errors.push(`Item ${index + 1} missing both title and description`)
             }
-            
+
             // Check for guid
             const guid = item.querySelector('guid')
             if (!guid) {
               warnings.push(`Item ${index + 1} missing guid element`)
             }
-            
+
             // Check for pubDate
             if (!item.querySelector('pubDate')) {
               warnings.push(`Item ${index + 1} missing pubDate`)
@@ -69,7 +72,7 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
         }
       }
     }
-    
+
     // Atom specific validation
     if (type === 'atom') {
       const feed = doc.querySelector('feed')
@@ -83,7 +86,7 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
             errors.push(`Missing required feed element: <${element}>`)
           }
         }
-        
+
         // Check entries
         const entries = feed.querySelectorAll('entry')
         if (entries.length === 0) {
@@ -97,7 +100,7 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
                 errors.push(`Entry ${index + 1} missing required element: <${element}>`)
               }
             }
-            
+
             // Check for content or summary
             if (!entry.querySelector('content') && !entry.querySelector('summary')) {
               warnings.push(`Entry ${index + 1} missing both content and summary`)
@@ -106,7 +109,7 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
         }
       }
     }
-    
+
     return {
       valid: errors.length === 0,
       errors,
@@ -124,17 +127,17 @@ async function validateXMLFeed(content: string, type: 'rss' | 'atom'): Promise<V
 function validateJSONFeed(content: string): ValidationResult {
   const errors: string[] = []
   const warnings: string[] = []
-  
+
   try {
     const feed = JSON.parse(content)
-    
+
     // Check JSON Feed version
     if (!feed.version) {
       errors.push('Missing required field: version')
     } else if (!feed.version.startsWith('https://jsonfeed.org/version/1')) {
       errors.push(`Invalid version: ${feed.version}`)
     }
-    
+
     // Check required fields
     const requiredFields = ['title', 'items']
     for (const field of requiredFields) {
@@ -142,7 +145,7 @@ function validateJSONFeed(content: string): ValidationResult {
         errors.push(`Missing required field: ${field}`)
       }
     }
-    
+
     // Validate items
     if (Array.isArray(feed.items)) {
       if (feed.items.length === 0) {
@@ -154,12 +157,12 @@ function validateJSONFeed(content: string): ValidationResult {
           if (!feedItem.id) {
             errors.push(`Item ${index + 1} missing required field: id`)
           }
-          
+
           // Must have content_html or content_text
           if (!feedItem.content_html && !feedItem.content_text) {
             errors.push(`Item ${index + 1} missing both content_html and content_text`)
           }
-          
+
           // Check for dates
           if (!feedItem.date_published) {
             warnings.push(`Item ${index + 1} missing date_published`)
@@ -169,17 +172,17 @@ function validateJSONFeed(content: string): ValidationResult {
     } else if (feed.items) {
       errors.push('Items field must be an array')
     }
-    
+
     // Check feed_url if present
     if (feed.feed_url && !isValidUrl(feed.feed_url)) {
       warnings.push(`Invalid feed_url: ${feed.feed_url}`)
     }
-    
+
     // Check home_page_url if present
     if (feed.home_page_url && !isValidUrl(feed.home_page_url)) {
       warnings.push(`Invalid home_page_url: ${feed.home_page_url}`)
     }
-    
+
     return {
       valid: errors.length === 0,
       errors,

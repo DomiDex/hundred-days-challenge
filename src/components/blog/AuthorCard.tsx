@@ -1,7 +1,7 @@
 import { PrismicNextImage } from '@prismicio/next'
 import { RichTextRenderer } from './RichTextRenderer'
 import { AuthorSocialLinks } from './AuthorSocialLinks'
-import type { AuthorDocument } from '@/types/author-types'
+import type { AuthorDocument } from '../../../prismicio-types'
 import { getAuthorData } from '@/lib/prismic-helpers'
 
 interface AuthorCardProps {
@@ -16,7 +16,7 @@ export function AuthorCard({ author, variant = 'compact', className = '' }: Auth
 
   return (
     <div className={`flex gap-4 ${className}`}>
-      {authorData.avatar.url && (
+      {authorData.avatar?.url && (
         <div className="flex-shrink-0">
           <PrismicNextImage
             field={authorData.avatar}
@@ -24,6 +24,8 @@ export function AuthorCard({ author, variant = 'compact', className = '' }: Auth
             height={variant === 'full' ? 100 : 60}
             className="rounded-full object-cover"
             fallbackAlt=""
+            loading="lazy"
+            sizes="(max-width: 768px) 60px, 100px"
           />
         </div>
       )}
