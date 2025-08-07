@@ -4,6 +4,7 @@ import { createSecureApiRoute, verifyWebhookSignature } from '@/lib/api-auth'
 import { ApiErrors, withErrorHandler } from '@/lib/error-handler'
 import { getPrismicConfig } from '@/lib/env'
 import { validateQueryParam } from '@/lib/validation'
+import { onContentPublished } from '@/lib/websub-notifier'
 
 async function handleRevalidate(request: NextRequest) {
   // Get webhook secret from config
@@ -43,6 +44,15 @@ async function handleRevalidate(request: NextRequest) {
     timestamp: new Date().toISOString(),
     ip: request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown',
   })
+
+  // Notify WebSub hub about content update
+  try {
+    await onContentPublished()
+    console.log('WebSub hub notified successfully')
+  } catch (error) {
+    console.error('Failed to notify WebSub hub:', error)
+    // Don't fail the revalidation if WebSub notification fails
+  }
 
   return NextResponse.json({
     revalidated: true,

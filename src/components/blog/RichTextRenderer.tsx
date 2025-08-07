@@ -100,11 +100,7 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
 
       // Language detected: ${language} from ${firstLine}
 
-      return (
-        <RichTextCodeBlock language={language}>
-          {codeText}
-        </RichTextCodeBlock>
-      )
+      return <RichTextCodeBlock language={language}>{codeText}</RichTextCodeBlock>
     },
     strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,

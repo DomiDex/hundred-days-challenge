@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen, waitFor } from '@/test-utils'
 import { RichTextRenderer } from '@/components/blog/RichTextRenderer'
-import { RichTextField, RTImageNode, EmbedField } from '@prismicio/client'
+import { RichTextField, RTImageNode } from '@prismicio/client'
 import DOMPurify from 'isomorphic-dompurify'
 import { createMockEmbedField } from '@/test-utils/mock-factories'
 
@@ -19,62 +19,73 @@ interface MockPrismicBlock {
 
 interface MockPrismicRichTextProps {
   field: MockPrismicBlock[]
-  components: Record<string, React.ComponentType<{ node: MockPrismicBlock; children?: React.ReactNode }>>
+  components: Record<
+    string,
+    React.ComponentType<{ node: MockPrismicBlock; children?: React.ReactNode }>
+  >
 }
 
 // Mock PrismicRichText component
 jest.mock('@prismicio/react', () => ({
   PrismicRichText: ({ field, components }: MockPrismicRichTextProps) => {
     if (!field || !Array.isArray(field)) return null
-    
+
     const renderText = (block: MockPrismicBlock) => {
       if (!block.spans || block.spans.length === 0) {
         return block.text
       }
-      
+
       // Handle spans
       let lastEnd = 0
       const parts: React.ReactNode[] = []
-      
+
       block.spans.forEach((span, i: number) => {
         // Add text before span
         if (span.start > lastEnd && block.text) {
           parts.push(block.text.slice(lastEnd, span.start))
         }
-        
+
         // Add span content
         const spanText = block.text?.slice(span.start, span.end) || ''
         const SpanComponent = components[span.type]
         if (SpanComponent) {
-          parts.push(<SpanComponent key={i} node={{ ...span, type: span.type, text: spanText }}>{spanText}</SpanComponent>)
+          parts.push(
+            <SpanComponent key={i} node={{ ...span, type: span.type, text: spanText }}>
+              {spanText}
+            </SpanComponent>
+          )
         } else {
           parts.push(spanText)
         }
-        
+
         lastEnd = span.end
       })
-      
+
       // Add remaining text
       if (lastEnd < (block.text?.length || 0)) {
         parts.push(block.text?.slice(lastEnd))
       }
-      
+
       return parts
     }
-    
+
     return (
       <div data-testid="prismic-rich-text">
         {field.map((block: MockPrismicBlock, index: number) => {
           const Component = components[block.type]
           if (Component) {
-            return <Component key={index} node={block}>{renderText(block)}</Component>
+            return (
+              <Component key={index} node={block}>
+                {renderText(block)}
+              </Component>
+            )
           }
           return <div key={index}>{renderText(block)}</div>
         })}
       </div>
     )
   },
-  JSXMapSerializer: {}
+  JSXMapSerializer: {},
 }))
 
 // Mock Prism
@@ -123,7 +134,7 @@ describe('RichTextRenderer', () => {
         spans: [],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
     expect(screen.getByText('This is a test paragraph.')).toBeInTheDocument()
   })
@@ -137,15 +148,33 @@ describe('RichTextRenderer', () => {
       { type: 'heading5', text: 'Small Heading', spans: [] },
       { type: 'heading6', text: 'Tiny Heading', spans: [] },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
-    expect(screen.getByRole('heading', { level: 1, name: 'Main Title' })).toHaveAttribute('id', 'main-title')
-    expect(screen.getByRole('heading', { level: 2, name: 'Section Title' })).toHaveAttribute('id', 'section-title')
-    expect(screen.getByRole('heading', { level: 3, name: 'Subsection Title' })).toHaveAttribute('id', 'subsection-title')
-    expect(screen.getByRole('heading', { level: 4, name: 'Sub-subsection' })).toHaveAttribute('id', 'sub-subsection')
-    expect(screen.getByRole('heading', { level: 5, name: 'Small Heading' })).toHaveAttribute('id', 'small-heading')
-    expect(screen.getByRole('heading', { level: 6, name: 'Tiny Heading' })).toHaveAttribute('id', 'tiny-heading')
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Main Title' })).toHaveAttribute(
+      'id',
+      'main-title'
+    )
+    expect(screen.getByRole('heading', { level: 2, name: 'Section Title' })).toHaveAttribute(
+      'id',
+      'section-title'
+    )
+    expect(screen.getByRole('heading', { level: 3, name: 'Subsection Title' })).toHaveAttribute(
+      'id',
+      'subsection-title'
+    )
+    expect(screen.getByRole('heading', { level: 4, name: 'Sub-subsection' })).toHaveAttribute(
+      'id',
+      'sub-subsection'
+    )
+    expect(screen.getByRole('heading', { level: 5, name: 'Small Heading' })).toHaveAttribute(
+      'id',
+      'small-heading'
+    )
+    expect(screen.getByRole('heading', { level: 6, name: 'Tiny Heading' })).toHaveAttribute(
+      'id',
+      'tiny-heading'
+    )
   })
 
   it('renders code blocks with language detection', () => {
@@ -156,9 +185,9 @@ describe('RichTextRenderer', () => {
         spans: [],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     const codeBlock = screen.getByTestId('code-block')
     expect(codeBlock).toHaveAttribute('data-language', 'javascript')
     expect(codeBlock).toHaveTextContent('const hello = "world";')
@@ -171,12 +200,10 @@ describe('RichTextRenderer', () => {
       { text: '/*css*/\nbody { color: red; }', expectedLang: 'css' },
       { text: '<!--html-->\n<div>Hello</div>', expectedLang: 'html' },
     ]
-    
+
     testCases.forEach(({ text, expectedLang }) => {
-      const field: RichTextField = [
-        { type: 'preformatted', text, spans: [] },
-      ]
-      
+      const field: RichTextField = [{ type: 'preformatted', text, spans: [] }]
+
       const { container } = render(<RichTextRenderer field={field} />)
       const codeBlock = container.querySelector('[data-testid="code-block"]')
       expect(codeBlock).toHaveAttribute('data-language', expectedLang)
@@ -206,9 +233,9 @@ describe('RichTextRenderer', () => {
         spans: [],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     expect(screen.getByText('First item')).toBeInTheDocument()
     expect(screen.getByText('Second item')).toBeInTheDocument()
     expect(screen.getByText('Ordered first')).toBeInTheDocument()
@@ -226,9 +253,9 @@ describe('RichTextRenderer', () => {
         ],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     expect(screen.getByText('bold', { exact: false })).toBeInTheDocument()
     expect(screen.getByText('italic', { exact: false })).toBeInTheDocument()
   })
@@ -252,9 +279,9 @@ describe('RichTextRenderer', () => {
         ],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     const link = screen.getByRole('link', { name: /this link/i })
     expect(link).toHaveAttribute('href', 'https://example.com')
     expect(link).toHaveAttribute('target', '_blank')
@@ -272,13 +299,13 @@ describe('RichTextRenderer', () => {
         ],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     const code = screen.getByText('code')
     expect(code.tagName).toBe('CODE')
     expect(code).toHaveClass('rounded', 'bg-gray-200')
-    
+
     const highlight = screen.getByText('highlight')
     expect(highlight.tagName).toBe('MARK')
     expect(highlight).toHaveClass('bg-yellow-200')
@@ -296,9 +323,9 @@ describe('RichTextRenderer', () => {
         edit: { x: 0, y: 0, zoom: 1, background: 'transparent' },
       } as RTImageNode,
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     const image = screen.getByAltText('Test image')
     expect(image).toHaveAttribute('src', 'https://example.com/image.jpg')
     expect(screen.getByText('© 2024 Example')).toBeInTheDocument()
@@ -318,9 +345,9 @@ describe('RichTextRenderer', () => {
         }),
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     expect(DOMPurify.sanitize).toHaveBeenCalledWith(embedHtml, expect.any(Object))
   })
 
@@ -332,21 +359,22 @@ describe('RichTextRenderer', () => {
         spans: [],
       },
     ]
-    
+
     render(<RichTextRenderer field={field} />)
-    
-    await waitFor(() => {
-      expect(mockHighlightAll).toHaveBeenCalled()
-    }, { timeout: 200 })
+
+    await waitFor(
+      () => {
+        expect(mockHighlightAll).toHaveBeenCalled()
+      },
+      { timeout: 200 }
+    )
   })
 
   it('applies custom className', () => {
-    const field: RichTextField = [
-      { type: 'paragraph', text: 'Test', spans: [] },
-    ]
-    
+    const field: RichTextField = [{ type: 'paragraph', text: 'Test', spans: [] }]
+
     render(<RichTextRenderer field={field} className="custom-prose" />)
-    
+
     const container = screen.getByText('Test').parentElement?.parentElement
     expect(container).toHaveClass('custom-prose')
   })
@@ -361,9 +389,9 @@ describe('RichTextRenderer', () => {
       { type: 'heading1', text: null as unknown as string, spans: [] },
       { type: 'paragraph', text: '', spans: [] },
     ] as RichTextField
-    
+
     render(<RichTextRenderer field={field} />)
-    
+
     const heading = screen.getByRole('heading', { level: 1 })
     expect(heading).toHaveAttribute('id', '')
   })

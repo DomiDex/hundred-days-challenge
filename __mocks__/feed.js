@@ -31,13 +31,13 @@ class Feed {
       version: 'https://jsonfeed.org/version/1',
       title: this.options.title,
       home_page_url: this.options.link,
-      items: this.items.map(item => ({
+      items: this.items.map((item) => ({
         id: item.id,
         url: item.link,
         title: item.title,
         content_html: item.content,
-        date_published: item.date
-      }))
+        date_published: item.date,
+      })),
     })
   }
 }

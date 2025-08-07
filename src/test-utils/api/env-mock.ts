@@ -11,7 +11,7 @@ export const env = {
   MAILCHIMP_API_SERVER: 'us1',
   MAILCHIMP_AUDIENCE_ID: 'test-audience-id',
   ADMIN_API_KEY: 'test-admin-key-123',
-  MAILCHIMP_WEBHOOK_KEY: 'test-webhook-key'
+  MAILCHIMP_WEBHOOK_KEY: 'test-webhook-key',
 }
 
 export function validateEnvironmentVariables() {
@@ -26,7 +26,7 @@ export function getPrismicConfig() {
   return {
     repositoryName: env.NEXT_PUBLIC_PRISMIC_REPOSITORY_NAME,
     previewSecret: env.PREVIEW_SECRET,
-    webhookSecret: env.PRISMIC_WEBHOOK_SECRET
+    webhookSecret: env.PRISMIC_WEBHOOK_SECRET,
   }
 }
 
@@ -34,7 +34,7 @@ export function getMailchimpConfig() {
   return {
     apiKey: env.MAILCHIMP_API_KEY,
     server: env.MAILCHIMP_API_SERVER,
-    audienceId: env.MAILCHIMP_AUDIENCE_ID
+    audienceId: env.MAILCHIMP_AUDIENCE_ID,
   }
 }
 
@@ -42,13 +42,13 @@ export function getSiteConfig() {
   return {
     url: env.NEXT_PUBLIC_SITE_URL,
     name: '100 Days of Craft',
-    description: 'A craft journey'
+    description: 'A craft journey',
   }
 }
 
 export function getSecurityConfig() {
   return {
     previewSecret: env.PREVIEW_SECRET,
-    webhookSecret: env.PRISMIC_WEBHOOK_SECRET
+    webhookSecret: env.PRISMIC_WEBHOOK_SECRET,
   }
 }

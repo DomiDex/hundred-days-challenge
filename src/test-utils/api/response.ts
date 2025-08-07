@@ -1,20 +1,20 @@
 /**
  * Asserts that a response is valid JSON with expected status
  */
-export async function expectJsonResponse(
+export async function expectJsonResponse<T = unknown>(
   response: Response,
   expectedStatus: number,
-  expectedBody?: any
-): Promise<any> {
+  expectedBody?: T
+): Promise<T> {
   expect(response.status).toBe(expectedStatus)
   expect(response.headers.get('Content-Type')).toContain('application/json')
-  
-  const json = await response.json()
-  
+
+  const json = (await response.json()) as T
+
   if (expectedBody !== undefined) {
     expect(json).toEqual(expectedBody)
   }
-  
+
   return json
 }
 
@@ -27,10 +27,10 @@ export async function expectErrorResponse(
   expectedMessage?: string
 ): Promise<void> {
   expect(response.status).toBe(expectedStatus)
-  
+
   const json = await response.json()
   expect(json).toHaveProperty('error')
-  
+
   if (expectedMessage) {
     expect(json.error).toBe(expectedMessage)
   }
@@ -44,19 +44,19 @@ export async function expectFeedResponse(
   contentType: 'rss' | 'atom' | 'json'
 ): Promise<string> {
   expect(response.status).toBe(200)
-  
+
   const expectedContentTypes = {
     rss: 'application/rss+xml',
     atom: 'application/atom+xml',
-    json: 'application/feed+json'
+    json: 'application/feed+json',
   }
-  
+
   expect(response.headers.get('Content-Type')).toContain(expectedContentTypes[contentType])
   expect(response.headers.get('Cache-Control')).toBeDefined()
-  
+
   const content = await response.text()
   expect(content).toBeTruthy()
-  
+
   return content
 }
 

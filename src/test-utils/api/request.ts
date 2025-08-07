@@ -3,22 +3,24 @@ import { NextRequest } from 'next/server'
 /**
  * Creates a mock NextRequest for testing API routes
  */
-export function createMockRequest(options: {
-  method?: string
-  url?: string
-  headers?: Record<string, string>
-  body?: any
-  params?: Record<string, string>
-  searchParams?: Record<string, string>
-  cookies?: Record<string, string>
-} = {}): NextRequest {
+export function createMockRequest(
+  options: {
+    method?: string
+    url?: string
+    headers?: Record<string, string>
+    body?: string | Record<string, unknown> | FormData | null
+    params?: Record<string, string>
+    searchParams?: Record<string, string>
+    cookies?: Record<string, string>
+  } = {}
+): NextRequest {
   const {
     method = 'GET',
     url = 'http://localhost:3000/api/test',
     headers: customHeaders = {},
     body,
     searchParams = {},
-    cookies = {}
+    cookies = {},
   } = options
 
   // Create URL with search params
@@ -30,7 +32,7 @@ export function createMockRequest(options: {
   // Create headers
   const requestHeaders = new Headers({
     'Content-Type': 'application/json',
-    ...customHeaders
+    ...customHeaders,
   })
 
   // Add cookies to headers
@@ -41,7 +43,7 @@ export function createMockRequest(options: {
     requestHeaders.set('Cookie', cookieString)
   }
 
-  // Create request init
+  // Create request init with proper typing for NextRequest
   const init: RequestInit = {
     method,
     headers: requestHeaders,
@@ -52,7 +54,7 @@ export function createMockRequest(options: {
     init.body = JSON.stringify(body)
   }
 
-  return new NextRequest(urlObj.toString(), init)
+  return new NextRequest(urlObj.toString(), init as ConstructorParameters<typeof NextRequest>[1])
 }
 
 /**
@@ -62,6 +64,6 @@ export function createMockHeaders(customHeaders: Record<string, string> = {}): H
   return new Headers({
     'Content-Type': 'application/json',
     'User-Agent': 'Jest Test',
-    ...customHeaders
+    ...customHeaders,
   })
 }

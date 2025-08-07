@@ -7,7 +7,6 @@ import { SliceZone } from '@prismicio/react'
 import { components } from '@/slices'
 import { RichTextRenderer } from '@/components/blog/RichTextRenderer'
 import { TableOfContents } from '@/components/blog/TableOfContents'
-import Link from 'next/link'
 import { PrismLoader } from '@/components/PrismLoader'
 import { generateSEOMetadata } from '@/components/SEO'
 import ProjectLinks from '@/components/blog/ProjectLinks'
@@ -20,6 +19,16 @@ import type { PostDocument, AuthorDocument } from '../../../../../prismicio-type
 import { filterPostsByCategory, extractCategoryData } from '@/lib/prismic-utils'
 import { getAuthorData } from '@/lib/prismic-helpers'
 import { extractHeadingsFromRichText } from '@/lib/toc-utils'
+import { generateArticleSchema } from '@/lib/structured-data'
+import { BreadcrumbSchema } from '@/components/SEO/BreadcrumbSchema'
+import { BlogPostAnalytics } from '@/components/BlogPostAnalytics'
+import { AuthorLink } from '@/components/blog/AuthorLink'
+
+// Configure for ISR (Incremental Static Regeneration)
+export const revalidate = 3600 // Revalidate every hour
+
+// Allow dynamic params that aren't pre-generated at build time
+export const dynamicParams = true
 
 // Temporary type extension until Prismic types are regenerated
 interface ExtendedPostData {
@@ -64,19 +73,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const client = createClient()
-  const posts = await client.getAllByType('post', {
-    fetchLinks: ['category.uid'],
-  })
+  try {
+    const client = createClient()
+    const posts = await client.getAllByType('post', {
+      fetchLinks: ['category.uid'],
+    })
 
-  return posts.map((post) => {
-    const categoryData = extractCategoryData(post)
+    // Filter out posts without valid category data
+    const validPosts = posts.filter((post) => {
+      const categoryData = extractCategoryData(post)
+      return categoryData?.uid && post.uid
+    })
 
-    return {
-      category: categoryData?.uid || '',
-      slug: post.uid,
-    }
-  })
+    return validPosts.map((post) => {
+      const categoryData = extractCategoryData(post)
+      return {
+        category: categoryData!.uid,
+        slug: post.uid,
+      }
+    })
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error)
+    // Return empty array on error to prevent build failure
+    return []
+  }
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -101,7 +121,13 @@ export default async function BlogPostPage({ params }: Props) {
       ],
     })) as ExtendedPost
   } catch (error) {
-    console.error('Error fetching post:', error)
+    console.error(`Error fetching post with slug "${slug}":`, error)
+    console.error('Error details:', {
+      slug,
+      category,
+      repositoryName: process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || 'hundred-days-challenge',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
     notFound()
   }
 
@@ -155,20 +181,31 @@ export default async function BlogPostPage({ params }: Props) {
   // Extract headings for table of contents
   const headings = extractHeadingsFromRichText(post.data.article_text)
 
+  // Generate structured data
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
+  const articleSchema = generateArticleSchema(post, author, siteUrl)
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog', href: '/blog' },
+    { label: categoryData?.name || 'Category', href: `/blog/${category}` },
+    { label: post.data.name || '' },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       <PrismLoader />
+      <BlogPostAnalytics postSlug={post.uid} postTitle={post.data.name || ''} />
+
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <BreadcrumbSchema items={breadcrumbItems} />
 
       <div className="mx-auto max-w-7xl px-8 py-16 md:px-12 lg:px-16">
-        <Breadcrumb
-          items={[
-            { label: 'Home', href: '/' },
-            { label: 'Blog', href: '/blog' },
-            { label: categoryData?.name || 'Category', href: `/blog/${category}` },
-            { label: post.data.name || '' },
-          ]}
-          className="mb-16"
-        />
+        <Breadcrumb items={breadcrumbItems} className="mb-16" />
         <div className="grid grid-cols-1 gap-12 xl:grid-cols-[300px_1fr]">
           {/* Table of Contents */}
           <aside className="hidden xl:block">
@@ -202,12 +239,11 @@ export default async function BlogPostPage({ params }: Props) {
                     <span className="hidden sm:inline">•</span>
                     <div className="flex items-center gap-2">
                       <span>By </span>
-                      <Link
-                        href={`/authors/${author.uid}`}
+                      <AuthorLink
+                        uid={author.uid}
+                        name={getAuthorData(author)?.name || ''}
                         className="text-primary transition-colors hover:text-primary/80"
-                      >
-                        {getAuthorData(author)?.name || ''}
-                      </Link>
+                      />
                     </div>
                   </>
                 )}

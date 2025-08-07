@@ -1,4 +1,9 @@
-import { extractHeadingsFromRichText, generateId, flattenHeadings, ToCHeading } from '@/lib/toc-utils'
+import {
+  extractHeadingsFromRichText,
+  generateId,
+  flattenHeadings,
+  ToCHeading,
+} from '@/lib/toc-utils'
 import { RichTextField } from '@prismicio/client'
 
 describe('toc-utils', () => {
@@ -77,7 +82,7 @@ describe('toc-utils', () => {
         { type: 'paragraph', text: 'Some content', spans: [] },
       ]
       const result = extractHeadingsFromRichText(richText)
-      
+
       expect(result).toHaveLength(1)
       expect(result[0]).toEqual({
         id: 'main-heading',
@@ -93,7 +98,7 @@ describe('toc-utils', () => {
         { type: 'heading4', text: 'H4 Heading', spans: [] },
       ]
       const result = extractHeadingsFromRichText(richText)
-      
+
       expect(result).toHaveLength(1)
       expect(result[0].level).toBe(2)
       expect(result[0].children).toHaveLength(1)
@@ -111,7 +116,7 @@ describe('toc-utils', () => {
         { type: 'heading3', text: 'Subsection 2.1', spans: [] },
       ]
       const result = extractHeadingsFromRichText(richText)
-      
+
       expect(result).toHaveLength(2)
       expect(result[0].text).toBe('Section 1')
       expect(result[0].children).toHaveLength(2)
@@ -128,7 +133,7 @@ describe('toc-utils', () => {
         { type: 'heading3', text: null as unknown as string, spans: [] },
       ]
       const result = extractHeadingsFromRichText(richText)
-      
+
       expect(result).toHaveLength(1)
       expect(result[0].text).toBe('')
       expect(result[0].id).toBe('')
@@ -142,7 +147,7 @@ describe('toc-utils', () => {
         { type: 'heading6' as 'heading2', text: 'H6', spans: [] },
       ]
       const result = extractHeadingsFromRichText(richText)
-      
+
       expect(result).toHaveLength(1)
       expect(result[0].text).toBe('H2')
     })
@@ -156,7 +161,7 @@ describe('toc-utils', () => {
         { type: 'heading2', text: 'Another Level 2', spans: [] },
       ]
       const result = extractHeadingsFromRichText(richText)
-      
+
       expect(result).toHaveLength(2)
       expect(result[0].children).toHaveLength(2)
       expect(result[0].children![0].level).toBe(4)
@@ -191,7 +196,7 @@ describe('toc-utils', () => {
         },
       ]
       const result = flattenHeadings(headings)
-      
+
       expect(result).toHaveLength(3)
       expect(result[0].id).toBe('1')
       expect(result[1].id).toBe('1.1')
@@ -209,18 +214,16 @@ describe('toc-utils', () => {
               id: '1.1',
               text: 'Level 2',
               level: 3,
-              children: [
-                { id: '1.1.1', text: 'Level 3', level: 4 },
-              ],
+              children: [{ id: '1.1.1', text: 'Level 3', level: 4 }],
             },
           ],
         },
         { id: '2', text: 'Another Level 1', level: 2 },
       ]
       const result = flattenHeadings(headings)
-      
+
       expect(result).toHaveLength(4)
-      expect(result.map(h => h.id)).toEqual(['1', '1.1', '1.1.1', '2'])
+      expect(result.map((h) => h.id)).toEqual(['1', '1.1', '1.1.1', '2'])
     })
 
     it('preserves original heading objects', () => {
@@ -233,7 +236,7 @@ describe('toc-utils', () => {
         },
       ]
       const result = flattenHeadings(headings)
-      
+
       expect(result[0]).toBe(headings[0])
       expect(result[1]).toBe(headings[0].children![0])
     })

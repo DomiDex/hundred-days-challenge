@@ -19,8 +19,8 @@ class MockIntersectionObserver {
     this.elements.clear()
   }
 
-  triggerIntersection(entries: Array<{ target: { id: string }, isIntersecting: boolean }>) {
-    const mockEntries = entries.map(entry => ({
+  triggerIntersection(entries: Array<{ target: { id: string }; isIntersecting: boolean }>) {
+    const mockEntries = entries.map((entry) => ({
       target: { id: entry.target.id } as unknown as Element,
       isIntersecting: entry.isIntersecting,
       intersectionRatio: entry.isIntersecting ? 1 : 0,
@@ -29,7 +29,10 @@ class MockIntersectionObserver {
       rootBounds: null,
       time: 0,
     }))
-    this.callback(mockEntries as IntersectionObserverEntry[], this as unknown as IntersectionObserver)
+    this.callback(
+      mockEntries as IntersectionObserverEntry[],
+      this as unknown as IntersectionObserver
+    )
   }
 }
 
@@ -75,9 +78,7 @@ describe('useTableOfContents', () => {
       id: 'heading-3',
       text: 'Heading 3',
       level: 2,
-      children: [
-        { id: 'heading-3-1', text: 'Heading 3.1', level: 3 },
-      ],
+      children: [{ id: 'heading-3-1', text: 'Heading 3.1', level: 3 }],
     },
   ]
 
@@ -98,7 +99,7 @@ describe('useTableOfContents', () => {
     const { result } = renderHook(() => useTableOfContents(mockHeadings))
 
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 150))
+      await new Promise((resolve) => setTimeout(resolve, 150))
     })
 
     expect(result.current.activeId).toBe('heading-1')
@@ -156,7 +157,7 @@ describe('useTableOfContents', () => {
 
   it('handles empty headings array', () => {
     const { result } = renderHook(() => useTableOfContents([]))
-    
+
     expect(result.current.activeId).toBe('')
     expect(mockIntersectionObserver).toBeNull()
   })

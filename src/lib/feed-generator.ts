@@ -59,9 +59,10 @@ export async function generateFeeds() {
     const excerpt = post.data.excerpt || generateExcerpt(asText(post.data.article_text), 160)
 
     // Get author data
-    const authorData = prismic.isFilled.contentRelationship(post.data.author) && post.data.author.data
-      ? (post.data.author.data as unknown as AuthorDocument['data'])
-      : null
+    const authorData =
+      prismic.isFilled.contentRelationship(post.data.author) && post.data.author.data
+        ? (post.data.author.data as unknown as AuthorDocument['data'])
+        : null
 
     feed.addItem({
       title: post.data.name || 'Untitled',
@@ -74,7 +75,10 @@ export async function generateFeeds() {
         {
           name: authorData?.name || 'Anonymous',
           email: 'noreply@100daysofcraft.com', // Privacy-safe email
-          link: (post.data.author && 'uid' in post.data.author && post.data.author.uid) ? `${siteUrl}/authors/${post.data.author.uid}` : undefined,
+          link:
+            post.data.author && 'uid' in post.data.author && post.data.author.uid
+              ? `${siteUrl}/authors/${post.data.author.uid}`
+              : undefined,
         },
       ],
       date: publicationDate,
@@ -136,9 +140,7 @@ async function extractFullContent(post: PostDocument, siteUrl: string): Promise<
 function generateExcerpt(content: string, maxLength: number): string {
   // Strip HTML tags and create clean excerpt
   const text = content.replace(/<[^>]*>/g, '').trim()
-  return text.length > maxLength 
-    ? text.substring(0, maxLength).trim() + '...'
-    : text
+  return text.length > maxLength ? text.substring(0, maxLength).trim() + '...' : text
 }
 
 // Generate feed for specific category
@@ -148,7 +150,7 @@ export async function generateCategoryFeed(categorySlug: string) {
 
   // First, find the category by slug
   const categories = await client.getAllByType('category', {
-    filters: [prismic.filter.at('my.category.uid', categorySlug)]
+    filters: [prismic.filter.at('my.category.uid', categorySlug)],
   })
 
   if (!categories.length) {
@@ -183,9 +185,7 @@ export async function generateCategoryFeed(categorySlug: string) {
 
   // Fetch posts for this category
   const posts = await client.getAllByType('post', {
-    filters: [
-      prismic.filter.at('my.post.category', category.id)
-    ],
+    filters: [prismic.filter.at('my.post.category', category.id)],
     orderings: [
       { field: 'my.post.publication_date', direction: 'desc' },
       { field: 'document.first_publication_date', direction: 'desc' },
@@ -202,9 +202,10 @@ export async function generateCategoryFeed(categorySlug: string) {
     const fullContent = await extractFullContent(post, siteUrl)
     const excerpt = post.data.excerpt || generateExcerpt(asText(post.data.article_text), 160)
 
-    const authorData = prismic.isFilled.contentRelationship(post.data.author) && post.data.author.data
-      ? (post.data.author.data as unknown as AuthorDocument['data'])
-      : null
+    const authorData =
+      prismic.isFilled.contentRelationship(post.data.author) && post.data.author.data
+        ? (post.data.author.data as unknown as AuthorDocument['data'])
+        : null
 
     feed.addItem({
       title: post.data.name || 'Untitled',
@@ -217,7 +218,10 @@ export async function generateCategoryFeed(categorySlug: string) {
         {
           name: authorData?.name || 'Anonymous',
           email: 'noreply@100daysofcraft.com',
-          link: (post.data.author && 'uid' in post.data.author && post.data.author.uid) ? `${siteUrl}/authors/${post.data.author.uid}` : undefined,
+          link:
+            post.data.author && 'uid' in post.data.author && post.data.author.uid
+              ? `${siteUrl}/authors/${post.data.author.uid}`
+              : undefined,
         },
       ],
       date: publicationDate,

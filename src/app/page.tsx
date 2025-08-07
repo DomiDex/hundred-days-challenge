@@ -4,6 +4,10 @@ import { HomepageBlogSection } from '@/components/blog/HomepageBlogSection'
 import { Hero } from '@/components/Hero'
 import * as prismic from '@prismicio/client'
 import type { PostDocument } from '../../prismicio-types'
+import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data'
+
+// Revalidate homepage every hour
+export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient()
@@ -11,9 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!page) {
     return {
-      title: 'Blog - Hundred Days Challenge',
+      title: '100 Days of Craft - Daily Journey of Code, Creativity & Growth',
       description:
-        'Welcome to our blog featuring articles on web development, technology, and more.',
+        'Explore the intersection of code and creativity with 100 Days of Craft. Daily experiments, projects, and learnings in design and development.',
     }
   }
 
@@ -50,19 +54,36 @@ export default async function Home() {
   const posts = postsResponse.results as PostDocument[]
   const hasMore = postsResponse.page < postsResponse.total_pages
 
-  return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <Hero />
+  // Generate structured data
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://100daysofcraft.com'
+  const organizationSchema = generateOrganizationSchema(siteUrl)
+  const websiteSchema = generateWebSiteSchema(siteUrl)
 
-      {/* Main Blog Content */}
-      <div className="container mx-auto px-4 py-8">
-        <HomepageBlogSection
-          initialPosts={posts}
-          initialHasMore={hasMore}
-          categories={categories}
-        />
-      </div>
-    </main>
+  return (
+    <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+
+      <main className="min-h-screen">
+        {/* Hero Section */}
+        <Hero />
+
+        {/* Main Blog Content */}
+        <div className="container mx-auto px-4 py-8">
+          <HomepageBlogSection
+            initialPosts={posts}
+            initialHasMore={hasMore}
+            categories={categories}
+          />
+        </div>
+      </main>
+    </>
   )
 }

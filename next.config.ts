@@ -2,6 +2,17 @@ import type { NextConfig } from 'next'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+// Bundle analyzer setup
+let withBundleAnalyzer = (config: NextConfig) => config
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  })
+} catch {
+  console.warn('Bundle analyzer not available')
+}
+
 const nextConfig: NextConfig = {
   // Security: Disable source maps in production
   productionBrowserSourceMaps: false,
@@ -16,6 +27,14 @@ const nextConfig: NextConfig = {
           exclude: ['error', 'warn'],
         }
       : false,
+  },
+  // Image optimization
+  images: {
+    domains: ['images.prismic.io'],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
   async rewrites() {
     return [
@@ -99,8 +118,38 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Cache static assets
+      {
+        source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache fonts
+      {
+        source: '/:all*(woff|woff2|otf|ttf)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache CSS and JS
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ]
   },
 }
 
-export default nextConfig
+export default withBundleAnalyzer(nextConfig)

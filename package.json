@@ -7,6 +7,7 @@
     "build": "next build",
     "build:safe": "node --max-old-space-size=4096 ./node_modules/.bin/next build",
     "build:clean": "rm -rf .next && npm run build",
+    "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "slicemachine": "npx start-slicemachine",
@@ -33,6 +34,7 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@next/third-parties": "^15.4.5",
     "@prismicio/client": "^7.18.1",
     "@prismicio/next": "^2.0.1",
     "@prismicio/react": "^3.2.1",
@@ -57,7 +59,9 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.4.5",
     "@playwright/test": "^1.54.2",
     "@slicemachine/adapter-next": "^0.3.81",
     "@testing-library/dom": "^10.4.1",

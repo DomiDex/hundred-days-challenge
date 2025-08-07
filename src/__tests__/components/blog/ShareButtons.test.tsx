@@ -78,23 +78,22 @@ describe('ShareButtons', () => {
 
   it('renders share button initially', () => {
     render(<ShareButtons {...defaultProps} />)
-    
+
     const shareButton = screen.getByRole('button', { name: 'Share this post' })
     expect(shareButton).toBeInTheDocument()
     expect(shareButton).toHaveAttribute('aria-expanded', 'false')
   })
 
-
   it('toggles share buttons on click', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
     render(<ShareButtons {...defaultProps} />)
-    
+
     const shareButton = screen.getByRole('button', { name: 'Share this post' })
-    
+
     // Click to open
     await user.click(shareButton)
     expect(shareButton).toHaveAttribute('aria-expanded', 'true')
-    
+
     // Social buttons should be rendered (even if not visible due to animations)
     expect(screen.getByRole('button', { name: 'Share on X (Twitter)' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Share on LinkedIn' })).toBeInTheDocument()
@@ -104,13 +103,13 @@ describe('ShareButtons', () => {
   it('shares on X (Twitter) when X button is clicked', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
     render(<ShareButtons {...defaultProps} />)
-    
+
     // Open share buttons
     await user.click(screen.getByRole('button', { name: 'Share this post' }))
-    
+
     // Click X button
     await user.click(screen.getByRole('button', { name: 'Share on X (Twitter)' }))
-    
+
     expect(mockWindowOpen).toHaveBeenCalledWith(
       'https://twitter.com/intent/tweet?url=https%3A%2F%2Fexample.com%2Fpost&text=Test%20Blog%20Post',
       '_blank',
@@ -121,13 +120,13 @@ describe('ShareButtons', () => {
   it('shares on LinkedIn when LinkedIn button is clicked', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
     render(<ShareButtons {...defaultProps} />)
-    
+
     // Open share buttons
     await user.click(screen.getByRole('button', { name: 'Share this post' }))
-    
+
     // Click LinkedIn button
     await user.click(screen.getByRole('button', { name: 'Share on LinkedIn' }))
-    
+
     expect(mockWindowOpen).toHaveBeenCalledWith(
       'https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fexample.com%2Fpost',
       '_blank',
@@ -139,26 +138,26 @@ describe('ShareButtons', () => {
     // Skipping this test due to issues with mocking navigator.clipboard in the test environment
     // The functionality works correctly in the browser
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
-    
+
     render(<ShareButtons {...defaultProps} />)
-    
+
     // Open share buttons
     await user.click(screen.getByRole('button', { name: 'Share this post' }))
-    
+
     // Wait for animations to complete
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Copy link' })).toBeInTheDocument()
     })
-    
+
     // Click copy button
     const copyButton = screen.getByRole('button', { name: 'Copy link' })
-    
+
     // Test by calling click directly first
     copyButton.click()
-    
+
     // Check if the handler was called
     expect(mockWriteText).toHaveBeenCalledWith('https://example.com/post')
-    
+
     // Since we mocked setCopied to be called synchronously, check for feedback
     await waitFor(() => {
       expect(screen.getByText('Link copied!')).toBeInTheDocument()
@@ -168,22 +167,22 @@ describe('ShareButtons', () => {
   it.skip('shows check icon after copying', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
     render(<ShareButtons {...defaultProps} />)
-    
+
     // Open share buttons
     await user.click(screen.getByRole('button', { name: 'Share this post' }))
-    
+
     // Initially should not have check icon
     const copyButton = screen.getByRole('button', { name: 'Copy link' })
     expect(copyButton.querySelector('.text-green-400')).not.toBeInTheDocument()
-    
+
     // Click copy button
     await user.click(copyButton)
-    
+
     // Should show check icon
     await waitFor(() => {
       expect(copyButton.querySelector('.text-green-400')).toBeInTheDocument()
     })
-    
+
     // Advance timers to trigger the cleanup
     act(() => {
       jest.advanceTimersByTime(2000)
@@ -192,21 +191,21 @@ describe('ShareButtons', () => {
 
   it.skip('hides copy feedback after 2 seconds', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
-    
+
     render(<ShareButtons {...defaultProps} />)
-    
+
     // Open share buttons and copy
     await user.click(screen.getByRole('button', { name: 'Share this post' }))
     await user.click(screen.getByRole('button', { name: 'Copy link' }))
-    
+
     // Feedback should be visible
     expect(screen.getByText('Link copied!')).toBeInTheDocument()
-    
+
     // Fast forward 2 seconds
     act(() => {
       jest.advanceTimersByTime(2000)
     })
-    
+
     // Feedback should be gone
     await waitFor(() => {
       expect(screen.queryByText('Link copied!')).not.toBeInTheDocument()
@@ -215,7 +214,7 @@ describe('ShareButtons', () => {
 
   it('applies custom className', () => {
     render(<ShareButtons {...defaultProps} className="custom-share-class" />)
-    
+
     const container = screen.getByRole('button', { name: 'Share this post' }).parentElement
     expect(container).toHaveClass('custom-share-class')
   })
@@ -226,14 +225,16 @@ describe('ShareButtons', () => {
       url: 'https://example.com/post?param=value&other=test',
       title: 'Test Post: "Special Characters" & More!',
     }
-    
+
     render(<ShareButtons {...specialProps} />)
-    
+
     await user.click(screen.getByRole('button', { name: 'Share this post' }))
     await user.click(screen.getByRole('button', { name: 'Share on X (Twitter)' }))
-    
+
     expect(mockWindowOpen).toHaveBeenCalledWith(
-      expect.stringContaining('url=https%3A%2F%2Fexample.com%2Fpost%3Fparam%3Dvalue%26other%3Dtest'),
+      expect.stringContaining(
+        'url=https%3A%2F%2Fexample.com%2Fpost%3Fparam%3Dvalue%26other%3Dtest'
+      ),
       '_blank',
       'width=550,height=420'
     )
@@ -247,25 +248,25 @@ describe('ShareButtons', () => {
   it('handles multiple toggles correctly', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime })
     render(<ShareButtons {...defaultProps} />)
-    
+
     const shareButton = screen.getByRole('button', { name: 'Share this post' })
-    
+
     // Open
     await user.click(shareButton)
     expect(shareButton).toHaveAttribute('aria-expanded', 'true')
-    
+
     // Close - need to wait for the animation to complete
     await user.click(shareButton)
-    
+
     // Wait for the GSAP animation to complete and state to update
     act(() => {
       jest.advanceTimersByTime(1000) // Allow time for GSAP animations
     })
-    
+
     await waitFor(() => {
       expect(shareButton).toHaveAttribute('aria-expanded', 'false')
     })
-    
+
     // Open again
     await user.click(shareButton)
     expect(shareButton).toHaveAttribute('aria-expanded', 'true')

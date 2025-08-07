@@ -16,7 +16,7 @@ export function createMockImageField<T extends string | null = never>(
   const needsThumbnail = overrides && 'thumbnail' in overrides
 
   if (needsThumbnail) {
-    const thumbnailOverrides = (overrides as any).thumbnail
+    const thumbnailOverrides = (overrides as ImageField<string>).thumbnail
     return {
       ...base,
       ...overrides,
@@ -39,7 +39,7 @@ export function createEmptyImageField<T extends string | null = never>(): ImageF
     copyright: null,
     edit: { x: 0, y: 0, zoom: 1, background: 'transparent' },
   }
-  
+
   // Return with thumbnail for types that require it
   return {
     ...base,
@@ -47,9 +47,28 @@ export function createEmptyImageField<T extends string | null = never>(): ImageF
   } as unknown as ImageField<T>
 }
 
+interface EmbedFieldOverrides {
+  type?: 'video' | 'photo' | 'link' | 'rich'
+  version?: string
+  title?: string
+  author_name?: string
+  author_url?: string
+  provider_name?: string
+  provider_url?: string
+  cache_age?: number
+  thumbnail_url?: string
+  thumbnail_width?: number
+  thumbnail_height?: number
+  embed_url?: string
+  html?: string
+  width?: number
+  height?: number
+  url?: string
+}
+
 export function createMockEmbedField(
   type: 'video' | 'photo' | 'link' | 'rich' = 'video',
-  overrides: Partial<any> = {}
+  overrides: EmbedFieldOverrides = {}
 ): EmbedField {
   const baseFields = {
     type,
