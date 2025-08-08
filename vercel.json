@@ -10,11 +10,11 @@
     },
     {
       "source": "/demos",
-      "destination": "https://hundred-project-v2.vercel.app/demos"
+      "destination": "https://hundred-demo.vercel.app/demos"
     },
     {
       "source": "/demos/:path*",
-      "destination": "https://hundred-project-v2.vercel.app/demos/:path*"
+      "destination": "https://hundred-demo.vercel.app/demos/:path*"
     }
   ]
 }
