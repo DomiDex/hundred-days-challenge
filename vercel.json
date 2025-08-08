@@ -7,6 +7,14 @@
     {
       "source": "/tools/:path*",
       "destination": "https://hundred-project-v2.vercel.app/tools/:path*"
+    },
+    {
+      "source": "/demos",
+      "destination": "https://hundred-project-v2.vercel.app/demos"
+    },
+    {
+      "source": "/demos/:path*",
+      "destination": "https://hundred-project-v2.vercel.app/demos/:path*"
     }
   ]
 }
