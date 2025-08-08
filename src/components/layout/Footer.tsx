@@ -77,9 +77,12 @@ export default async function Footer() {
       </div>
 
       <div className="w-full px-8">
-        <div className="text-limed-spruce-200 dark:text-limed-spruce-700 mx-auto max-w-7xl">
-          <div className="flex items-center justify-between py-4">
+        <div className="text-limed-spruce-200 dark:text-limed-spruce-700 max-w-8xl mx-auto">
+          <div className="flex flex-col items-center justify-between gap-4">
             <FooterLogo />
+            <p className="text-center text-sm text-muted-foreground">
+              © 2025 100DaysOfCraft. All content is protected by copyright.
+            </p>
             <div className="flex items-center gap-4">
               <Link
                 href="/subscribe"
