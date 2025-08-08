@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/tools",
+      "destination": "https://hundred-project-v2.vercel.app/tools"
+    },
+    {
+      "source": "/tools/:path*",
+      "destination": "https://hundred-project-v2.vercel.app/tools/:path*"
+    }
+  ]
+}
