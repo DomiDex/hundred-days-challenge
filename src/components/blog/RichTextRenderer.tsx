@@ -3,7 +3,7 @@
 import { PrismicRichText, JSXMapSerializer } from '@prismicio/react'
 import { RichTextField } from '@prismicio/client'
 import { useEffect } from 'react'
-import { RichTextCodeBlock } from './RichTextCodeBlock'
+import { MarkdownRenderer } from './MarkdownRenderer'
 import { generateId } from '@/lib/toc-utils'
 import DOMPurify from 'isomorphic-dompurify'
 
@@ -26,6 +26,22 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
     }
     highlightCode()
   }, [field])
+
+  // Check if the entire field looks like markdown
+  const fieldText = field?.map((block) => ('text' in block ? block.text : '')).join('\n') || ''
+  const isMarkdownContent = () => {
+    const patterns = [/^#{1,6}\s+/m, /```[\w]*\n/m, /\*\*[^*]+\*\*/, /\[.+?\]\(.+?\)/]
+    return patterns.some((pattern) => pattern.test(fieldText))
+  }
+
+  // If the entire content looks like markdown, render it as markdown
+  if (isMarkdownContent()) {
+    return (
+      <div className={className}>
+        <MarkdownRenderer content={fieldText} />
+      </div>
+    )
+  }
 
   const components: JSXMapSerializer = {
     heading1: ({ children, node }) => {
@@ -84,23 +100,11 @@ export function RichTextRenderer({ field, className }: RichTextRendererProps) {
     },
     paragraph: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
     preformatted: ({ node }) => {
-      let language = 'plaintext'
-      let codeText = node.text || ''
+      const text = node.text || ''
 
-      // Check if the first line contains a language hint
-      // Format: //javascript or #python or --sql etc.
-      const firstLine = codeText.split('\n')[0]
-      const languageMatch = firstLine.match(/^(?:\/\/|#|--|'|"|<!--|\/\*)\s*(\w+)/)
-
-      if (languageMatch) {
-        language = languageMatch[1].toLowerCase()
-        // Remove the language line from the code
-        codeText = codeText.split('\n').slice(1).join('\n')
-      }
-
-      // Language detected: ${language} from ${firstLine}
-
-      return <RichTextCodeBlock language={language}>{codeText}</RichTextCodeBlock>
+      // Always treat preformatted blocks as markdown in blog posts
+      // since you're using this for markdown content from Prismic
+      return <MarkdownRenderer content={text} />
     },
     strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,

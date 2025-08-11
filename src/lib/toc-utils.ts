@@ -12,6 +12,16 @@ export function extractHeadingsFromRichText(richText: RichTextField): ToCHeading
     return []
   }
 
+  // Check if content looks like markdown
+  const fieldText = richText.map((block) => ('text' in block ? block.text : '')).join('\n')
+  const isMarkdown = /^#{1,6}\s+/m.test(fieldText) || /```[\w]*\n/m.test(fieldText)
+
+  if (isMarkdown) {
+    // Extract headings from markdown
+    return extractHeadingsFromMarkdown(fieldText)
+  }
+
+  // Original logic for Prismic rich text
   const headings: ToCHeading[] = []
   const stack: ToCHeading[] = []
 
@@ -44,6 +54,46 @@ export function extractHeadingsFromRichText(richText: RichTextField): ToCHeading
       stack.push(heading)
     }
   })
+
+  return headings
+}
+
+export function extractHeadingsFromMarkdown(markdown: string): ToCHeading[] {
+  const headings: ToCHeading[] = []
+  const stack: ToCHeading[] = []
+
+  // Match markdown headings (# H1, ## H2, etc.)
+  const headingRegex = /^(#{1,6})\s+(.+)$/gm
+  let match
+
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    const level = match[1].length
+    const text = match[2].trim()
+    const id = generateId(text)
+
+    const heading: ToCHeading = {
+      id,
+      text,
+      level,
+    }
+
+    // Build hierarchy
+    while (stack.length > 0 && stack[stack.length - 1].level >= level) {
+      stack.pop()
+    }
+
+    if (stack.length === 0) {
+      headings.push(heading)
+    } else {
+      const parent = stack[stack.length - 1]
+      if (!parent.children) {
+        parent.children = []
+      }
+      parent.children.push(heading)
+    }
+
+    stack.push(heading)
+  }
 
   return headings
 }
