@@ -11,4 +11,10 @@
     <loc>https://www.100daysofcraft.com/tools/sitemap.xml</loc>
     <lastmod>2025-08-08</lastmod>
   </sitemap>
+  
+  <!-- Demos subdirectory sitemap -->
+  <sitemap>
+    <loc>https://www.100daysofcraft.com/demos/sitemap.xml</loc>
+    <lastmod>2025-08-08</lastmod>
+  </sitemap>
 </sitemapindex>
